@@ -1,113 +1,7 @@
+{% extends "seatsense_app/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
 
-  <!-- SITE TITTLE -->
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Eventre</title>
-  
-  <!-- PLUGINS CSS STYLE -->
-  <!-- Bootstrap -->
-  <link href="{% static 'seatsense_app/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-  <!-- Themefisher Font -->  
-  <link href="{% static 'seatsense_app/plugins/themefisher-font/style.css' %}" rel="stylesheet">
-  <!-- Font Awesome -->
-  <link href="{% static 'seatsense_app/plugins/font-awsome/css/font-awesome.min.css' %}" rel="stylesheet">
-  <!-- Magnific Popup -->
-  <link href="{% static 'seatsense_app/plugins/magnific-popup/magnific-popup.css' %}" rel="stylesheet">
-  <!-- Slick Carousel -->
-  <link href="{% static 'seatsense_app/plugins/slick/slick.css' %}" rel="stylesheet">
-  <link href="{% static 'seatsense_app/plugins/slick/slick-theme.css' %}" rel="stylesheet">
-  <!-- CUSTOM CSS -->
-  <link href="{% static 'seatsense_app/css/style.css' %}" rel="stylesheet">
-
-  <!-- FAVICON -->
-  <link href="{% static 'seatsense_app/images/favicon.png' %}" rel="shortcut icon">
-
-</head>
-
-<body class="body-wrapper">
-
-
-<!--========================================
-=            Navigation Section            =
-=========================================-->
-
-<nav class="navbar main-nav border-less fixed-top navbar-expand-lg p-0">
-  <div class="container-fluid p-0">
-      <!-- logo -->
-      <a class="navbar-brand" href="{% url 'index' %}">
-        <img src="{% static 'seatsense_app/images/logo.png' %}" alt="logo">
-      </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="fa fa-bars"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav mx-auto">
-        <li class="nav-item dropdown active dropdown-slide">
-          <a class="nav-link" href="#"  data-toggle="dropdown">Home
-            <span>/</span>
-          </a>
-          <!-- Dropdown list -->
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="{% url 'index' %}">Homepage</a>
-            <a class="dropdown-item" href="{% url 'homepage_two' %}">Homepage 2</a>
-          </div>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'speakers' %}">Speakers
-            <span>/</span>
-          </a>
-        </li>
-        <li class="nav-item dropdown dropdown-slide">
-          <a class="nav-link" href="#" data-toggle="dropdown">Pages<span>/</span></a>
-            <!-- Dropdown list -->
-            <div class="dropdown-menu">
-              <a class="dropdown-item" href="{% url 'about_us' %}">About Us</a>
-              <a class="dropdown-item" href="{% url 'single_speaker' %}">Single Speaker</a>
-              <a class="dropdown-item" href="{% url 'gallery' %}">Gallery</a>
-              <a class="dropdown-item" href="{% url 'gallery_two' %}">Gallery-02</a>
-              <a class="dropdown-item" href="{% url 'testimonial' %}">Testimonial</a>
-              <a class="dropdown-item" href="{% url 'pricing' %}">Pricing</a>
-              <a class="dropdown-item" href="{% url 'faq' %}">FAQ</a>
-              <a class="dropdown-item" href="{% url 'page_404' %}">404</a>
-            </div>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'schedule' %}">Schedule<span>/</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'sponsors' %}">Sponsors<span>/</span></a>
-        </li>
-        <li class="nav-item dropdown dropdown-slide">
-          <a class="nav-link" href="#"  data-toggle="dropdown">News
-            <span>/</span>
-          </a>
-          <!-- Dropdown list -->
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="{% url 'news' %}">News without sidebar</a>
-            <a class="dropdown-item" href="{% url 'news_right_sidebar' %}">News with right sidebar</a>
-            <a class="dropdown-item" href="{% url 'news_left_sidebar' %}">News with left sidebar</a>
-            <a class="dropdown-item" href="{% url 'news_single' %}">News Single</a>
-          </div>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'contact' %}">Contact</a>
-        </li>
-      </ul>
-      <a href="#" class="ticket">
-        <img src="{% static 'seatsense_app/images/icon/ticket.png' %}" alt="ticket">
-        <span>Buy Ticket</span>
-      </a>
-      </div>
-  </div>
-</nav>
-
-<!--====  End of Navigation Section  ====-->
-
+{% block content %}
 
 
 <!--================================
@@ -119,11 +13,11 @@
 		<div class="row">
 			<div class="col-12 text-center">
 				<div class="title">
-					<h3>Our News</h3>
+					<h3>Our Events</h3>
 				</div>
 				<ol class="breadcrumb p-0 m-0">
 				  <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-				  <li class="breadcrumb-item active">Our News</li>
+				  <li class="breadcrumb-item active">Explore Events</li>
 				</ol>
 			</div>
 		</div>
@@ -158,7 +52,7 @@
 										<h2><a href="{% url 'news_single' %}">Elementum purus id ultrices.</a></h2>
 									</div>
 									<div class="post-meta">
-										<ul class="list-inline">
+										<!-- <ul class="list-inline">
 											<li class="list-inline-item">
 												<i class="fa fa-user-o"></i>
 												<a href="#">Admin</a>
@@ -171,7 +65,7 @@
 												<i class="fa fa-comments-o"></i>
 												<a href="#">30</a>
 											</li>
-										</ul>
+										</ul> -->
 									</div>
 								</div>
 							</div>
@@ -496,81 +390,4 @@
 
 <!--====  End of Google Map  ====-->
 
-<!--============================
-=            Footer            =
-=============================-->
-
-<footer class="footer-main">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="block text-center">
-            <div class="footer-logo">
-              <img src="{% static 'seatsense_app/images/footer-logo.png' %}" alt="logo" class="img-fluid">
-            </div>
-            <ul class="social-links-footer list-inline">
-              <li class="list-inline-item">
-                <a href="#"><i class="fa fa-facebook"></i></a>
-              </li>
-              <li class="list-inline-item">
-                <a href="#"><i class="fa fa-twitter"></i></a>
-              </li>
-              <li class="list-inline-item">
-                <a href="#"><i class="fa fa-instagram"></i></a>
-              </li>
-              <li class="list-inline-item">
-                <a href="#"><i class="fa fa-rss"></i></a>
-              </li>
-              <li class="list-inline-item">
-                <a href="#"><i class="fa fa-vimeo"></i></a>
-              </li>
-            </ul>
-          </div>
-          
-        </div>
-      </div>
-    </div>
-</footer>
-<!-- Subfooter -->
-<footer class="subfooter">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6 align-self-center">
-        <div class="copyright-text">
-          <p><a href="#">Eventre</a> &#169; 2017 All Right Reserved</p>
-        </div>
-      </div>
-      <div class="col-md-6">
-          <a href="#" class="to-top"><i class="fa fa-angle-up"></i></a>
-      </div>
-    </div>
-  </div>
-</footer>
-
-
-
-  <!-- JAVASCRIPTS -->
-  <!-- jQuey -->
-  <script src="{% static 'seatsense_app/plugins/jquery/jquery.js' %}"></script>
-  <!-- Popper js -->
-  <script src="{% static 'seatsense_app/plugins/popper/popper.min.js' %}"></script>
-  <!-- Bootstrap 4 -->
-  <script src="{% static 'seatsense_app/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
-  <!-- Smooth Scroll -->
-  <script src="{% static 'seatsense_app/plugins/smoothscroll/SmoothScroll.min.js' %}"></script>  
-  <!-- Isotope -->
-  <script src="{% static 'seatsense_app/plugins/isotope/mixitup.min.js' %}"></script>  
-  <!-- Magnific Popup -->
-  <script src="{% static 'seatsense_app/plugins/magnific-popup/jquery.magnific-popup.min.js' %}"></script>
-  <!-- Slick Carousel -->
-  <script src="{% static 'seatsense_app/plugins/slick/slick.min.js' %}"></script>  
-  <!-- SyoTimer -->
-  <script src="{% static 'seatsense_app/plugins/syotimer/jquery.syotimer.min.js' %}"></script>
-  <!-- Google Mapl -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCC72vZw-6tGqFyRhhg5CkF2fqfILn2Tsw"></script>
-  <script type="text/javascript" src="{% static 'seatsense_app/plugins/google-map/gmap.js' %}"></script>
-  <!-- Custom Script -->
-  <script src="{% static 'seatsense_app/js/custom.js' %}"></script>
-</body>
-
-</html>
+{% endblock %}
