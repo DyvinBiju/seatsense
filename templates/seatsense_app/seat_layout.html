@@ -1,0 +1,185 @@
+{% extends "seatsense_app/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<section class="section">
+<div class="container">
+
+<!-- Page Title -->
+
+<div class="text-center mb-4">
+<h2>Select Your Seats</h2>
+
+<p>
+{{ event.title }} <br>
+{{ event.event_date }} | {{ event.event_time }}
+</p>
+</div>
+
+
+<!-- Screen -->
+
+<div class="text-center mb-5">
+<div style="background:#ddd;padding:12px;border-radius:6px;font-weight:bold;">
+SCREEN
+</div>
+</div>
+
+
+<!-- Seat Legend -->
+
+<div class="text-center mb-4">
+
+<span class="seat"></span> Available
+
+<span class="seat selected"></span> Selected
+
+<span class="seat booked"></span> Booked
+
+</div>
+
+
+<!-- Seat Layout -->
+
+<div class="text-center">
+
+{% for row in rows %}
+
+<div class="seat-row">
+
+<strong class="row-label">{{ row }}</strong>
+
+{% for seat in seats_per_row %}
+
+<span class="seat"
+data-seat="{{ row }}{{ seat }}">
+{{ seat }}
+</span>
+
+{% if seat == 6 %}
+<span class="aisle"></span>
+{% endif %}
+
+{% endfor %}
+
+</div>
+
+{% endfor %}
+
+</div>
+
+
+<!-- Selected Seats -->
+
+<div class="text-center mt-4">
+
+<strong>Selected Seats:</strong>
+
+<span id="selectedSeats">None</span>
+
+</div>
+
+
+<!-- Continue Button (future booking) -->
+
+<div class="text-center mt-4">
+
+<button class="btn btn-main-md">
+Continue Booking
+</button>
+
+</div>
+
+</div>
+</section>
+
+
+<!-- ================= CSS ================= -->
+
+<style>
+
+.seat-row{
+margin-bottom:10px;
+}
+
+.row-label{
+display:inline-block;
+width:25px;
+margin-right:10px;
+font-weight:bold;
+}
+
+.seat{
+display:inline-block;
+width:36px;
+height:36px;
+margin:4px;
+background:#e0e0e0;
+border-radius:6px;
+line-height:36px;
+cursor:pointer;
+font-size:13px;
+text-align:center;
+}
+
+.seat:hover{
+background:#ff4d4d;
+color:white;
+}
+
+.seat.selected{
+background:#28a745;
+color:white;
+}
+
+.seat.booked{
+background:#444;
+color:white;
+cursor:not-allowed;
+}
+
+.aisle{
+display:inline-block;
+width:28px;
+}
+
+</style>
+
+
+<!-- ================= JS ================= -->
+
+<script>
+
+let selectedSeats = []
+
+document.querySelectorAll(".seat").forEach(seat => {
+
+seat.addEventListener("click", function(){
+
+if(this.classList.contains("booked")){
+return
+}
+
+this.classList.toggle("selected")
+
+let seatNumber = this.innerText
+let row = this.dataset.seat.charAt(0)
+let seatLabel = row + seatNumber
+
+if(selectedSeats.includes(seatLabel)){
+selectedSeats = selectedSeats.filter(s => s !== seatLabel)
+}else{
+selectedSeats.push(seatLabel)
+}
+
+document.getElementById("selectedSeats").innerText =
+selectedSeats.length ? selectedSeats.join(", ") : "None"
+
+})
+
+})
+
+</script>
+
+{% endblock %}

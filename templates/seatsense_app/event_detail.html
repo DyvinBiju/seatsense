@@ -31,7 +31,7 @@
 Venue: {{ event.auditorium.name }}
 </p>
 
-<a href="#" class="btn btn-main-md">
+<a href="{% url 'seat_layout' event.id %}" class="btn btn-main-md">
 Book Seat
 </a>
 
@@ -77,7 +77,7 @@ alt="event image">
 
 <li class="list-inline-item">
 
-<a href="#" class="btn btn-main-md">
+<a href="{% url 'seat_layout' event.id %}" class="btn btn-main-md">
 Book Seat
 </a>
 

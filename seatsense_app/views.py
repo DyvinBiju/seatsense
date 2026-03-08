@@ -61,6 +61,26 @@ def event_detail(request, event_id):
     return render(request, "seatsense_app/event_detail.html", context)
 
 
+def seat_layout(request, event_id):
+
+    event = get_object_or_404(Event, id=event_id)
+
+    auditorium = event.auditorium
+
+    rows = auditorium.total_rows
+    seats_per_row = auditorium.seats_per_row
+
+    row_labels = [chr(65 + i) for i in range(rows)]
+
+    context = {
+        "event": event,
+        "rows": row_labels,
+        "seats_per_row": range(1, seats_per_row + 1)
+    }
+
+    return render(request, "seatsense_app/seat_layout.html", context)
+
+
 
 
 
