@@ -25,6 +25,14 @@ class Seat(models.Model):
         return f"{self.row_label}{self.seat_number}"
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Event(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
@@ -33,6 +41,7 @@ class Event(models.Model):
     event_time = models.TimeField()
 
     auditorium = models.ForeignKey(Auditorium, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     ticket_price = models.DecimalField(max_digits=8, decimal_places=2)
 
