@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from .models import Event, Category
+
 
 def page_404(request):
     return render(request, 'seatsense_app/404.html')
@@ -27,8 +29,19 @@ def index(request):
 def news_left_sidebar(request):
     return render(request, 'seatsense_app/news-left-sidebar.html')
 
-def news_right_sidebar(request):
-    return render(request, 'seatsense_app/news-right-sidebar.html')
+from .models import Event, Category
+
+def explore_events(request):
+
+    events = Event.objects.all().order_by("event_date")
+    categories = Category.objects.all()
+
+    context = {
+        "events": events,
+        "categories": categories
+    }
+
+    return render(request, "seatsense_app/explore_events.html", context)
 
 def news_single(request):
     return render(request, 'seatsense_app/news-single.html')

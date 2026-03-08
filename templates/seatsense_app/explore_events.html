@@ -1,0 +1,284 @@
+{% extends "seatsense_app/base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+<!--================================
+=            Page Title            =
+=================================-->
+
+<section class="page-title bg-title overlay-dark">
+	<div class="container">
+		<div class="row">
+			<div class="col-12 text-center">
+				<div class="title">
+					<h3>Our Events</h3>
+				</div>
+				<ol class="breadcrumb p-0 m-0">
+				  <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+				  <li class="breadcrumb-item active">Explore Events</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!--====  End of Page Title  ====-->
+
+
+<!--================================
+=            News Posts            =
+=================================-->
+
+<section class="news section">
+<div class="container">
+
+<div class="row mt-30">
+
+<!-- ================= LEFT SIDE : EVENTS ================= -->
+
+<div class="col-lg-8 col-md-10 mx-auto">
+
+<div class="block">
+<div class="row">
+
+{% for event in events %}
+
+<div class="col-md-6 col-sm-8 col-10 m-auto">
+
+<div class="blog-post">
+
+<!-- Event Image -->
+<div class="post-thumb">
+<a href="#">
+<img src="{{ event.image.url }}" alt="event-image" class="img-fluid">
+</a>
+</div>
+
+<!-- Event Content -->
+<div class="post-content">
+
+<!-- Event Date -->
+<div class="date">
+<h4>
+{{ event.event_date|date:"d" }}
+<span>{{ event.event_date|date:"M" }}</span>
+</h4>
+</div>
+
+<!-- Event Title -->
+<div class="post-title">
+<h2>{{ event.title }}</h2>
+</div>
+
+<!-- Event Description -->
+<p>
+{{ event.description|truncatewords:18 }}
+</p>
+
+<!-- Event Venue -->
+<p>
+<strong>Venue:</strong> {{ event.auditorium.name }}
+</p>
+
+<!-- Event Price -->
+<p>
+<strong>Ticket Price:</strong> ₹ {{ event.ticket_price }}
+</p>
+
+<!-- Button -->
+<a href="#" class="btn btn-main-md">
+View Details
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+{% empty %}
+
+<p class="text-center">No events available.</p>
+
+{% endfor %}
+
+</div>
+</div>
+
+</div>
+
+
+<!-- ================= RIGHT SIDEBAR ================= -->
+
+<div class="col-lg-4 col-md-10 mx-auto">
+
+<div class="sidebar">
+
+<!-- Search Widget -->
+<div class="widget search p-0">
+<div class="input-group">
+
+<input type="text" class="form-control main m-0" placeholder="Search events...">
+
+<span class="input-group-addon">
+<i class="fa fa-search"></i>
+</span>
+
+</div>
+</div>
+
+
+<!-- Categories Widget -->
+
+<div class="widget category">
+
+<h5 class="widget-header">Event Categories</h5>
+
+<ul class="category-list m-0 p-0">
+
+{% for category in categories %}
+
+<li>
+
+<a href="#">
+
+{{ category.name }}
+
+<span class="float-right">
+({{ category.event_set.count }})
+</span>
+
+</a>
+
+</li>
+
+{% empty %}
+
+<li>No categories available</li>
+
+{% endfor %}
+
+</ul>
+
+</div>
+
+
+<!-- Upcoming Events Widget -->
+
+<div class="widget latest-post">
+
+<h5 class="widget-header">Upcoming Events</h5>
+
+{% for event in events|slice:":4" %}
+
+<div class="media">
+
+<img src="{{ event.image.url }}" class="img-fluid" style="width:70px; margin-right:10px;">
+
+<div class="media-body">
+
+<h6>{{ event.title }}</h6>
+
+<p>
+
+<span class="fa fa-calendar"></span>
+
+{{ event.event_date }}
+
+</p>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+
+<!-- Popular Tags Widget -->
+
+<div class="widget tags">
+
+<h5 class="widget-header">Popular Tags</h5>
+
+<ul class="list-inline">
+
+<li class="list-inline-item"><a href="#">Events</a></li>
+<li class="list-inline-item"><a href="#">Music</a></li>
+<li class="list-inline-item"><a href="#">Technology</a></li>
+<li class="list-inline-item"><a href="#">Business</a></li>
+<li class="list-inline-item"><a href="#">Workshops</a></li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+<!--====  End of News Posts  ====-->
+
+<!--==============================================
+=            Call to Action Subscribe            =
+===============================================-->
+
+<section class="cta-subscribe bg-subscribe overlay-dark">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 mr-auto">
+				<!-- Subscribe Content -->
+				<div class="content">
+					<h3>Subscribe to Our <span class="alternate">Newsletter</span></h3>
+					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusm tempor</p>
+				</div>
+			</div>
+			<div class="col-md-6 ml-auto align-self-center">
+				<!-- Subscription form -->
+				<form action="#" class="row">
+					<div class="col-lg-8 col-md-12">
+						<input type="email" class="form-control main white mb-lg-0" placeholder="Email">
+					</div>
+					<div class="col-lg-4 col-md-12">
+						<div class="subscribe-button">
+							<button class="btn btn-main-md">Subscribe</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!--====  End of Call to Action Subscribe  ====-->
+
+<!--================================
+=            Google Map            =
+=================================-->
+
+<section class="map">
+	<!-- Google Map -->
+	<div id="map"></div>
+	<div class="address-block">
+		<h4>Docklands Convention</h4>
+		<ul class="address-list p-0 m-0">
+			<li><i class="fa fa-home"></i><span>1201 Park Street, Fifth Avenue, <br>Dhanmondy, Dhaka.</span></li>
+			<li><i class="fa fa-phone"></i><span>[88] 657 524 332</span></li>
+		</ul>
+		<a href="#" class="btn btn-white-md">Get Direction</a>
+	</div>
+</section>
+
+<!--====  End of Google Map  ====-->
+
+{% endblock %}
