@@ -104,10 +104,30 @@
           <a class="nav-link" href="{% url 'contact' %}">Contact</a>
         </li>
       </ul>
-      <a href="#" class="ticket">
-        <img src="{% static 'seatsense_app/images/icon/ticket.png' %}" alt="ticket">
-        <span>Buy Ticket</span>
-      </a>
+      {% if user.is_authenticated %}
+
+        <li class="nav-item">
+        <a class="nav-link" href="#">{{ user.username }}</a>
+        </li>
+
+        <form method="POST" action="{% url 'logout' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="nav-link btn btn-link" style="display:inline; padding:0;">
+                Logout
+            </button>
+        </form>
+
+        {% else %}
+
+        <li class="nav-item">
+        <a class="nav-link" href="{% url 'login' %}">Login</a>
+        </li>
+
+        <li class="nav-item">
+        <a class="nav-link" href="{% url 'signup' %}">Signup</a>
+        </li>
+
+        {% endif %}
       </div>
   </div>
 </nav>

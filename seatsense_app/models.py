@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+import string
 
 class Auditorium(models.Model):
     name = models.CharField(max_length=200)
@@ -13,6 +13,20 @@ class Auditorium(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def generate_seats(self):
+
+        for i in range(self.total_rows):
+
+            row = string.ascii_uppercase[i]
+
+            for seat_num in range(1, self.seats_per_row + 1):
+
+                Seat.objects.create(
+                    auditorium=self,
+                    row_label=row,
+                    seat_number=seat_num
+                )
 
 
 class Seat(models.Model):

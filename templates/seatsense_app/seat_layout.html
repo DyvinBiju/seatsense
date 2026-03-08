@@ -12,26 +12,25 @@
 <h2>Select Your Seats</h2>
 
 <p>
-{{ event.title }} <br>
+<strong>{{ event.title }}</strong><br>
 {{ event.event_date }} | {{ event.event_time }}
 </p>
 </div>
 
 
-<!-- Screen -->
+<!-- Screen (BookMyShow style arc) -->
 
-<div class="text-center mb-5">
-<div style="background:#ddd;padding:12px;border-radius:6px;font-weight:bold;">
-SCREEN
-</div>
+<div class="screen-wrapper text-center mb-5">
+<div class="screen"></div>
+<p class="screen-text">SCREEN</p>
 </div>
 
 
 <!-- Seat Legend -->
 
-<div class="text-center mb-4">
+<div class="seat-legend text-center mb-4">
 
-<span class="seat"></span> Available
+<span class="seat available"></span> Available
 
 <span class="seat selected"></span> Selected
 
@@ -40,24 +39,32 @@ SCREEN
 </div>
 
 
+<!-- Booking Form -->
+
+<form id="bookingForm" method="POST" action="{% url 'confirm_booking' event.id %}">
+{% csrf_token %}
+
+<input type="hidden" name="selected_seats" id="selectedSeatsInput">
+
+
 <!-- Seat Layout -->
 
-<div class="text-center">
+<div class="seat-container text-center">
 
-{% for row in rows %}
+{% for row, seats in seat_map.items %}
 
 <div class="seat-row">
 
-<strong class="row-label">{{ row }}</strong>
+<span class="row-label">{{ row }}</span>
 
-{% for seat in seats_per_row %}
+{% for seat in seats %}
 
-<span class="seat"
-data-seat="{{ row }}{{ seat }}">
-{{ seat }}
+<span class="seat available"
+data-seat="{{ seat.row_label }}{{ seat.seat_number }}">
+{{ seat.seat_number }}
 </span>
 
-{% if seat == 6 %}
+{% if seat.seat_number == 6 %}
 <span class="aisle"></span>
 {% endif %}
 
@@ -72,7 +79,7 @@ data-seat="{{ row }}{{ seat }}">
 
 <!-- Selected Seats -->
 
-<div class="text-center mt-4">
+<div class="selected-info text-center mt-4">
 
 <strong>Selected Seats:</strong>
 
@@ -81,15 +88,17 @@ data-seat="{{ row }}{{ seat }}">
 </div>
 
 
-<!-- Continue Button (future booking) -->
+<!-- Continue Button -->
 
 <div class="text-center mt-4">
 
-<button class="btn btn-main-md">
+<button type="submit" class="btn btn-main-md">
 Continue Booking
 </button>
 
 </div>
+
+</form>
 
 </div>
 </section>
@@ -99,39 +108,82 @@ Continue Booking
 
 <style>
 
-.seat-row{
-margin-bottom:10px;
+.screen-wrapper{
+position:relative;
 }
+
+.screen{
+width:80%;
+height:20px;
+background:#ddd;
+margin:0 auto;
+border-radius:50%/100%;
+box-shadow:0 3px 8px rgba(0,0,0,0.3);
+}
+
+.screen-text{
+margin-top:6px;
+font-size:12px;
+color:#666;
+}
+
+/* Seat legend */
+
+.seat-legend span{
+margin:0 8px;
+}
+
+/* Seat rows */
+
+.seat-row{
+margin-bottom:12px;
+}
+
+/* Row label */
 
 .row-label{
 display:inline-block;
 width:25px;
-margin-right:10px;
 font-weight:bold;
+margin-right:12px;
 }
+
+/* Seat style */
 
 .seat{
 display:inline-block;
-width:36px;
-height:36px;
+width:34px;
+height:30px;
 margin:4px;
-background:#e0e0e0;
 border-radius:6px;
-line-height:36px;
-cursor:pointer;
-font-size:13px;
+line-height:30px;
+font-size:12px;
 text-align:center;
+cursor:pointer;
+transition:0.2s;
 }
 
-.seat:hover{
+/* Available */
+
+.seat.available{
+background:#f0f0f0;
+border:1px solid #ccc;
+}
+
+.seat.available:hover{
 background:#ff4d4d;
 color:white;
 }
 
+/* Selected */
+
 .seat.selected{
 background:#28a745;
 color:white;
+border:none;
 }
+
+/* Booked */
 
 .seat.booked{
 background:#444;
@@ -139,9 +191,26 @@ color:white;
 cursor:not-allowed;
 }
 
+/* Aisle spacing */
+
 .aisle{
 display:inline-block;
-width:28px;
+width:25px;
+}
+
+/* Container spacing */
+
+.seat-container{
+padding:20px;
+border-radius:10px;
+background:#fafafa;
+border:1px solid #eee;
+}
+
+/* Selected info */
+
+.selected-info{
+font-size:16px;
 }
 
 </style>
@@ -153,7 +222,7 @@ width:28px;
 
 let selectedSeats = []
 
-document.querySelectorAll(".seat").forEach(seat => {
+document.querySelectorAll(".seat.available").forEach(seat => {
 
 seat.addEventListener("click", function(){
 
@@ -163,9 +232,7 @@ return
 
 this.classList.toggle("selected")
 
-let seatNumber = this.innerText
-let row = this.dataset.seat.charAt(0)
-let seatLabel = row + seatNumber
+let seatLabel = this.dataset.seat
 
 if(selectedSeats.includes(seatLabel)){
 selectedSeats = selectedSeats.filter(s => s !== seatLabel)
@@ -176,7 +243,20 @@ selectedSeats.push(seatLabel)
 document.getElementById("selectedSeats").innerText =
 selectedSeats.length ? selectedSeats.join(", ") : "None"
 
+document.getElementById("selectedSeatsInput").value =
+selectedSeats.join(",")
+
 })
+
+})
+
+
+document.getElementById("bookingForm").addEventListener("submit", function(e){
+
+if(selectedSeats.length === 0){
+alert("Please select at least one seat.")
+e.preventDefault()
+}
 
 })
 

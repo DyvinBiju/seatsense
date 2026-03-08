@@ -1,0 +1,27 @@
+{% extends "seatsense_app/base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+<h2>Confirm Your Booking</h2>
+
+<h4>{{ event.title }}</h4>
+
+<p>Date: {{ event.event_date }}</p>
+
+<p>Selected Seats:</p>
+
+<ul>
+{% for seat in seats %}
+<li>{{ seat }}</li>
+{% endfor %}
+</ul>
+
+<button class="btn btn-success mt-3">
+Confirm Booking
+</button>
+
+</div>
+
+{% endblock %}

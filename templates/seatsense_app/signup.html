@@ -1,0 +1,38 @@
+{% extends "seatsense_app/base.html" %}
+
+{% block content %}
+
+<section class="section">
+<div class="container">
+
+<div class="row justify-content-center">
+
+<div class="col-md-6">
+
+<h2 class="text-center mb-4">Create Account</h2>
+
+<form method="POST">
+
+{% csrf_token %}
+
+{{ form.as_p }}
+
+<button type="submit" class="btn btn-main-md w-100">
+Sign Up
+</button>
+
+</form>
+
+<p class="text-center mt-3">
+Already have an account?
+<a href="{% url 'login' %}">Login</a>
+</p>
+
+</div>
+
+</div>
+
+</div>
+</section>
+
+{% endblock %}
