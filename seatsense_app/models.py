@@ -82,3 +82,18 @@ class Feedback(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.event.title}"
+    
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    profile_image = models.ImageField(
+        upload_to="profiles/",
+        default="profiles/default.png",
+        blank=True
+    )
+
+    phone = models.CharField(max_length=15, blank=True)
+
+    def __str__(self):
+        return self.user.username
