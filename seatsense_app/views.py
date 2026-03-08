@@ -1,6 +1,6 @@
-from django.shortcuts import render
-from .models import Event, Category
+from django.shortcuts import render, get_object_or_404
 
+from .models import Event, Category
 
 def page_404(request):
     return render(request, 'seatsense_app/404.html')
@@ -29,6 +29,9 @@ def index(request):
 def news_left_sidebar(request):
     return render(request, 'seatsense_app/news-left-sidebar.html')
 
+
+
+
 from .models import Event, Category
 
 def explore_events(request):
@@ -42,6 +45,26 @@ def explore_events(request):
     }
 
     return render(request, "seatsense_app/explore_events.html", context)
+
+
+
+
+
+def event_detail(request, event_id):
+
+    event = get_object_or_404(Event, id=event_id)
+
+    context = {
+        "event": event
+    }
+
+    return render(request, "seatsense_app/event_detail.html", context)
+
+
+
+
+
+
 
 def news_single(request):
     return render(request, 'seatsense_app/news-single.html')

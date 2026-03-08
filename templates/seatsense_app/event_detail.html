@@ -1,0 +1,527 @@
+{% extends "seatsense_app/base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+
+
+<!--============================
+=            Banner            =
+=============================-->
+
+<section class="banner-two overlay-white-slant text-overlay">
+<div class="container">
+
+<div class="row">
+
+<div class="col-md-8">
+
+<div class="block">
+
+<h1>{{ event.title }}</h1>
+
+<h4>{{ event.category.name }}</h4>
+
+<h6>
+{{ event.event_date }} | {{ event.event_time }}
+</h6>
+
+<p>
+Venue: {{ event.auditorium.name }}
+</p>
+
+<a href="#" class="btn btn-main-md">
+Book Seat
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+</section>
+
+
+
+<!--============================
+=         About Event         =
+=============================-->
+
+<section class="section about">
+<div class="container">
+
+<div class="row">
+
+<div class="col-lg-5 col-md-6 align-self-center">
+
+<img class="img-fluid"
+src="{{ event.image.url }}"
+alt="event image">
+
+</div>
+
+<div class="col-lg-6 col-md-6 align-self-center ml-lg-auto">
+
+<div class="content-block">
+
+<h2>About This Event</h2>
+
+<p>
+{{ event.description }}
+</p>
+
+<ul class="list-inline">
+
+<li class="list-inline-item">
+
+<a href="#" class="btn btn-main-md">
+Book Seat
+</a>
+
+</li>
+
+<li class="list-inline-item">
+
+<a href="{% url 'explore_events' %}" class="btn btn-transparent-md">
+Back to Events
+</a>
+
+</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+</section>
+
+
+
+<!--============================
+=        Event Details        =
+=============================-->
+
+<section class="ticket-feature">
+<div class="container">
+
+<div class="row text-center">
+
+<div class="col-md-4">
+
+<div class="service-item">
+
+<i class="fa fa-map-marker"></i>
+
+<h5>{{ event.auditorium.name }}</h5>
+
+<p>Event Venue</p>
+
+</div>
+
+</div>
+
+
+<div class="col-md-4">
+
+<div class="service-item">
+
+<i class="fa fa-calendar"></i>
+
+<h5>{{ event.event_date }}</h5>
+
+<p>Event Date</p>
+
+</div>
+
+</div>
+
+
+<div class="col-md-4">
+
+<div class="service-item">
+
+<i class="fa fa-ticket"></i>
+
+<h5>₹ {{ event.ticket_price }}</h5>
+
+<p>Ticket Price</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+</section>
+
+
+<!--==========================
+=            News            =
+===========================-->
+
+<section class="news-hr section mb-0">
+	<div class="container">
+		<div class="row">
+			<div class="col-12">
+				<div class="section-title">
+					<h3>Eventre <span class="alternate">News</span></h3>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus, enim.</p>
+				</div>
+			</div>
+		</div>
+		<div class="row no-gutters">
+			<div class="col-lg-6">
+				<article class="news-post-hr">
+					<div class="post-thumb">
+						<a href="{% url 'news_single' %}">
+							<img src="{% static 'seatsense_app/images/news/post-thumb-hr-one.jpg' %}" alt="post-image" class="img-fluid">
+						</a>
+					</div>
+					<div class="post-contents border-top">
+						<div class="post-title"><h6><a href="{% url 'news_single' %}">Default title here</a></h6></div>
+						<div class="post-exerpts">
+							<p>Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed doeiuse tempor incididunt ut
+							</p>
+						</div>
+
+						<div class="date">
+							<h4>20<span>May</span></h4>
+						</div>
+						<div class="more">
+							<a href="{% url 'news_single' %}">Show more</a>
+						</div>
+					</div>
+				</article>
+			</div>
+			<div class="col-lg-6">
+				<article class="news-post-hr">
+					<div class="post-thumb">
+						<a href="{% url 'news_single' %}">
+							<img src="{% static 'seatsense_app/images/news/post-thumb-hr-two.jpg' %}" alt="post-image" class="img-fluid">
+						</a>
+					</div>
+					<div class="post-contents border-top">
+						<div class="post-title"><h6><a href="{% url 'news_single' %}">Default title here</a></h6></div>
+						<div class="post-exerpts">
+							<p>Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed doeiuse tempor incididunt ut
+							</p>
+						</div>
+						
+						<div class="date">
+							<h4>20<span>May</span></h4>
+						</div>
+						<div class="more">
+							<a href="{% url 'news_single' %}">Show more</a>
+						</div>
+					</div>
+				</article>
+			</div>
+			<div class="col-lg-6">
+				<article class="news-post-hr">
+					<div class="post-thumb">
+						<a href="{% url 'news_single' %}">
+							<img src="{% static 'seatsense_app/images/news/post-thumb-hr-three.jpg' %}" alt="post-image" class="img-fluid">
+						</a>
+					</div>
+					<div class="post-contents">
+						<div class="post-title"><h6><a href="{% url 'news_single' %}">Default title here</a></h6></div>
+						<div class="post-exerpts">
+							<p>Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed doeiuse tempor incididunt ut
+							</p>
+						</div>
+						
+						<div class="date">
+							<h4>20<span>May</span></h4>
+						</div>
+						<div class="more">
+							<a href="{% url 'news_single' %}">Show more</a>
+						</div>
+					</div>
+				</article>
+			</div>
+			<div class="col-lg-6">
+				<article class="news-post-hr">
+					<div class="post-thumb">
+						<a href="{% url 'news_single' %}">
+							<img src="{% static 'seatsense_app/images/news/post-thumb-hr-four.jpg' %}" alt="post-image" class="img-fluid">
+						</a>
+					</div>
+					<div class="post-contents">
+						<div class="post-title"><h6><a href="{% url 'news_single' %}">Default title here</a></h6></div>
+						<div class="post-exerpts">
+							<p>Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed doeiuse tempor incididunt ut
+							</p>
+						</div>
+						
+						<div class="date">
+							<h4>20<span>May</span></h4>
+						</div>
+						<div class="more">
+							<a href="{% url 'news_single' %}">Show more</a>
+						</div>
+					</div>
+				</article>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!--====  End of News  ====-->
+
+<!--=============================
+=            Gallery            =
+==============================-->
+
+<section class="gallery-full section pb-0">
+	<div class="container-fluid p-0">
+		<div class="row">
+			<div class="col-12">
+				<div class="section-title">
+					<h3>Eventre <span class="alternate">Gallery</span></h3>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, autem.</p>
+				</div>
+			</div>
+		</div>
+		<div class="row no-gutters">
+			<!-- Gallery Image -->
+			<div class="col-lg-3 col-md-4">
+				<div class="image">
+					<img src="{% static 'seatsense_app/images/gallery/gallery-full-one.jpg' %}" alt="gallery-image" class="img-fluid">
+					<div class="primary-overlay">
+        				<a class="image-popup" data-effect="mfp-with-zoom" href="{% static 'seatsense_app/images/gallery/gallery-full-popup-one.jpg' %}"><i class="fa fa-picture-o"></i></a>
+        			</div>
+				</div>
+			</div>
+			<!-- Gallery Image -->
+			<div class="col-lg-3 col-md-4">
+				<div class="image">
+					<img src="{% static 'seatsense_app/images/gallery/gallery-full-two.jpg' %}" alt="gallery-image" class="img-fluid">
+					<div class="primary-overlay">
+        				<a class="image-popup" data-effect="mfp-with-zoom" href="{% static 'seatsense_app/images/gallery/gallery-full-popup-two.jpg' %}"><i class="fa fa-picture-o"></i></a>
+        			</div>
+				</div>
+			</div>
+			<!-- Gallery Image -->
+			<div class="col-lg-3 col-md-4">
+				<div class="image">
+					<img src="{% static 'seatsense_app/images/gallery/gallery-full-three.jpg' %}" alt="gallery-image" class="img-fluid">
+					<div class="primary-overlay">
+        				<a class="image-popup" data-effect="mfp-with-zoom" href="{% static 'seatsense_app/images/gallery/gallery-full-popup-three.jpg' %}"><i class="fa fa-picture-o"></i></a>
+        			</div>
+				</div>
+			</div>
+			<!-- Gallery Image -->
+			<div class="col-lg-3 col-md-4">
+				<div class="image">
+					<img src="{% static 'seatsense_app/images/gallery/gallery-full-four.jpg' %}" alt="gallery-image" class="img-fluid">
+					<div class="primary-overlay">
+        				<a class="image-popup" data-effect="mfp-with-zoom" href="{% static 'seatsense_app/images/gallery/gallery-full-popup-four.jpg' %}"><i class="fa fa-picture-o"></i></a>
+        			</div>
+				</div>
+			</div>
+			<!-- Gallery Image -->
+			<div class="col-lg-3 col-md-4">
+				<div class="image">
+					<img src="{% static 'seatsense_app/images/gallery/gallery-full-five.jpg' %}" alt="gallery-image" class="img-fluid">
+					<div class="primary-overlay">
+        				<a class="image-popup" data-effect="mfp-with-zoom" href="{% static 'seatsense_app/images/gallery/gallery-full-popup-five.jpg' %}"><i class="fa fa-picture-o"></i></a>
+        			</div>
+				</div>
+			</div>
+			<!-- Gallery Image -->
+			<div class="col-lg-3 col-md-4">
+				<div class="image">
+					<img src="{% static 'seatsense_app/images/gallery/gallery-full-six.jpg' %}" alt="gallery-image" class="img-fluid">
+					<div class="primary-overlay">
+        				<a class="image-popup" data-effect="mfp-with-zoom" href="{% static 'seatsense_app/images/gallery/gallery-full-popup-six.jpg' %}"><i class="fa fa-picture-o"></i></a>
+        			</div>
+				</div>
+			</div>
+			<!-- Gallery Image -->
+			<div class="col-lg-3 col-md-4">
+				<div class="image">
+					<img src="{% static 'seatsense_app/images/gallery/gallery-full-seven.jpg' %}" alt="gallery-image" class="img-fluid">
+					<div class="primary-overlay">
+        				<a class="image-popup" data-effect="mfp-with-zoom" href="{% static 'seatsense_app/images/gallery/gallery-full-popup-sven.jpg' %}"><i class="fa fa-picture-o"></i></a>
+        			</div>
+				</div>
+			</div>
+			<!-- Gallery Image -->
+			<div class="col-lg-3 col-md-4">
+				<div class="image">
+					<img src="{% static 'seatsense_app/images/gallery/gallery-full-eight.jpg' %}" alt="gallery-image" class="img-fluid">
+					<div class="primary-overlay">
+        				<a class="image-popup" data-effect="mfp-with-zoom" href="{% static 'seatsense_app/images/gallery/gallery-full-popup-eight.jpg' %}"><i class="fa fa-picture-o"></i></a>
+        			</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!--====  End of Gallery  ====-->
+
+<!--===================================
+=            Pricing Table            =
+====================================-->
+
+<section class="section pricing two">
+	<div class="container">
+		<div class="row">
+			<div class="col-12">
+				<div class="section-title">
+					<h3>Get <span class="alternate">ticket</span></h3>
+					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusm tempor incididunt ut labore</p>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-4 col-md-6">
+				<!-- Pricing Item -->
+				<div class="pricing-item">
+					<div class="pricing-heading text-center">
+						<!-- Title -->
+						<div class="title">
+							<h6>Starter</h6>
+						</div>
+						<!-- Price -->
+						<div class="price">
+							<h2>$39.00</h2>
+						</div>
+					</div>
+					<div class="pricing-body">
+						<!-- Feature List -->
+						<ul class="feature-list m-0 p-0">
+							<li><p><span class="fa fa-check-circle available"></span>1 Comfortable Seats</p></li>
+							<li><p><span class="fa fa-check-circle available"></span>Free Lunch and Coffee</p></li>
+							<li><p><span class="fa fa-times-circle unavailable"></span>Certificate</p></li>
+							<li><p><span class="fa fa-times-circle unavailable"></span>Easy Access</p></li>
+						</ul>
+					</div>
+					<div class="pricing-footer text-center">
+						<a href="#" class="btn btn-transparent-md">Buy a ticket</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4 col-md-6">
+				<!-- Pricing Item -->
+				<div class="pricing-item featured">
+					<div class="pricing-heading text-center">
+						<!-- Title -->
+						<div class="title">
+							<h6>Standard</h6>
+						</div>
+						<!-- Price -->
+						<div class="price">
+							<h2>$49.00</h2>
+						</div>
+					</div>
+					<div class="pricing-body">
+						<!-- Feature List -->
+						<ul class="feature-list m-0 p-0">
+							<li><p><span class="fa fa-check-circle available"></span>1 Comfortable Seats</p></li>
+							<li><p><span class="fa fa-check-circle available"></span>Free Lunch and Coffee</p></li>
+							<li><p><span class="fa fa-check-circle available"></span>Certificate</p></li>
+							<li><p><span class="fa fa-times-circle unavailable"></span>Easy Access</p></li>
+						</ul>
+					</div>
+					<div class="pricing-footer text-center">
+						<a href="#" class="btn btn-main-md">Buy a ticket</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4 col-md-6 m-auto">
+				<!-- Pricing Item -->
+				<div class="pricing-item">
+					<div class="pricing-heading text-center">
+						<!-- Title -->
+						<div class="title">
+							<h6>Platinum</h6>
+						</div>
+						<!-- Price -->
+						<div class="price">
+							<h2>$99.00</h2>
+						</div>
+					</div>
+					<div class="pricing-body">
+						<!-- Feature List -->
+						<ul class="feature-list m-0 p-0">
+							<li><p><span class="fa fa-check-circle available"></span>1 Comfortable Seats</p></li>
+							<li><p><span class="fa fa-check-circle available"></span>Free Lunch and Coffee</p></li>
+							<li><p><span class="fa fa-check-circle available"></span>Certificate</p></li>
+							<li><p><span class="fa fa-check-circle available"></span>Easy Access</p></li>
+						</ul>
+					</div>
+					<div class="pricing-footer text-center">
+						<a href="#" class="btn btn-transparent-md">Buy a ticket</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!--====  End of Pricing Table  ====-->
+
+<!--================================
+=            Google Map            =
+=================================-->
+
+<section class="map new">
+	<!-- Google Map -->
+	<div id="map"></div>
+	<div class="address-block">
+		<h4>Docklands Convention</h4>
+		<ul class="address-list p-0 m-0">
+			<li><i class="fa fa-home"></i><span>1201 Park Street, Fifth Avenue, <br>Dhanmondy, Dhaka.</span></li>
+			<li><i class="fa fa-phone"></i><span>[88] 657 524 332</span></li>
+		</ul>
+		<a href="#" class="btn btn-white-md">Get Direction</a>
+	</div>
+	<div class="register overlay-dark bg-registration-two">
+		<div class="block">
+			<div class="title text-center">
+				<h3>Register to <span class="alternate">Eventre</span></h3>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>
+			</div>
+			<form action="#" class="row">
+				<div class="col-md-6">
+					<input type="text" class="form-control main" placeholder="Your Name">
+				</div>
+				<div class="col-md-6">
+					<input type="email" class="form-control main" placeholder="Email">
+				</div>
+				<div class="col-md-6">
+					<input type="text" class="form-control main" placeholder="Phone">
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<select class="form-control main" id="select-ticket">
+					      <option>Ticket Type</option>
+					      <option>1</option>
+					      <option>2</option>
+					      <option>3</option>
+					      <option>4</option>
+					      <option>5</option>
+					    </select>
+					</div>
+				</div>
+				<div class="col-12 text-center">
+					<button type="submit" class="btn btn-white-md">Register Now</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</section>
+
+<!--====  End of Google Map  ====-->
+
+{% endblock %}

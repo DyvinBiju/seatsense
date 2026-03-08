@@ -11,7 +11,10 @@ urlpatterns = [
     path('homepage-two/', views.homepage_two, name='homepage_two'),
     path('', views.index, name='index'),
     path('news-left-sidebar/', views.news_left_sidebar, name='news_left_sidebar'),
+
     path("events/", views.explore_events, name="explore_events"),
+    path("event/<int:event_id>/", views.event_detail, name="event_detail"),
+
     path('news-single/', views.news_single, name='news_single'),
     path('news/', views.news, name='news'),
     path('pricing/', views.pricing, name='pricing'),
