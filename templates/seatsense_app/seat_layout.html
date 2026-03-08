@@ -18,7 +18,7 @@
 </div>
 
 
-<!-- Screen (BookMyShow style arc) -->
+<!-- Screen -->
 
 <div class="screen-wrapper text-center mb-5">
 <div class="screen"></div>
@@ -59,9 +59,11 @@
 
 {% for seat in seats %}
 
-<span class="seat available"
+<span class="seat {% if seat.is_locked %}booked{% else %}available{% endif %}"
 data-seat="{{ seat.row_label }}{{ seat.seat_number }}">
+
 {{ seat.seat_number }}
+
 </span>
 
 {% if seat.seat_number == 6 %}
@@ -183,7 +185,7 @@ color:white;
 border:none;
 }
 
-/* Booked */
+/* Booked or Locked */
 
 .seat.booked{
 background:#444;
@@ -225,10 +227,6 @@ let selectedSeats = []
 document.querySelectorAll(".seat.available").forEach(seat => {
 
 seat.addEventListener("click", function(){
-
-if(this.classList.contains("booked")){
-return
-}
 
 this.classList.toggle("selected")
 

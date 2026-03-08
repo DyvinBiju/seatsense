@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
-
-from .models import Event, Category
+from .models import Event, Category, SeatLock
+from django.utils import timezone
+from datetime import timedelta
 
 def page_404(request):
     return render(request, 'seatsense_app/404.html')
@@ -68,6 +69,15 @@ def seat_layout(request, event_id):
 
     event = get_object_or_404(Event, id=event_id)
 
+    # Remove expired locks
+    SeatLock.objects.filter(
+        locked_at__lt=timezone.now() - timedelta(minutes=5)
+    ).delete()
+
+    locked_seats = SeatLock.objects.filter(event=event)
+
+    locked_ids = [lock.seat.id for lock in locked_seats]
+
     seats = Seat.objects.filter(
         auditorium=event.auditorium
     ).order_by("row_label", "seat_number")
@@ -75,6 +85,7 @@ def seat_layout(request, event_id):
     seat_map = {}
 
     for seat in seats:
+        seat.is_locked = seat.id in locked_ids
         seat_map.setdefault(seat.row_label, []).append(seat)
 
     context = {
@@ -120,12 +131,37 @@ def confirm_booking(request, event_id):
 
     seat_list = seats.split(",")
 
+    locked_seats = []
+
+    for seat_code in seat_list:
+
+        row = seat_code[0]
+        number = seat_code[1:]
+
+        seat = Seat.objects.get(
+            auditorium=event.auditorium,
+            row_label=row,
+            seat_number=number
+        )
+
+        SeatLock.objects.create(
+            seat=seat,
+            event=event,
+            user=request.user
+        )
+
+        locked_seats.append(seat)
+
     context = {
         "event": event,
         "seats": seat_list
     }
 
-    return render(request, "seatsense_app/confirm_booking.html", context)
+    return render(
+        request,
+        "seatsense_app/confirm_booking.html",
+        context
+    )
 
 
 

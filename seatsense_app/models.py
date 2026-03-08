@@ -120,3 +120,22 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+    
+from django.utils import timezone
+from datetime import timedelta
+from django.contrib.auth.models import User
+
+class SeatLock(models.Model):
+
+    seat = models.ForeignKey(Seat, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    locked_at = models.DateTimeField(auto_now_add=True)
+
+    def is_expired(self):
+        return timezone.now() > self.locked_at + timedelta(minutes=5)
+
+    def __str__(self):
+        return f"{self.seat} locked by {self.user}"
