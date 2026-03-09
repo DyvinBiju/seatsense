@@ -2,26 +2,130 @@
 
 {% block content %}
 
-<div class="container mt-5">
+<section class="section">
+<div class="container text-center">
 
 <h2>Confirm Your Booking</h2>
 
-<h4>{{ event.title }}</h4>
+<h4 class="mt-3">{{ event.title }}</h4>
 
-<p>Date: {{ event.event_date }}</p>
+<p>
+{{ event.event_date }} | {{ event.event_time }}
+</p>
 
-<p>Selected Seats:</p>
 
-<ul>
+<!-- Countdown Timer -->
+
+<div class="timer-box mt-4">
+
+<h5>Seats reserved for you</h5>
+
+<h3 id="countdown">05:00</h3>
+
+<p class="text-muted">
+Complete your booking before the timer expires
+</p>
+
+</div>
+
+
+<!-- Selected Seats -->
+
+<div class="mt-4">
+
+<h5>Selected Seats</h5>
+
+<ul class="seat-list">
+
 {% for seat in seats %}
 <li>{{ seat }}</li>
 {% endfor %}
+
 </ul>
 
-<button class="btn btn-success mt-3">
+</div>
+
+
+<!-- Confirm Button -->
+
+<div class="mt-4">
+
+<form method="POST" action="{% url 'finalize_booking' event.id %}">
+{% csrf_token %}
+
+<input type="hidden" name="selected_seats" value="{{ seats|join:',' }}">
+
+<button class="btn btn-success btn-lg">
 Confirm Booking
 </button>
 
+</form>
+
 </div>
+
+</div>
+</section>
+
+
+<style>
+
+.timer-box{
+background:#fafafa;
+border:1px solid #ddd;
+padding:20px;
+border-radius:8px;
+display:inline-block;
+}
+
+#countdown{
+font-size:40px;
+color:#ff4d4d;
+}
+
+.seat-list{
+list-style:none;
+padding:0;
+}
+
+.seat-list li{
+display:inline-block;
+background:#eee;
+padding:8px 12px;
+margin:4px;
+border-radius:6px;
+}
+
+</style>
+
+
+<script>
+
+let timeLeft = 300   // 5 minutes
+
+let timer = setInterval(function(){
+
+let minutes = Math.floor(timeLeft / 60)
+let seconds = timeLeft % 60
+
+seconds = seconds < 10 ? "0" + seconds : seconds
+
+document.getElementById("countdown").innerText =
+minutes + ":" + seconds
+
+timeLeft--
+
+if(timeLeft < 0){
+
+clearInterval(timer)
+
+alert("Seat reservation expired!")
+
+window.location.href = "/events/"
+
+}
+
+},1000)
+
+</script>
 
 {% endblock %}

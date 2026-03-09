@@ -90,6 +90,10 @@ class BookingSeat(models.Model):
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
     seat = models.ForeignKey(Seat, on_delete=models.CASCADE)
 
+    class Meta:
+        unique_together = ("booking", "seat")
+
+
     def __str__(self):
         return f"{self.seat}"
 

@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404
 from .models import Event, Category, SeatLock
 from django.utils import timezone
 from datetime import timedelta
+from .models import Booking, BookingSeat,Seat, SeatLock
+from django.contrib import messages
 
 def page_404(request):
     return render(request, 'seatsense_app/404.html')
@@ -33,7 +35,6 @@ def news_left_sidebar(request):
 
 
 
-from .models import Event, Category
 
 def explore_events(request):
 
@@ -62,8 +63,7 @@ def event_detail(request, event_id):
     return render(request, "seatsense_app/event_detail.html", context)
 
 
-from django.shortcuts import render, get_object_or_404
-from .models import Event, Seat
+
 
 def seat_layout(request, event_id):
 
@@ -75,8 +75,10 @@ def seat_layout(request, event_id):
     ).delete()
 
     locked_seats = SeatLock.objects.filter(event=event)
+    booked_seats = BookingSeat.objects.filter(booking__event=event)
 
     locked_ids = [lock.seat.id for lock in locked_seats]
+    booked_ids = [bs.seat.id for bs in booked_seats]
 
     seats = Seat.objects.filter(
         auditorium=event.auditorium
@@ -85,7 +87,10 @@ def seat_layout(request, event_id):
     seat_map = {}
 
     for seat in seats:
+
         seat.is_locked = seat.id in locked_ids
+        seat.is_booked = seat.id in booked_ids
+
         seat_map.setdefault(seat.row_label, []).append(seat)
 
     context = {
@@ -162,6 +167,49 @@ def confirm_booking(request, event_id):
         "seatsense_app/confirm_booking.html",
         context
     )
+
+
+
+
+
+@login_required
+def finalize_booking(request, event_id):
+
+    event = get_object_or_404(Event, id=event_id)
+
+    seats = request.POST.get("selected_seats")
+    seat_list = seats.split(",")
+
+    booking = Booking.objects.create(
+        user=request.user,
+        event=event,
+        total_amount=event.ticket_price * len(seat_list)
+    )
+
+    for seat_code in seat_list:
+
+        row = seat_code[0]
+        number = seat_code[1:]
+
+        seat = Seat.objects.get(
+            auditorium=event.auditorium,
+            row_label=row,
+            seat_number=number
+        )
+
+        BookingSeat.objects.create(
+            booking=booking,
+            seat=seat
+        )
+
+        SeatLock.objects.filter(
+            seat=seat,
+            event=event
+        ).delete()
+
+    messages.success(request, "Booking confirmed!")
+
+    return redirect("index")
 
 
 
