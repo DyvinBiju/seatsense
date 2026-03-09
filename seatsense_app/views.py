@@ -77,15 +77,15 @@ def seat_layout(request, event_id):
         locked_at__lt=timezone.now() - timedelta(minutes=5)
     ).delete()
 
+    seats = Seat.objects.filter(
+        auditorium=event.auditorium
+    ).order_by("row_label", "seat_number")
+
     locked_seats = SeatLock.objects.filter(event=event)
     booked_seats = BookingSeat.objects.filter(booking__event=event)
 
     locked_ids = [lock.seat.id for lock in locked_seats]
-    booked_ids = [bs.seat.id for bs in booked_seats]
-
-    seats = Seat.objects.filter(
-        auditorium=event.auditorium
-    ).order_by("row_label", "seat_number")
+    booked_ids = [b.seat.id for b in booked_seats]
 
     seat_map = {}
 

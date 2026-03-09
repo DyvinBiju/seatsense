@@ -34,7 +34,9 @@
 
 <span class="seat selected"></span> Selected
 
-<span class="seat booked"></span> Booked / Unavailable
+<span class="seat locked"></span> Locked
+
+<span class="seat booked"></span> Booked
 
 </div>
 
@@ -63,7 +65,7 @@
 {% if seat.is_booked %}
 booked
 {% elif seat.is_locked %}
-booked
+locked
 {% else %}
 available
 {% endif %}"
@@ -157,7 +159,7 @@ font-weight:bold;
 margin-right:12px;
 }
 
-/* Seat style */
+/* Seat base style */
 
 .seat{
 display:inline-block;
@@ -168,7 +170,6 @@ border-radius:6px;
 line-height:30px;
 font-size:12px;
 text-align:center;
-cursor:pointer;
 transition:0.2s;
 }
 
@@ -177,6 +178,7 @@ transition:0.2s;
 .seat.available{
 background:#f0f0f0;
 border:1px solid #ccc;
+cursor:pointer;
 }
 
 .seat.available:hover{
@@ -192,10 +194,18 @@ color:white;
 border:none;
 }
 
-/* Booked or Locked */
+/* Locked (temporary) */
+
+.seat.locked{
+background:#888;
+color:white;
+cursor:not-allowed;
+}
+
+/* Booked (permanent) */
 
 .seat.booked{
-background:#444;
+background:black;
 color:white;
 cursor:not-allowed;
 }
