@@ -16,7 +16,10 @@ urlpatterns = [
     path("event/<int:event_id>/", views.event_detail, name="event_detail"),
     path("event/<int:event_id>/seats/", views.seat_layout, name="seat_layout"),
     path('event/<int:event_id>/confirm-booking/', views.confirm_booking, name='confirm_booking'),
-    path("event/<int:event_id>/finalize-booking/", views.finalize_booking, name="finalize_booking"),
+    path('event/<int:event_id>/payment/', views.payment_page, name='payment_page'),
+    path('event/<int:event_id>/process-payment/', views.process_payment, name='process_payment'),
+    path("payment-success/", views.payment_success, name="payment_success"),
+    # path("event/<int:event_id>/finalize-booking/", views.finalize_booking, name="finalize_booking"),
     path("signup/", views.signup, name="signup"),
 
 

@@ -112,6 +112,7 @@ class Feedback(models.Model):
     
 
 class Profile(models.Model):
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     profile_image = models.ImageField(
@@ -121,6 +122,8 @@ class Profile(models.Model):
     )
 
     phone = models.CharField(max_length=15, blank=True)
+
+    payment_pin = models.CharField(max_length=10, blank=True)
 
     def __str__(self):
         return self.user.username
@@ -138,8 +141,26 @@ class SeatLock(models.Model):
 
     locked_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ("seat", "event")
+
     def is_expired(self):
         return timezone.now() > self.locked_at + timedelta(minutes=5)
 
     def __str__(self):
         return f"{self.seat} locked by {self.user}"
+    
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()

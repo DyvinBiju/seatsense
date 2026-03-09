@@ -1,0 +1,23 @@
+{% extends "seatsense_app/base.html" %}
+
+{% block content %}
+
+<div class="container text-center mt-5">
+
+<h2>Payment Successful</h2>
+
+<p>Your booking has been confirmed.</p>
+
+<p><strong>Event:</strong> {{ event.title }}</p>
+
+<p><strong>Seats:</strong> {{ seats|join:", " }}</p>
+
+<p><strong>Total Paid:</strong> ₹{{ booking.total_amount }}</p>
+
+<a href="{% url 'explore_events' %}" class="btn btn-main-md">
+Browse More Events
+</a>
+
+</div>
+
+{% endblock %}

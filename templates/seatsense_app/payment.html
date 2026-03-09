@@ -1,0 +1,64 @@
+<h2>SeatSense Payment</h2>
+
+<h3>₹{{ total_price }} requested by SeatSense</h3>
+
+<p><strong>Event:</strong> {{ event.title }}</p>
+
+<p><strong>Seats:</strong> {{ seats|join:", " }}</p>
+
+
+<h4>
+Complete payment within:
+<span id="timer">05:00</span>
+</h4>
+
+
+<form method="POST" action="{% url 'process_payment' event.id %}">
+{% csrf_token %}
+
+<input type="password" name="pin" placeholder="Enter Payment PIN" required>
+
+<button type="submit">
+Pay ₹{{ total_price }}
+</button>
+
+</form>
+
+{% if error %}
+<p style="color:red">{{ error }}</p>
+{% endif %}
+
+
+
+<script>
+
+let timeLeft = Number("{{ remaining_seconds }}")
+
+let redirectURL = "{% url 'seat_layout' event.id %}"
+
+let timer = setInterval(function(){
+
+    if(timeLeft <= 0){
+
+        clearInterval(timer)
+
+        alert("Payment session expired!")
+
+        window.location.replace(redirectURL)
+
+        return
+    }
+
+    let minutes = Math.floor(timeLeft / 60)
+    let seconds = timeLeft % 60
+
+    seconds = seconds < 10 ? "0" + seconds : seconds
+
+    document.getElementById("timer").innerText =
+        minutes + ":" + seconds
+
+    timeLeft--
+
+},1000)
+
+</script>

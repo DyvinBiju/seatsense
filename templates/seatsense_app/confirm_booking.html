@@ -46,17 +46,15 @@ Complete your booking before the timer expires
 </div>
 
 
-<!-- Confirm Button -->
+<!-- Proceed to Payment -->
 
 <div class="mt-4">
 
-<form method="POST" action="{% url 'finalize_booking' event.id %}">
+<form method="POST" action="{% url 'payment_page' event.id %}">
 {% csrf_token %}
 
-<input type="hidden" name="selected_seats" value="{{ seats|join:',' }}">
-
-<button class="btn btn-success btn-lg">
-Confirm Booking
+<button class="btn btn-main-md">
+Proceed to Payment
 </button>
 
 </form>
@@ -80,6 +78,7 @@ display:inline-block;
 #countdown{
 font-size:40px;
 color:#ff4d4d;
+font-weight:bold;
 }
 
 .seat-list{
@@ -93,6 +92,7 @@ background:#eee;
 padding:8px 12px;
 margin:4px;
 border-radius:6px;
+font-weight:500;
 }
 
 </style>
@@ -100,7 +100,7 @@ border-radius:6px;
 
 <script>
 
-let timeLeft = 300   // 5 minutes
+let timeLeft = Number("{{ remaining_seconds }}")
 
 let timer = setInterval(function(){
 
@@ -120,7 +120,7 @@ clearInterval(timer)
 
 alert("Seat reservation expired!")
 
-window.location.href = "/events/"
+window.location.href = "{% url 'seat_layout' event.id %}"
 
 }
 
