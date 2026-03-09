@@ -2,279 +2,391 @@
 {% load static %}
 
 {% block content %}
-
-<section class="section">
+<section class="section pt-5 pb-5" style="margin-top: 100px;">
 <div class="container">
 
 <!-- Page Title -->
-
-<div class="text-center mb-4">
-<h2>Select Your Seats</h2>
-
-<p>
-<strong>{{ event.title }}</strong><br>
-{{ event.event_date }} | {{ event.event_time }}
-</p>
+<div class="text-center mb-5">
+    <h2 class="mb-2" style="font-weight: 700; color: #202124;">Select Your Seats</h2>
+    
+    <div class="header-event-card">
+        <h4 style="color: #1a73e8; margin-bottom: 10px; font-weight: 700;">{{ event.title }}</h4>
+        <div class="event-meta">
+            <span class="meta-item"><i class="fa fa-calendar"></i> {{ event.event_date }}</span>
+            <span class="meta-item"><i class="fa fa-clock-o"></i> {{ event.event_time }}</span>
+        </div>
+    </div>
 </div>
-
 
 <!-- Screen -->
-
 <div class="screen-wrapper text-center mb-5">
-<div class="screen"></div>
-<p class="screen-text">SCREEN</p>
+    <div class="screen"></div>
+    <p class="screen-text">SCREEN</p>
 </div>
-
 
 <!-- Seat Legend -->
-
 <div class="seat-legend text-center mb-4">
-
-<span class="seat available"></span> Available
-
-<span class="seat selected"></span> Selected
-
-<span class="seat locked"></span> Locked
-
-<span class="seat booked"></span> Booked
-
+    <div class="legend-item"><span class="seat available"></span> Available</div>
+    <div class="legend-item"><span class="seat selected"></span> Selected</div>
+    <div class="legend-item"><span class="seat locked"></span> Locked</div>
+    <div class="legend-item"><span class="seat booked"></span> Booked</div>
 </div>
-
 
 <!-- Booking Form -->
-
 <form id="bookingForm" method="POST" action="{% url 'confirm_booking' event.id %}">
 {% csrf_token %}
-
 <input type="hidden" name="selected_seats" id="selectedSeatsInput">
 
-
 <!-- Seat Layout -->
+<div class="seat-container mx-auto">
+    <div class="seat-map-wrapper text-center">
+        {% for row, seats in seat_map.items %}
+        <div class="seat-row">
+            <span class="row-label">{{ row }}</span>
+            
+            {% for seat in seats %}
+            <span class="seat 
+                {% if seat.is_booked %}booked
+                {% elif seat.is_locked %}locked
+                {% else %}available{% endif %}"
+                data-seat="{{ seat.row_label }}{{ seat.seat_number }}">
+                {{ seat.seat_number }}
+            </span>
 
-<div class="seat-container text-center">
-
-{% for row, seats in seat_map.items %}
-
-<div class="seat-row">
-
-<span class="row-label">{{ row }}</span>
-
-{% for seat in seats %}
-
-<span class="seat 
-{% if seat.is_booked %}
-booked
-{% elif seat.is_locked %}
-locked
-{% else %}
-available
-{% endif %}"
-data-seat="{{ seat.row_label }}{{ seat.seat_number }}">
-
-{{ seat.seat_number }}
-
-</span>
-
-{% if seat.seat_number == 6 %}
-<span class="aisle"></span>
-{% endif %}
-
-{% endfor %}
-
+            {% if seat.seat_number == 6 %}
+            <span class="aisle"></span>
+            {% endif %}
+            
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
 </div>
-
-{% endfor %}
-
-</div>
-
 
 <!-- Selected Seats -->
-
 <div class="selected-info text-center mt-4">
-
-<strong>Selected Seats:</strong>
-
-<span id="selectedSeats">None</span>
-
+    <div class="selected-box">
+        <strong>Selected Seats:</strong>
+        <span id="selectedSeats" style="color: #1a73e8; font-weight: 600;">None</span>
+    </div>
 </div>
 
-
 <!-- Continue Button -->
-
 <div class="text-center mt-4">
-
-<button type="submit" class="btn btn-main-md">
-Continue Booking
-</button>
-
+    <button type="submit" class="btn btn-main-md" style="padding: 12px 40px; font-size: 16px; border-radius: 30px;">
+        Continue Booking <i class="fa fa-arrow-right ml-2"></i>
+    </button>
 </div>
 
 </form>
-
 </div>
 </section>
 
-
 <!-- ================= CSS ================= -->
-
 <style>
-
-.screen-wrapper{
-position:relative;
+/* Event Header Styling */
+.header-event-card {
+    display: inline-block;
+    background: #ffffff;
+    padding: 18px 40px;
+    border-radius: 50px;
+    border: 1px solid #eef0f2;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+    margin-top: 15px;
+}
+.event-meta {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    color: #5f6368;
+    font-size: 15px;
+    font-weight: 500;
+}
+.meta-item i {
+    color: #1a73e8;
+    margin-right: 6px;
 }
 
-.screen{
-width:80%;
-height:20px;
-background:#ddd;
-margin:0 auto;
-border-radius:50%/100%;
-box-shadow:0 3px 8px rgba(0,0,0,0.3);
+/* Screen */
+.screen-wrapper {
+    position: relative;
+    margin-top: 20px;
+    margin-bottom: 50px;
 }
 
-.screen-text{
-margin-top:6px;
-font-size:12px;
-color:#666;
+.screen {
+    width: 65%;
+    height: 70px;
+    background: linear-gradient(to bottom, #d8e2eb, #f9fafb);
+    margin: 0 auto;
+    border-top-left-radius: 50% 100%;
+    border-top-right-radius: 50% 100%;
+    box-shadow: 0 -8px 25px rgba(0,0,0,0.06);
+    position: relative;
+}
+
+.screen-text {
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    font-weight: 600;
+    color: #8fa0b3;
+    letter-spacing: 6px;
 }
 
 /* Seat legend */
+.seat-legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
 
-.seat-legend span{
-margin:0 8px;
+.legend-item {
+    display: flex;
+    align-items: center;
+    color: #495057;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.legend-item .seat {
+    margin-right: 8px;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* Container */
+.seat-container {
+    padding: 30px 20px;
+    border-radius: 20px;
+    background: #ffffff;
+    border: 1px solid #eef0f2;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.04);
+    overflow-x: auto;
+    max-width: 100%;
+    /* Enforce centering of the map wrapper */
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+.seat-map-wrapper {
+    display: inline-block;
+    min-width: max-content; /* Ensure rows don't wrap unexpectedly */
 }
 
 /* Seat rows */
-
-.seat-row{
-margin-bottom:12px;
+.seat-row {
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
 }
 
 /* Row label */
-
-.row-label{
-display:inline-block;
-width:25px;
-font-weight:bold;
-margin-right:12px;
+.row-label {
+    display: inline-block;
+    width: 30px;
+    font-weight: 600;
+    color: #a0aab2;
+    margin-right: 15px;
+    text-align: right;
+    font-size: 14px;
 }
 
 /* Seat base style */
-
-.seat{
-display:inline-block;
-width:34px;
-height:30px;
-margin:4px;
-border-radius:6px;
-line-height:30px;
-font-size:12px;
-text-align:center;
-transition:0.2s;
+.seat {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 42px;
+    height: 38px;
+    margin: 4px;
+    border-radius: 6px 6px 14px 14px; /* Shape like an auditorium seat */
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.04);
 }
 
 /* Available */
-
-.seat.available{
-background:#f0f0f0;
-border:1px solid #ccc;
-cursor:pointer;
+.seat.available {
+    background: #f1f3f5;
+    color: #495057;
+    border: 1px solid #dee2e6;
+    cursor: pointer;
 }
 
-.seat.available:hover{
-background:#ff4d4d;
-color:white;
+.seat.available:hover {
+    background: #1a73e8; /* elegant blue */
+    color: white;
+    border-color: #1a73e8;
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 15px rgba(26,115,232,0.3);
 }
 
 /* Selected */
-
-.seat.selected{
-background:#28a745;
-color:white;
-border:none;
+.seat.selected {
+    background: #34a853; /* vibrant green */
+    color: white;
+    border: 1px solid #2d9648;
+    box-shadow: 0 4px 15px rgba(52,168,83,0.35);
+    transform: scale(1.05);
 }
 
 /* Locked (temporary) */
-
-.seat.locked{
-background:#888;
-color:white;
-cursor:not-allowed;
+.seat.locked {
+    background: #adb5bd;
+    color: white;
+    border: 1px solid #a2aab2;
+    cursor: not-allowed;
 }
 
 /* Booked (permanent) */
-
-.seat.booked{
-background:black;
-color:white;
-cursor:not-allowed;
+.seat.booked {
+    background: #343a40;
+    color: white;
+    border: 1px solid #212529;
+    cursor: not-allowed;
+    opacity: 0.85;
 }
 
 /* Aisle spacing */
-
-.aisle{
-display:inline-block;
-width:25px;
+.aisle {
+    display: inline-block;
+    width: 45px;
 }
 
-/* Container spacing */
-
-.seat-container{
-padding:20px;
-border-radius:10px;
-background:#fafafa;
-border:1px solid #eee;
+/* Selected Info Box */
+.selected-box {
+    display: inline-block;
+    padding: 12px 25px;
+    border-radius: 12px;
+    background: #f8f9fa;
+    border: 1px solid #eef0f2;
+    font-size: 16px;
 }
 
-/* Selected info */
-
-.selected-info{
-font-size:16px;
+/* Mobile Responsiveness */
+@media (max-width: 991px) {
+    .seat {
+        width: 34px;
+        height: 30px;
+        margin: 3px;
+        font-size: 12px;
+        border-radius: 5px 5px 10px 10px;
+    }
+    .aisle {
+        width: 30px;
+    }
 }
 
+@media (max-width: 768px) {
+    .screen {
+        width: 85%;
+        height: 50px;
+    }
+    .seat {
+        width: 28px;
+        height: 25px;
+        margin: 2px;
+        font-size: 10px;
+        border-radius: 4px 4px 8px 8px;
+    }
+    .aisle {
+        width: 20px;
+    }
+    .row-label {
+        width: 20px;
+        margin-right: 10px;
+        font-size: 12px;
+    }
+    .seat-container {
+        padding: 20px 10px;
+        /* Revert display flex here if needed, but flex keeps it centered seamlessly */
+    }
+    .header-event-card {
+        padding: 15px 25px;
+    }
+    .event-meta {
+        gap: 15px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .screen {
+        width: 95%;
+        height: 40px;
+        border-top-left-radius: 40% 100%;
+        border-top-right-radius: 40% 100%;
+    }
+    .screen-text {
+        font-size: 12px;
+        letter-spacing: 4px;
+    }
+    .seat {
+        width: 22px;
+        height: 20px;
+        margin: 2px;
+        font-size: 9px;
+        border-radius: 3px 3px 6px 6px;
+    }
+    .aisle {
+        width: 15px;
+    }
+    .row-label {
+        width: 15px;
+        margin-right: 5px;
+        font-size: 10px;
+    }
+    .legend-item {
+        font-size: 12px;
+    }
+    .header-event-card {
+        padding: 12px 20px;
+        border-radius: 15px;
+    }
+    .event-meta {
+        flex-direction: column;
+        gap: 5px;
+        font-size: 13px;
+    }
+}
 </style>
 
-
 <!-- ================= JS ================= -->
-
 <script>
-
 let selectedSeats = []
 
 document.querySelectorAll(".seat.available").forEach(seat => {
+    seat.addEventListener("click", function(){
+        this.classList.toggle("selected")
+        let seatLabel = this.dataset.seat
 
-seat.addEventListener("click", function(){
+        if(selectedSeats.includes(seatLabel)){
+            selectedSeats = selectedSeats.filter(s => s !== seatLabel)
+        } else {
+            selectedSeats.push(seatLabel)
+        }
 
-this.classList.toggle("selected")
+        document.getElementById("selectedSeats").innerText =
+            selectedSeats.length ? selectedSeats.join(", ") : "None"
 
-let seatLabel = this.dataset.seat
-
-if(selectedSeats.includes(seatLabel)){
-selectedSeats = selectedSeats.filter(s => s !== seatLabel)
-}else{
-selectedSeats.push(seatLabel)
-}
-
-document.getElementById("selectedSeats").innerText =
-selectedSeats.length ? selectedSeats.join(", ") : "None"
-
-document.getElementById("selectedSeatsInput").value =
-selectedSeats.join(",")
-
+        document.getElementById("selectedSeatsInput").value =
+            selectedSeats.join(",")
+    })
 })
-
-})
-
 
 document.getElementById("bookingForm").addEventListener("submit", function(e){
-
-if(selectedSeats.length === 0){
-alert("Please select at least one seat.")
-e.preventDefault()
-}
-
+    if(selectedSeats.length === 0){
+        alert("Please select at least one seat.")
+        e.preventDefault()
+    }
 })
-
 </script>
-
 {% endblock %}
