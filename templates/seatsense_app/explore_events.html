@@ -31,33 +31,40 @@
 =            News Posts            =
 =================================-->
 
-<section class="news section">
-<div class="container">
+<section class="news section" style="background-color: #f8f9fa; padding-top: 60px; padding-bottom: 60px;">
+<div class="container-fluid" style="max-width: 1400px; padding-left: 30px; padding-right: 30px;">
 
 <div class="row mt-30">
 
-<!-- ================= LEFT SIDE : EVENTS ================= -->
+<!-- ================= EVENTS SECTION ================= -->
 
-<div class="col-lg-8 col-md-10 mx-auto">
+<div class="col-lg-9 order-2 order-lg-1">
 
 <div class="block">
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h3 style="font-weight: 700; color: #1a1a1a; margin: 0; padding-bottom: 20px; border-bottom: 2px solid #f1f3f4; display: inline-block;">{{ active_category_name }}</h3>
+    </div>
+</div>
+
 <div class="row">
 
 {% for event in events %}
 
-<div class="col-md-6 col-sm-8 col-10 m-auto">
+<div class="col-lg-4 col-md-6 col-sm-8 col-10 mb-4 mx-auto">
 
-<div class="blog-post">
+<div class="blog-post event-card" style="height: 100%; display: flex; flex-direction: column; background-color: #ffffff; border-radius: 16px; border: none; box-shadow: 0 6px 20px rgba(0,0,0,0.04); overflow: hidden; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 15px 30px rgba(0,0,0,0.08)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.04)';">
 
 <!-- Event Image -->
-<div class="post-thumb">
-<a href="#">
-<img src="{{ event.image.url }}" alt="event-image" class="img-fluid">
+<div class="post-thumb" style="flex-shrink: 0; position: relative;">
+<a href="{% url 'event_detail' event.id %}">
+<img src="{{ event.image.url }}" alt="event-image" class="img-fluid" style="height: 250px; width: 100%; object-fit: cover;">
 </a>
 </div>
 
 <!-- Event Content -->
-<div class="post-content">
+<div class="post-content" style="flex-grow: 1; display: flex; flex-direction: column; padding: 25px;">
 
 <!-- Event Date -->
 <div class="date">
@@ -68,29 +75,35 @@
 </div>
 
 <!-- Event Title -->
-<div class="post-title">
-<h2>{{ event.title }}</h2>
+<div class="post-title" style="margin-top: 15px; margin-bottom: 5px; flex-grow: 1;">
+<h4 style="margin: 0; font-weight: 700; color: #1a1a1a; line-height: 1.4; font-size: 20px;">{{ event.title|title }}</h4>
 </div>
 
-<!-- Event Description -->
-<p>
-{{ event.description|truncatewords:18 }}
-</p>
-
-<!-- Event Venue -->
-<p>
-<strong>Venue:</strong> {{ event.auditorium.name }}
-</p>
-
-<!-- Event Price -->
-<p>
-<strong>Ticket Price:</strong> ₹ {{ event.ticket_price }}
-</p>
+<!-- Event Meta (Venue, Price & Date) -->
+<div class="mt-auto" style="margin-bottom: 15px; padding-top: 15px; border-top: 1px solid #eef0f2;">
+    <div style="display: flex; align-items: center; margin-bottom: 10px; color: #5f6368; font-size: 14px;">
+        <i class="fa fa-map-marker" style="color: #ff5722; width: 24px; font-size: 18px; text-align: center;"></i>
+        <strong style="color: #202124; font-weight: 600; margin-right: 5px; margin-left: 5px;">Venue:</strong> 
+        <span>{{ event.auditorium.name|title }}</span>
+    </div>
+    <div style="display: flex; align-items: center; margin-bottom: 10px; color: #5f6368; font-size: 14px;">
+        <i class="fa fa-ticket" style="color: #ff5722; width: 24px; font-size: 16px; text-align: center;"></i>
+        <strong style="color: #202124; font-weight: 600; margin-right: 5px; margin-left: 5px;">Price:</strong> 
+        <span style="color: #ff5722; font-weight: 700; font-size: 16px;">₹ {{ event.ticket_price }}</span>
+    </div>
+    <div style="display: flex; align-items: center; color: #5f6368; font-size: 14px;">
+        <i class="fa fa-calendar" style="color: #ff5722; width: 24px; font-size: 16px; text-align: center;"></i>
+        <strong style="color: #202124; font-weight: 600; margin-right: 5px; margin-left: 5px;">Date:</strong> 
+        <span>{{ event.event_date|date:"F j, Y" }}</span>
+    </div>
+</div>
 
 <!-- Button -->
-<a href="{% url 'event_detail' event.id %}" class="btn btn-main-md">
+<div style="margin-top: 15px;">
+<a href="{% url 'event_detail' event.id %}" class="btn" style="background-color: #fff0eb; color: #ff5722; font-weight: 600; width: 100%; border-radius: 8px; padding: 12px; border: 1px solid #ffebe4; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#ff5722'; this.style.color='#fff';" onmouseout="this.style.backgroundColor='#fff0eb'; this.style.color='#ff5722';">
 View Details
 </a>
+</div>
 
 </div>
 
@@ -100,126 +113,112 @@ View Details
 
 {% empty %}
 
-<p class="text-center">No events available.</p>
+<p class="text-center w-100">No events available.</p>
 
 {% endfor %}
 
 </div>
+
+<!-- Pagination -->
+<div class="col-12 mt-5 mb-5 pb-5">
+<nav class="d-flex justify-content-center">
+  {% if events.has_other_pages %}
+  <ul class="pagination pagination-orange" style="margin: 0; padding: 0;">
+    
+    {% if events.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ events.previous_page_number }}{% if current_query %}&q={{ current_query }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}" aria-label="prev">
+        <span aria-hidden="true"><i class="fa fa-angle-left"></i></span>
+      </a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+      <a class="page-link" href="#" aria-label="prev">
+        <span aria-hidden="true"><i class="fa fa-angle-left"></i></span>
+      </a>
+    </li>
+    {% endif %}
+
+    {% for num in events.paginator.page_range %}
+      {% if events.number == num %}
+        <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+      {% else %}
+        <li class="page-item"><a class="page-link" href="?page={{ num }}{% if current_query %}&q={{ current_query }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}">{{ num }}</a></li>
+      {% endif %}
+    {% endfor %}
+
+    {% if events.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ events.next_page_number }}{% if current_query %}&q={{ current_query }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}" aria-label="Next">
+        <span aria-hidden="true"><i class="fa fa-angle-right"></i></span>
+      </a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+      <a class="page-link" href="#" aria-label="Next">
+        <span aria-hidden="true"><i class="fa fa-angle-right"></i></span>
+      </a>
+    </li>
+    {% endif %}
+
+  </ul>
+  {% endif %}
+</nav>
 </div>
 
 </div>
-
+</div>
 
 <!-- ================= RIGHT SIDEBAR ================= -->
 
-<div class="col-lg-4 col-md-10 mx-auto">
-
+<div class="col-lg-3 order-1 order-lg-2 mb-5">
 <div class="sidebar">
 
 <!-- Search Widget -->
-<div class="widget search p-0">
+<div class="widget search p-0 mb-4" style="box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-radius: 25px;">
+<form method="GET" action="{% url 'explore_events' %}">
 <div class="input-group">
-
-<input type="text" class="form-control main m-0" placeholder="Search events...">
-
-<span class="input-group-addon">
+<input type="text" name="q" value="{{ current_query }}" class="form-control main m-0" placeholder="Search events..." style="border-radius: 25px 0 0 25px; padding-left: 20px; border: 1px solid #ced4da; box-shadow: none;">
+{% if current_category %}
+<input type="hidden" name="category" value="{{ current_category }}">
+{% endif %}
+<button type="submit" class="input-group-addon" style="background:#ff5722; color:white; border:none; cursor:pointer; border-radius: 0 25px 25px 0; padding: 0 15px;">
 <i class="fa fa-search"></i>
-</span>
-
+</button>
 </div>
+</form>
 </div>
-
 
 <!-- Categories Widget -->
-
-<div class="widget category">
-
+<div class="widget category" style="background: #ffffff; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #eef0f2;">
 <h5 class="widget-header">Event Categories</h5>
+<ul class="category-list m-0 p-0" style="list-style: none;">
 
-<ul class="category-list m-0 p-0">
+<li style="margin-bottom: 12px; border-bottom: 1px dashed #eef0f2; padding-bottom: 12px;">
+<a href="{% if current_query %}?q={{ current_query }}{% else %}?{% endif %}" 
+   class="{% if not current_category %}active-category{% else %}inactive-category{% endif %}">
+   All Events
+   <span class="float-right">({{ all_events_count }})</span>
+</a>
+</li>
 
 {% for category in categories %}
-
-<li>
-
-<a href="#">
-
-{{ category.name }}
-
+<li style="margin-bottom: 12px; {% if not forloop.last %}border-bottom: 1px dashed #eef0f2; padding-bottom: 12px;{% endif %}">
+<a href="?category={{ category.id }}{% if current_query %}&q={{ current_query }}{% endif %}" 
+   class="{% if current_category == category.id|stringformat:'s' %}active-category{% else %}inactive-category{% endif %}">
+{{ category.name|title }}
 <span class="float-right">
 ({{ category.event_set.count }})
 </span>
-
 </a>
-
 </li>
-
-{% empty %}
-
-<li>No categories available</li>
-
 {% endfor %}
 
 </ul>
-
-</div>
-
-
-<!-- Upcoming Events Widget -->
-
-<div class="widget latest-post">
-
-<h5 class="widget-header">Upcoming Events</h5>
-
-{% for event in events|slice:":4" %}
-
-<div class="media">
-
-<img src="{{ event.image.url }}" class="img-fluid" style="width:70px; margin-right:10px;">
-
-<div class="media-body">
-
-<h6>{{ event.title }}</h6>
-
-<p>
-
-<span class="fa fa-calendar"></span>
-
-{{ event.event_date }}
-
-</p>
-
 </div>
 
 </div>
-
-{% endfor %}
-
 </div>
-
-
-<!-- Popular Tags Widget -->
-
-<div class="widget tags">
-
-<h5 class="widget-header">Popular Tags</h5>
-
-<ul class="list-inline">
-
-<li class="list-inline-item"><a href="#">Events</a></li>
-<li class="list-inline-item"><a href="#">Music</a></li>
-<li class="list-inline-item"><a href="#">Technology</a></li>
-<li class="list-inline-item"><a href="#">Business</a></li>
-<li class="list-inline-item"><a href="#">Workshops</a></li>
-
-</ul>
-
-</div>
-
-</div>
-
-</div>
-
 
 </div>
 
@@ -282,3 +281,193 @@ View Details
 <!--====  End of Google Map  ====-->
 
 {% endblock %}
+
+<style>
+/* Filter Pills CSS */
+.filter-pills .filter-pill {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: #ffffff;
+    color: #5f6368;
+    font-weight: 600;
+    font-size: 14px;
+    border: 1px solid #dadce0;
+    transition: all 0.2s ease;
+    margin-bottom: 8px;
+    text-decoration: none;
+}
+.filter-pills .filter-pill:hover,
+.filter-pills .filter-pill.active {
+    background: #ff5722;
+    color: #ffffff;
+    border-color: #ff5722;
+    box-shadow: 0 4px 10px rgba(255,87,34,0.3);
+}
+
+/* Event Card Styling */
+.event-card {
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    border: 1px solid #eef0f2;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+}
+
+.card-img-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 60%; /* Aspect Ratio 5:3 */
+    overflow: hidden;
+}
+
+.event-card-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.event-card:hover .event-card-img {
+    transform: scale(1.05);
+}
+
+.event-date-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #ff5722;
+    color: white;
+    border-radius: 12px;
+    padding: 8px 12px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(255,87,34,0.3);
+    z-index: 2;
+}
+
+.event-date-badge .day {
+    display: block;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.event-date-badge .month {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+.event-card-content {
+    padding: 25px 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.event-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #202124;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.event-desc {
+    color: #5f6368;
+    font-size: 14px;
+    margin-bottom: 20px;
+    line-height: 1.6;
+    flex-grow: 1;
+}
+
+.event-meta-info {
+    border-top: 1px solid #f1f3f4;
+    padding-top: 15px;
+    margin-bottom: 5px;
+}
+
+.meta-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    color: #3c4043;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.meta-row i {
+    color: #ff5722;
+    width: 20px;
+    font-size: 16px;
+}
+
+.event-action-btn {
+    background-color: #f1f3f4;
+    color: #202124;
+    font-weight: 600;
+    border-radius: 25px;
+    padding: 12px 20px;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.event-card:hover .event-action-btn {
+    background-color: #ff5722;
+    color: white;
+    box-shadow: 0 4px 15px rgba(255,87,34,0.3);
+}
+
+/* Sidebar Customizations */
+.widget-header {
+    font-size: 18px;
+    font-weight: 700;
+    color: #202124;
+    position: relative;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+}
+.widget-header::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 40px;
+    height: 3px;
+    background: #ff5722;
+    border-radius: 3px;
+}
+
+/* Pagination Styling */
+.pagination-orange .page-link {
+    color: #ff5722;
+    border: none;
+    margin: 0 5px;
+    border-radius: 5px;
+    font-weight: 600;
+    padding: 10px 16px;
+    transition: all 0.3s ease;
+}
+.pagination-orange .page-item.active .page-link {
+    background-color: #ff5722;
+    color: white;
+}
+.pagination-orange .page-link:hover {
+    background-color: #ff5722;
+    color: white;
+}
+</style>

@@ -1,38 +1,140 @@
 {% extends "seatsense_app/base.html" %}
 
 {% block content %}
+<section class="section pt-5 pb-5" style="margin-top: 100px;">
+<div class="container text-center">
 
-<section class="section">
-<div class="container">
-
-<div class="row justify-content-center">
-
-<div class="col-md-6">
-
-<h2 class="text-center mb-4">Login</h2>
-
-<form method="POST">
-
-{% csrf_token %}
-
-{{ form.as_p }}
-
-<button type="submit" class="btn btn-main-md w-100">
-Login
-</button>
-
-</form>
-
-<p class="text-center mt-3">
-Don't have an account?
-<a href="{% url 'signup' %}">Sign Up</a>
-</p>
-
+<!-- Page Title -->
+<div class="mb-5">
+    <h2 class="mb-2" style="font-weight: 700; color: #202124;">Welcome Back</h2>
+    <p style="color: #5f6368; font-size: 16px;">Please login to your account to continue</p>
 </div>
 
+<div class="auth-card mx-auto text-left">
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div class="form-fields">
+            {% for field in form %}
+            <div class="form-group mb-4">
+                <label for="{{ field.id_for_label }}" class="field-label">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                <div class="text-danger small mt-1">{{ error }}</div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+            {% if form.non_field_errors %}
+            <div class="text-danger small mb-3">
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-main-md auth-btn w-100 mt-2">
+            Login <i class="fa fa-sign-in ml-2"></i>
+        </button>
+    </form>
+
+    <div class="mt-4 text-center">
+        <p class="mb-0" style="color: #5f6368;">Don't have an account? 
+            <a href="{% url 'signup' %}" style="color: #ff5722; font-weight: 600;">Sign Up</a>
+        </p>
+    </div>
 </div>
 
 </div>
 </section>
 
+<!-- ================= CSS ================= -->
+<style>
+/* Main Auth Card */
+.auth-card {
+    max-width: 450px;
+    background: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.04);
+    border: 1px solid #eef0f2;
+    padding: 40px 30px;
+    text-align: left;
+}
+
+/* Form Styles */
+.field-label {
+    color: #3c4043;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.auth-card input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid #dadce0;
+    background-color: #f8f9fa;
+    color: #202124;
+    transition: all 0.3s ease;
+    font-size: 15px;
+}
+
+.auth-card input:focus {
+    outline: none;
+    border-color: #ff5722;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(255,87,34,0.1);
+}
+
+.auth-card input[type="checkbox"] {
+    width: auto;
+    margin-right: 8px;
+    margin-top: 4px;
+}
+
+.form-group.mb-4 {
+    margin-bottom: 1.5rem;
+}
+
+/* Button Styling */
+.auth-btn {
+    padding: 14px 20px;
+    font-size: 16px;
+    border-radius: 30px;
+    font-weight: 600;
+    background-color: #ff5722;
+    color: white;
+    box-shadow: 0 4px 15px rgba(255,87,34,0.3);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.auth-btn:hover, .auth-btn:focus, .auth-btn:active {
+    background-color: #e64a19 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255,87,34,0.4) !important;
+    color: white !important;
+}
+
+/* Help text styling */
+.form-text {
+    font-size: 12px;
+    color: #80868b !important;
+    margin-top: 6px;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 480px) {
+    .auth-card {
+        padding: 30px 20px;
+        border-radius: 16px;
+        margin: 0 15px;
+    }
+}
+</style>
 {% endblock %}

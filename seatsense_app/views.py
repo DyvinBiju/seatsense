@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Event, Category, SeatLock
+from django.db.models import Q
 from django.utils import timezone
 from datetime import timedelta
 from .models import Booking, BookingSeat,Seat, SeatLock
@@ -39,14 +40,47 @@ def news_left_sidebar(request):
 
 
 
+from django.core.paginator import Paginator
+
 def explore_events(request):
+    query = request.GET.get('q', '')
+    category_id = request.GET.get('category', '')
+    page_number = request.GET.get('page', 1)
 
     events = Event.objects.all().order_by("event_date")
+
+    active_category_name = "All Events"
+
+    if query:
+        events = events.filter(
+            Q(title__icontains=query) | 
+            Q(description__icontains=query) | 
+            Q(auditorium__name__icontains=query)
+        )
+        active_category_name = f"Search Results for '{query}'"
+        
+    if category_id:
+        events = events.filter(category_id=category_id)
+        active_cat = Category.objects.filter(id=category_id).first()
+        if active_cat:
+            if query:
+                active_category_name = f"{active_cat.name.title()} Results for '{query}'"
+            else:
+                active_category_name = active_cat.name.title()
+        
+    paginator = Paginator(events, 9)
+    page_obj = paginator.get_page(page_number)
+
     categories = Category.objects.all()
+    all_events_count = Event.objects.all().count()
 
     context = {
-        "events": events,
-        "categories": categories
+        "events": page_obj,
+        "categories": categories,
+        "current_query": query,
+        "current_category": category_id,
+        "all_events_count": all_events_count,
+        "active_category_name": active_category_name
     }
 
     return render(request, "seatsense_app/explore_events.html", context)

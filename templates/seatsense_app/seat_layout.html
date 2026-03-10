@@ -10,7 +10,7 @@
     <h2 class="mb-2" style="font-weight: 700; color: #202124;">Select Your Seats</h2>
     
     <div class="header-event-card">
-        <h4 style="color: #1a73e8; margin-bottom: 10px; font-weight: 700;">{{ event.title }}</h4>
+        <h4 style="color: #ff5722; margin-bottom: 10px; font-weight: 700;">{{ event.title }}</h4>
         <div class="event-meta">
             <span class="meta-item"><i class="fa fa-calendar"></i> {{ event.event_date }}</span>
             <span class="meta-item"><i class="fa fa-clock-o"></i> {{ event.event_time }}</span>
@@ -67,7 +67,7 @@
 <div class="selected-info text-center mt-4">
     <div class="selected-box">
         <strong>Selected Seats:</strong>
-        <span id="selectedSeats" style="color: #1a73e8; font-weight: 600;">None</span>
+        <span id="selectedSeats" style="color: #ff5722; font-weight: 600;">None</span>
     </div>
 </div>
 
@@ -103,7 +103,7 @@
     font-weight: 500;
 }
 .meta-item i {
-    color: #1a73e8;
+    color: #ff5722;
     margin-right: 6px;
 }
 
@@ -222,11 +222,11 @@
 }
 
 .seat.available:hover {
-    background: #1a73e8; /* elegant blue */
+    background: #ff5722; /* elegant orange */
     color: white;
-    border-color: #1a73e8;
+    border-color: #ff5722;
     transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 6px 15px rgba(26,115,232,0.3);
+    box-shadow: 0 6px 15px rgba(255,87,34,0.3);
 }
 
 /* Selected */
