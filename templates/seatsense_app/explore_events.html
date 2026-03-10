@@ -9,19 +9,19 @@
 =================================-->
 
 <section class="page-title bg-title overlay-dark">
-	<div class="container">
-		<div class="row">
-			<div class="col-12 text-center">
-				<div class="title">
-					<h3>Our Events</h3>
-				</div>
-				<ol class="breadcrumb p-0 m-0">
-				  <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-				  <li class="breadcrumb-item active">Explore Events</li>
-				</ol>
-			</div>
-		</div>
-	</div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="title">
+                    <h3>Our Events</h3>
+                </div>
+                <ol class="breadcrumb p-0 m-0">
+                    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+                    <li class="breadcrumb-item active">Explore Events</li>
+                </ol>
+            </div>
+        </div>
+    </div>
 </section>
 
 <!--====  End of Page Title  ====-->
@@ -32,197 +32,247 @@
 =================================-->
 
 <section class="news section" style="background-color: #f8f9fa; padding-top: 60px; padding-bottom: 60px;">
-<div class="container-fluid" style="max-width: 1400px; padding-left: 30px; padding-right: 30px;">
+    <div class="container-fluid" style="max-width: 1400px; padding-left: 30px; padding-right: 30px;">
 
-<div class="row mt-30">
+        <div class="row mt-30">
 
-<!-- ================= EVENTS SECTION ================= -->
+            <!-- ================= EVENTS SECTION ================= -->
 
-<div class="col-lg-9 order-2 order-lg-1">
+            <div class="col-lg-9 order-2 order-lg-1">
 
-<div class="block">
+                <div class="block">
 
-<div class="row mb-4">
-    <div class="col-12">
-        <h3 style="font-weight: 700; color: #1a1a1a; margin: 0; padding-bottom: 20px; border-bottom: 2px solid #f1f3f4; display: inline-block;">{{ active_category_name }}</h3>
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h3
+                                style="font-weight: 700; color: #1a1a1a; margin: 0; padding-bottom: 20px; border-bottom: 2px solid #f1f3f4; display: inline-block;">
+                                {{ active_category_name }}</h3>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        {% for event in events %}
+
+                        <div class="col-lg-4 col-md-6 col-sm-8 col-10 mb-4 mx-auto">
+
+                            <div class="blog-post event-card"
+                                style="height: 100%; display: flex; flex-direction: column; background-color: #ffffff; border-radius: 16px; border: none; box-shadow: 0 6px 20px rgba(0,0,0,0.04); overflow: hidden; transition: all 0.3s ease;"
+                                onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 15px 30px rgba(0,0,0,0.08)';"
+                                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.04)';">
+
+                                <!-- Event Image -->
+                                <div class="post-thumb" style="flex-shrink: 0; position: relative;">
+                                    <a href="{% url 'event_detail' event.id %}">
+                                        <img src="{{ event.image.url }}" alt="event-image" class="img-fluid"
+                                            style="height: 250px; width: 100%; object-fit: cover;">
+                                    </a>
+                                </div>
+
+                                <!-- Event Content -->
+                                <div class="post-content"
+                                    style="flex-grow: 1; display: flex; flex-direction: column; padding: 25px;">
+
+                                    <!-- Event Date -->
+                                    <div class="date">
+                                        <h4>
+                                            {{ event.event_date|date:"d" }}
+                                            <span>{{ event.event_date|date:"M" }}</span>
+                                        </h4>
+                                    </div>
+
+                                    <!-- Event Title -->
+                                    <div class="post-title" style="margin-top: 15px; margin-bottom: 5px; flex-grow: 1;">
+                                        <h4
+                                            style="margin: 0; font-weight: 700; color: #1a1a1a; line-height: 1.4; font-size: 20px;">
+                                            {{ event.title|title }}</h4>
+                                    </div>
+
+                                    <!-- Event Meta (Venue, Price & Date) -->
+                                    <div class="mt-auto"
+                                        style="margin-bottom: 15px; padding-top: 15px; border-top: 1px solid #eef0f2;">
+                                        <div
+                                            style="display: flex; align-items: center; margin-bottom: 10px; color: #5f6368; font-size: 14px;">
+                                            <i class="fa fa-map-marker"
+                                                style="color: #ff5722; width: 24px; font-size: 18px; text-align: center;"></i>
+                                            <strong
+                                                style="color: #202124; font-weight: 600; margin-right: 5px; margin-left: 5px;">Venue:</strong>
+                                            <span>{{ event.auditorium.name|title }}</span>
+                                        </div>
+                                        <div
+                                            style="display: flex; align-items: center; margin-bottom: 10px; color: #5f6368; font-size: 14px;">
+                                            <i class="fa fa-ticket"
+                                                style="color: #ff5722; width: 24px; font-size: 16px; text-align: center;"></i>
+                                            <strong
+                                                style="color: #202124; font-weight: 600; margin-right: 5px; margin-left: 5px;">Price:</strong>
+                                            <span class="price-badge">
+                                                ₹ {{ event.ticket_price }}
+                                            </span>
+                                        </div>
+                                        <div
+                                            style="display: flex; align-items: center; color: #5f6368; font-size: 14px;">
+                                            <i class="fa fa-calendar"
+                                                style="color: #ff5722; width: 24px; font-size: 16px; text-align: center;"></i>
+                                            <strong
+                                                style="color: #202124; font-weight: 600; margin-right: 5px; margin-left: 5px;">Date:</strong>
+                                            <span>{{ event.event_date|date:"F j, Y" }}</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Button -->
+                                    <div style="margin-top: 15px;">
+                                        <a href="{% url 'event_detail' event.id %}" class="btn"
+                                            style="background-color: #fff0eb; color: #ff5722; font-weight: 600; width: 100%; border-radius: 8px; padding: 12px; border: 1px solid #ffebe4; transition: all 0.3s ease;"
+                                            onmouseover="this.style.backgroundColor='#ff5722'; this.style.color='#fff';"
+                                            onmouseout="this.style.backgroundColor='#fff0eb'; this.style.color='#ff5722';">
+                                            View Details
+                                        </a>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        {% empty %}
+
+                        <p class="text-center w-100">No events available.</p>
+
+                        {% endfor %}
+
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="col-12 mt-5 mb-5 pb-5">
+                        <nav class="d-flex justify-content-center">
+                            {% if events.has_other_pages %}
+                            <ul class="pagination pagination-orange" style="margin: 0; padding: 0;">
+
+                                {% if events.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link"
+                                        href="?page={{ events.previous_page_number }}{% if current_query %}&q={{ current_query }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}"
+                                        aria-label="prev">
+                                        <span aria-hidden="true"><i class="fa fa-angle-left"></i></span>
+                                    </a>
+                                </li>
+                                {% else %}
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" aria-label="prev">
+                                        <span aria-hidden="true"><i class="fa fa-angle-left"></i></span>
+                                    </a>
+                                </li>
+                                {% endif %}
+
+                                {% for num in events.paginator.page_range %}
+                                {% if events.number == num %}
+                                <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+                                {% else %}
+                                <li class="page-item"><a class="page-link"
+                                        href="?page={{ num }}{% if current_query %}&q={{ current_query }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}">{{
+                                        num }}</a></li>
+                                {% endif %}
+                                {% endfor %}
+
+                                {% if events.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link"
+                                        href="?page={{ events.next_page_number }}{% if current_query %}&q={{ current_query }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}"
+                                        aria-label="Next">
+                                        <span aria-hidden="true"><i class="fa fa-angle-right"></i></span>
+                                    </a>
+                                </li>
+                                {% else %}
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" aria-label="Next">
+                                        <span aria-hidden="true"><i class="fa fa-angle-right"></i></span>
+                                    </a>
+                                </li>
+                                {% endif %}
+
+                            </ul>
+                            {% endif %}
+                        </nav>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ================= RIGHT SIDEBAR ================= -->
+
+            <div class="col-lg-3 order-1 order-lg-2 mb-5">
+                <div class="sidebar">
+
+                    <!-- Search Widget -->
+                    <div class="widget search p-0 mb-4"
+                        style="box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-radius: 25px;">
+                        <form method="GET" action="{% url 'explore_events' %}">
+                            <div class="input-group">
+                                <input type="text" name="q" value="{{ current_query }}" class="form-control main m-0"
+                                    placeholder="Search events..."
+                                    style="border-radius: 25px 0 0 25px; padding-left: 20px; border: 1px solid #ced4da; box-shadow: none;">
+                                {% if current_category %}
+                                <input type="hidden" name="category" value="{{ current_category }}">
+                                {% endif %}
+                                <button type="submit" class="input-group-addon"
+                                    style="background:#ff5722; color:white; border:none; cursor:pointer; border-radius: 0 25px 25px 0; padding: 0 15px;">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Categories Widget -->
+                    <div class="widget category"
+                        style="background: #ffffff; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #eef0f2;">
+                        <h5 class="widget-header">Event Categories</h5>
+                        <ul class="category-list m-0 p-0" style="list-style: none;">
+
+                            <li style="margin-bottom: 12px; border-bottom: 1px dashed #eef0f2; padding-bottom: 12px;">
+                                <a href="{% if current_query %}?q={{ current_query }}{% else %}?{% endif %}"
+                                    class="{% if not current_category and not show_past %}active-category{% else %}inactive-category{% endif %}"
+                                    style="text-decoration: none; color: inherit; font-weight: {% if not current_category and not show_past %}700; color: #ff5722;{% else %}500;{% endif %}; transition: color 0.3s ease;">
+                                    All Events
+                                    <span class="count-badge">
+                                        ({{ all_events_count }})
+                                    </span>
+                                </a>
+                            </li>
+
+                            {% for category in categories %}
+                            <li style="margin-bottom: 12px; border-bottom: 1px dashed #eef0f2; padding-bottom: 12px;">
+                                <a href="?category={{ category.id }}{% if current_query %}&q={{ current_query }}{% endif %}"
+                                    class="{% if current_category == category.id|stringformat:'s' %}active-category{% else %}inactive-category{% endif %}"
+                                    style="text-decoration: none; color: inherit; font-weight: {% if current_category == category.id|stringformat:'s' %}700; color: #ff5722;{% else %}500;{% endif %}; transition: color 0.3s ease;">
+                                    {{ category.name|title }}
+                                    <span class="count-badge">
+                                        ({{ category.event_set.count }})
+                                    </span>
+                                </a>
+                            </li>
+                            {% endfor %}
+
+                            <li style="margin-top: 12px;">
+                                <a href="?past=1{% if current_query %}&q={{ current_query }}{% endif %}"
+                                    class="{% if show_past %}active-category{% else %}inactive-category{% endif %}"
+                                    style="text-decoration: none; color: inherit; font-weight: {% if show_past %}700; color: #ff5722;{% else %}500;{% endif %}; transition: color 0.3s ease;">
+                                    Past Events
+                                    <span class="count-badge">
+                                        ({{ past_events_count }})
+                                    </span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
     </div>
-</div>
-
-<div class="row">
-
-{% for event in events %}
-
-<div class="col-lg-4 col-md-6 col-sm-8 col-10 mb-4 mx-auto">
-
-<div class="blog-post event-card" style="height: 100%; display: flex; flex-direction: column; background-color: #ffffff; border-radius: 16px; border: none; box-shadow: 0 6px 20px rgba(0,0,0,0.04); overflow: hidden; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 15px 30px rgba(0,0,0,0.08)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.04)';">
-
-<!-- Event Image -->
-<div class="post-thumb" style="flex-shrink: 0; position: relative;">
-<a href="{% url 'event_detail' event.id %}">
-<img src="{{ event.image.url }}" alt="event-image" class="img-fluid" style="height: 250px; width: 100%; object-fit: cover;">
-</a>
-</div>
-
-<!-- Event Content -->
-<div class="post-content" style="flex-grow: 1; display: flex; flex-direction: column; padding: 25px;">
-
-<!-- Event Date -->
-<div class="date">
-<h4>
-{{ event.event_date|date:"d" }}
-<span>{{ event.event_date|date:"M" }}</span>
-</h4>
-</div>
-
-<!-- Event Title -->
-<div class="post-title" style="margin-top: 15px; margin-bottom: 5px; flex-grow: 1;">
-<h4 style="margin: 0; font-weight: 700; color: #1a1a1a; line-height: 1.4; font-size: 20px;">{{ event.title|title }}</h4>
-</div>
-
-<!-- Event Meta (Venue, Price & Date) -->
-<div class="mt-auto" style="margin-bottom: 15px; padding-top: 15px; border-top: 1px solid #eef0f2;">
-    <div style="display: flex; align-items: center; margin-bottom: 10px; color: #5f6368; font-size: 14px;">
-        <i class="fa fa-map-marker" style="color: #ff5722; width: 24px; font-size: 18px; text-align: center;"></i>
-        <strong style="color: #202124; font-weight: 600; margin-right: 5px; margin-left: 5px;">Venue:</strong> 
-        <span>{{ event.auditorium.name|title }}</span>
-    </div>
-    <div style="display: flex; align-items: center; margin-bottom: 10px; color: #5f6368; font-size: 14px;">
-        <i class="fa fa-ticket" style="color: #ff5722; width: 24px; font-size: 16px; text-align: center;"></i>
-        <strong style="color: #202124; font-weight: 600; margin-right: 5px; margin-left: 5px;">Price:</strong> 
-        <span style="color: #ff5722; font-weight: 700; font-size: 16px;">₹ {{ event.ticket_price }}</span>
-    </div>
-    <div style="display: flex; align-items: center; color: #5f6368; font-size: 14px;">
-        <i class="fa fa-calendar" style="color: #ff5722; width: 24px; font-size: 16px; text-align: center;"></i>
-        <strong style="color: #202124; font-weight: 600; margin-right: 5px; margin-left: 5px;">Date:</strong> 
-        <span>{{ event.event_date|date:"F j, Y" }}</span>
-    </div>
-</div>
-
-<!-- Button -->
-<div style="margin-top: 15px;">
-<a href="{% url 'event_detail' event.id %}" class="btn" style="background-color: #fff0eb; color: #ff5722; font-weight: 600; width: 100%; border-radius: 8px; padding: 12px; border: 1px solid #ffebe4; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#ff5722'; this.style.color='#fff';" onmouseout="this.style.backgroundColor='#fff0eb'; this.style.color='#ff5722';">
-View Details
-</a>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-{% empty %}
-
-<p class="text-center w-100">No events available.</p>
-
-{% endfor %}
-
-</div>
-
-<!-- Pagination -->
-<div class="col-12 mt-5 mb-5 pb-5">
-<nav class="d-flex justify-content-center">
-  {% if events.has_other_pages %}
-  <ul class="pagination pagination-orange" style="margin: 0; padding: 0;">
-    
-    {% if events.has_previous %}
-    <li class="page-item">
-      <a class="page-link" href="?page={{ events.previous_page_number }}{% if current_query %}&q={{ current_query }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}" aria-label="prev">
-        <span aria-hidden="true"><i class="fa fa-angle-left"></i></span>
-      </a>
-    </li>
-    {% else %}
-    <li class="page-item disabled">
-      <a class="page-link" href="#" aria-label="prev">
-        <span aria-hidden="true"><i class="fa fa-angle-left"></i></span>
-      </a>
-    </li>
-    {% endif %}
-
-    {% for num in events.paginator.page_range %}
-      {% if events.number == num %}
-        <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
-      {% else %}
-        <li class="page-item"><a class="page-link" href="?page={{ num }}{% if current_query %}&q={{ current_query }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}">{{ num }}</a></li>
-      {% endif %}
-    {% endfor %}
-
-    {% if events.has_next %}
-    <li class="page-item">
-      <a class="page-link" href="?page={{ events.next_page_number }}{% if current_query %}&q={{ current_query }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}" aria-label="Next">
-        <span aria-hidden="true"><i class="fa fa-angle-right"></i></span>
-      </a>
-    </li>
-    {% else %}
-    <li class="page-item disabled">
-      <a class="page-link" href="#" aria-label="Next">
-        <span aria-hidden="true"><i class="fa fa-angle-right"></i></span>
-      </a>
-    </li>
-    {% endif %}
-
-  </ul>
-  {% endif %}
-</nav>
-</div>
-
-</div>
-</div>
-
-<!-- ================= RIGHT SIDEBAR ================= -->
-
-<div class="col-lg-3 order-1 order-lg-2 mb-5">
-<div class="sidebar">
-
-<!-- Search Widget -->
-<div class="widget search p-0 mb-4" style="box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-radius: 25px;">
-<form method="GET" action="{% url 'explore_events' %}">
-<div class="input-group">
-<input type="text" name="q" value="{{ current_query }}" class="form-control main m-0" placeholder="Search events..." style="border-radius: 25px 0 0 25px; padding-left: 20px; border: 1px solid #ced4da; box-shadow: none;">
-{% if current_category %}
-<input type="hidden" name="category" value="{{ current_category }}">
-{% endif %}
-<button type="submit" class="input-group-addon" style="background:#ff5722; color:white; border:none; cursor:pointer; border-radius: 0 25px 25px 0; padding: 0 15px;">
-<i class="fa fa-search"></i>
-</button>
-</div>
-</form>
-</div>
-
-<!-- Categories Widget -->
-<div class="widget category" style="background: #ffffff; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #eef0f2;">
-<h5 class="widget-header">Event Categories</h5>
-<ul class="category-list m-0 p-0" style="list-style: none;">
-
-<li style="margin-bottom: 12px; border-bottom: 1px dashed #eef0f2; padding-bottom: 12px;">
-<a href="{% if current_query %}?q={{ current_query }}{% else %}?{% endif %}" 
-   class="{% if not current_category %}active-category{% else %}inactive-category{% endif %}">
-   All Events
-   <span class="float-right">({{ all_events_count }})</span>
-</a>
-</li>
-
-{% for category in categories %}
-<li style="margin-bottom: 12px; {% if not forloop.last %}border-bottom: 1px dashed #eef0f2; padding-bottom: 12px;{% endif %}">
-<a href="?category={{ category.id }}{% if current_query %}&q={{ current_query }}{% endif %}" 
-   class="{% if current_category == category.id|stringformat:'s' %}active-category{% else %}inactive-category{% endif %}">
-{{ category.name|title }}
-<span class="float-right">
-({{ category.event_set.count }})
-</span>
-</a>
-</li>
-{% endfor %}
-
-</ul>
-</div>
-
-</div>
-</div>
-
-</div>
-
-</div>
 
 </section>
 
@@ -233,30 +283,30 @@ View Details
 ===============================================-->
 
 <section class="cta-subscribe bg-subscribe overlay-dark">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-6 mr-auto">
-				<!-- Subscribe Content -->
-				<div class="content">
-					<h3>Subscribe to Our <span class="alternate">Newsletter</span></h3>
-					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusm tempor</p>
-				</div>
-			</div>
-			<div class="col-md-6 ml-auto align-self-center">
-				<!-- Subscription form -->
-				<form action="#" class="row">
-					<div class="col-lg-8 col-md-12">
-						<input type="email" class="form-control main white mb-lg-0" placeholder="Email">
-					</div>
-					<div class="col-lg-4 col-md-12">
-						<div class="subscribe-button">
-							<button class="btn btn-main-md">Subscribe</button>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 mr-auto">
+                <!-- Subscribe Content -->
+                <div class="content">
+                    <h3>Subscribe to Our <span class="alternate">Newsletter</span></h3>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusm tempor</p>
+                </div>
+            </div>
+            <div class="col-md-6 ml-auto align-self-center">
+                <!-- Subscription form -->
+                <form action="#" class="row">
+                    <div class="col-lg-8 col-md-12">
+                        <input type="email" class="form-control main white mb-lg-0" placeholder="Email">
+                    </div>
+                    <div class="col-lg-4 col-md-12">
+                        <div class="subscribe-button">
+                            <button class="btn btn-main-md">Subscribe</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </section>
 
 <!--====  End of Call to Action Subscribe  ====-->
@@ -266,16 +316,16 @@ View Details
 =================================-->
 
 <section class="map">
-	<!-- Google Map -->
-	<div id="map"></div>
-	<div class="address-block">
-		<h4>Docklands Convention</h4>
-		<ul class="address-list p-0 m-0">
-			<li><i class="fa fa-home"></i><span>1201 Park Street, Fifth Avenue, <br>Dhanmondy, Dhaka.</span></li>
-			<li><i class="fa fa-phone"></i><span>[88] 657 524 332</span></li>
-		</ul>
-		<a href="#" class="btn btn-white-md">Get Direction</a>
-	</div>
+    <!-- Google Map -->
+    <div id="map"></div>
+    <div class="address-block">
+        <h4>Docklands Convention</h4>
+        <ul class="address-list p-0 m-0">
+            <li><i class="fa fa-home"></i><span>1201 Park Street, Fifth Avenue, <br>Dhanmondy, Dhaka.</span></li>
+            <li><i class="fa fa-phone"></i><span>[88] 657 524 332</span></li>
+        </ul>
+        <a href="#" class="btn btn-white-md">Get Direction</a>
+    </div>
 </section>
 
 <!--====  End of Google Map  ====-->
@@ -283,191 +333,208 @@ View Details
 {% endblock %}
 
 <style>
-/* Filter Pills CSS */
-.filter-pills .filter-pill {
-    display: inline-block;
-    padding: 8px 16px;
-    border-radius: 20px;
-    background: #ffffff;
-    color: #5f6368;
-    font-weight: 600;
-    font-size: 14px;
-    border: 1px solid #dadce0;
-    transition: all 0.2s ease;
-    margin-bottom: 8px;
-    text-decoration: none;
-}
-.filter-pills .filter-pill:hover,
-.filter-pills .filter-pill.active {
-    background: #ff5722;
-    color: #ffffff;
-    border-color: #ff5722;
-    box-shadow: 0 4px 10px rgba(255,87,34,0.3);
-}
+    /* Filter Pills CSS */
+    .filter-pills .filter-pill {
+        display: inline-block;
+        padding: 8px 16px;
+        border-radius: 20px;
+        background: #ffffff;
+        color: #5f6368;
+        font-weight: 600;
+        font-size: 14px;
+        border: 1px solid #dadce0;
+        transition: all 0.2s ease;
+        margin-bottom: 8px;
+        text-decoration: none;
+    }
 
-/* Event Card Styling */
-.event-card {
-    background: #ffffff;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-    border: 1px solid #eef0f2;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
+    .filter-pills .filter-pill:hover,
+    .filter-pills .filter-pill.active {
+        background: #ff5722;
+        color: #ffffff;
+        border-color: #ff5722;
+        box-shadow: 0 4px 10px rgba(255, 87, 34, 0.3);
+    }
 
-.event-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
-}
+    /* Event Card Styling */
+    .price-badge {
+        color: #ff5722;
+        font-weight: 700;
+        font-size: 16px;
+    }
 
-.card-img-wrapper {
-    position: relative;
-    width: 100%;
-    padding-top: 60%; /* Aspect Ratio 5:3 */
-    overflow: hidden;
-}
+    .count-badge {
+        float: right;
+        color: #9ca3af;
+        font-size: 13px;
+    }
 
-.event-card-img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
+    .event-card {
+        background: #ffffff;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        border: 1px solid #eef0f2;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
 
-.event-card:hover .event-card-img {
-    transform: scale(1.05);
-}
+    .event-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    }
 
-.event-date-badge {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: #ff5722;
-    color: white;
-    border-radius: 12px;
-    padding: 8px 12px;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(255,87,34,0.3);
-    z-index: 2;
-}
+    .card-img-wrapper {
+        position: relative;
+        width: 100%;
+        padding-top: 60%;
+        /* Aspect Ratio 5:3 */
+        overflow: hidden;
+    }
 
-.event-date-badge .day {
-    display: block;
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 1;
-}
+    .event-card-img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
 
-.event-date-badge .month {
-    display: block;
-    font-size: 12px;
-    text-transform: uppercase;
-    font-weight: 600;
-    margin-top: 2px;
-}
+    .event-card:hover .event-card-img {
+        transform: scale(1.05);
+    }
 
-.event-card-content {
-    padding: 25px 20px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
+    .event-date-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #ff5722;
+        color: white;
+        border-radius: 12px;
+        padding: 8px 12px;
+        text-align: center;
+        box-shadow: 0 4px 10px rgba(255, 87, 34, 0.3);
+        z-index: 2;
+    }
 
-.event-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: #202124;
-    margin-bottom: 12px;
-    line-height: 1.4;
-}
+    .event-date-badge .day {
+        display: block;
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 1;
+    }
 
-.event-desc {
-    color: #5f6368;
-    font-size: 14px;
-    margin-bottom: 20px;
-    line-height: 1.6;
-    flex-grow: 1;
-}
+    .event-date-badge .month {
+        display: block;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-weight: 600;
+        margin-top: 2px;
+    }
 
-.event-meta-info {
-    border-top: 1px solid #f1f3f4;
-    padding-top: 15px;
-    margin-bottom: 5px;
-}
+    .event-card-content {
+        padding: 25px 20px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
 
-.meta-row {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-    color: #3c4043;
-    font-size: 14px;
-    font-weight: 500;
-}
+    .event-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #202124;
+        margin-bottom: 12px;
+        line-height: 1.4;
+    }
 
-.meta-row i {
-    color: #ff5722;
-    width: 20px;
-    font-size: 16px;
-}
+    .event-desc {
+        color: #5f6368;
+        font-size: 14px;
+        margin-bottom: 20px;
+        line-height: 1.6;
+        flex-grow: 1;
+    }
 
-.event-action-btn {
-    background-color: #f1f3f4;
-    color: #202124;
-    font-weight: 600;
-    border-radius: 25px;
-    padding: 12px 20px;
-    transition: all 0.3s ease;
-    border: none;
-}
+    .event-meta-info {
+        border-top: 1px solid #f1f3f4;
+        padding-top: 15px;
+        margin-bottom: 5px;
+    }
 
-.event-card:hover .event-action-btn {
-    background-color: #ff5722;
-    color: white;
-    box-shadow: 0 4px 15px rgba(255,87,34,0.3);
-}
+    .meta-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+        color: #3c4043;
+        font-size: 14px;
+        font-weight: 500;
+    }
 
-/* Sidebar Customizations */
-.widget-header {
-    font-size: 18px;
-    font-weight: 700;
-    color: #202124;
-    position: relative;
-    padding-bottom: 12px;
-    margin-bottom: 20px;
-}
-.widget-header::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 40px;
-    height: 3px;
-    background: #ff5722;
-    border-radius: 3px;
-}
+    .meta-row i {
+        color: #ff5722;
+        width: 20px;
+        font-size: 16px;
+    }
 
-/* Pagination Styling */
-.pagination-orange .page-link {
-    color: #ff5722;
-    border: none;
-    margin: 0 5px;
-    border-radius: 5px;
-    font-weight: 600;
-    padding: 10px 16px;
-    transition: all 0.3s ease;
-}
-.pagination-orange .page-item.active .page-link {
-    background-color: #ff5722;
-    color: white;
-}
-.pagination-orange .page-link:hover {
-    background-color: #ff5722;
-    color: white;
-}
+    .event-action-btn {
+        background-color: #f1f3f4;
+        color: #202124;
+        font-weight: 600;
+        border-radius: 25px;
+        padding: 12px 20px;
+        transition: all 0.3s ease;
+        border: none;
+    }
+
+    .event-card:hover .event-action-btn {
+        background-color: #ff5722;
+        color: white;
+        box-shadow: 0 4px 15px rgba(255, 87, 34, 0.3);
+    }
+
+    /* Sidebar Customizations */
+    .widget-header {
+        font-size: 18px;
+        font-weight: 700;
+        color: #202124;
+        position: relative;
+        padding-bottom: 12px;
+        margin-bottom: 20px;
+    }
+
+    .widget-header::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 40px;
+        height: 3px;
+        background: #ff5722;
+        border-radius: 3px;
+    }
+
+    /* Pagination Styling */
+    .pagination-orange .page-link {
+        color: #ff5722;
+        border: none;
+        margin: 0 5px;
+        border-radius: 5px;
+        font-weight: 600;
+        padding: 10px 16px;
+        transition: all 0.3s ease;
+    }
+
+    .pagination-orange .page-item.active .page-link {
+        background-color: #ff5722;
+        color: white;
+    }
+
+    .pagination-orange .page-link:hover {
+        background-color: #ff5722;
+        color: white;
+    }
 </style>

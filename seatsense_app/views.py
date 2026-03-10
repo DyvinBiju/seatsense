@@ -7,6 +7,7 @@ from .models import Booking, BookingSeat,Seat, SeatLock
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import redirect
+from django.contrib import  messages
 
 
 def page_404(request):
@@ -41,45 +42,98 @@ def news_left_sidebar(request):
 
 
 from django.core.paginator import Paginator
+from django.utils import timezone
+from datetime import datetime
+
+from django.core.paginator import Paginator
+from django.utils import timezone
+from datetime import datetime
+from django.db.models import Q
 
 def explore_events(request):
+
     query = request.GET.get('q', '')
     category_id = request.GET.get('category', '')
+    show_past = request.GET.get('past', '') == '1'
     page_number = request.GET.get('page', 1)
 
-    events = Event.objects.all().order_by("event_date")
+    now = timezone.now()
 
-    active_category_name = "All Events"
+    # Get all events once
+    all_events = Event.objects.all()
 
+    valid_events = []
+    upcoming_events_count = 0
+    past_events_count = 0
+
+    for event in all_events:
+
+        event_datetime = datetime.combine(event.event_date, event.event_time)
+
+        if timezone.is_naive(event_datetime):
+            event_datetime = timezone.make_aware(event_datetime)
+
+        # Count upcoming vs past
+        if event_datetime > now:
+            upcoming_events_count += 1
+        else:
+            past_events_count += 1
+
+        # Filter depending on view mode
+        if show_past:
+            if event_datetime <= now:
+                valid_events.append(event)
+        else:
+            if event_datetime > now:
+                valid_events.append(event)
+
+    # Order events correctly
+    if show_past:
+        valid_events.sort(key=lambda x: x.event_date, reverse=True)
+    else:
+        valid_events.sort(key=lambda x: x.event_date)
+
+    active_category_name = "Past Events" if show_past else "All Events"
+
+    # Search filter
     if query:
-        events = events.filter(
-            Q(title__icontains=query) | 
-            Q(description__icontains=query) | 
-            Q(auditorium__name__icontains=query)
-        )
+        valid_events = [
+            event for event in valid_events if (
+                query.lower() in event.title.lower()
+                or query.lower() in event.description.lower()
+                or query.lower() in event.auditorium.name.lower()
+            )
+        ]
         active_category_name = f"Search Results for '{query}'"
-        
+
+    # Category filter
     if category_id:
-        events = events.filter(category_id=category_id)
+        valid_events = [
+            event for event in valid_events if str(event.category_id) == category_id
+        ]
+
         active_cat = Category.objects.filter(id=category_id).first()
+
         if active_cat:
             if query:
                 active_category_name = f"{active_cat.name.title()} Results for '{query}'"
             else:
                 active_category_name = active_cat.name.title()
-        
-    paginator = Paginator(events, 9)
+
+    # Pagination
+    paginator = Paginator(valid_events, 9)
     page_obj = paginator.get_page(page_number)
 
     categories = Category.objects.all()
-    all_events_count = Event.objects.all().count()
 
     context = {
         "events": page_obj,
         "categories": categories,
         "current_query": query,
         "current_category": category_id,
-        "all_events_count": all_events_count,
+        "show_past": show_past,
+        "all_events_count": upcoming_events_count,
+        "past_events_count": past_events_count,
         "active_category_name": active_category_name
     }
 
@@ -105,6 +159,14 @@ def event_detail(request, event_id):
 def seat_layout(request, event_id):
 
     event = get_object_or_404(Event, id=event_id)
+
+    event_datetime = timezone.make_aware(
+        datetime.combine(event.event_date, event.event_time)
+    )
+
+    if event_datetime < timezone.now():
+        messages.error(request, "This event has already ended. Booking is closed.")
+        return redirect("explore_events")
 
     # Remove expired locks
     SeatLock.objects.filter(
@@ -174,6 +236,14 @@ from .models import Event
 def confirm_booking(request, event_id):
 
     event = get_object_or_404(Event, id=event_id)
+
+    event_datetime = timezone.make_aware(
+        datetime.combine(event.event_date, event.event_time)
+)
+
+    if event_datetime <= timezone.now():
+        messages.error(request, "This event has already ended. Booking is closed.")
+        return redirect("explore_events")
 
     # First time coming from seat selection
     if request.method == "POST":
@@ -246,45 +316,6 @@ def confirm_booking(request, event_id):
     )
 
 
-
-# @login_required
-# def finalize_booking(request, event_id):
-
-#     event = get_object_or_404(Event, id=event_id)
-
-#     seats = request.POST.get("selected_seats")
-#     seat_list = seats.split(",")
-
-#     booking = Booking.objects.create(
-#         user=request.user,
-#         event=event,
-#         total_amount=event.ticket_price * len(seat_list)
-#     )
-
-#     for seat_code in seat_list:
-
-#         row = seat_code[0]
-#         number = seat_code[1:]
-
-#         seat = Seat.objects.get(
-#             auditorium=event.auditorium,
-#             row_label=row,
-#             seat_number=number
-#         )
-
-#         BookingSeat.objects.create(
-#             booking=booking,
-#             seat=seat
-#         )
-
-#         SeatLock.objects.filter(
-#             seat=seat,
-#             event=event
-#         ).delete()
-
-#     messages.success(request, "Booking confirmed!")
-
-#     return redirect("index")
 
 
 

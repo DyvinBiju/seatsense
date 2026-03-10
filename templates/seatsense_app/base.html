@@ -103,8 +103,8 @@
             style="font-weight: 600; color: #202124; font-size: 15px; margin-right: 15px; text-decoration: none; transition: color 0.3s ease;"
             onmouseover="this.style.color='#ff5722';" onmouseout="this.style.color='#202124';">
             <i class="fa fa-user-circle"
-              style="color: #ff5722; font-size: 18px; margin-right: 6px; vertical-align: middle;"></i>{{
-            user.username|title }}
+              style="color: #ff5722; font-size: 18px; margin-right: 6px; vertical-align: middle;"></i>
+            <span>{{ user.username|title }}</span>
           </a>
           <form method="POST" action="{% url 'logout' %}" style="margin: 0;">
             {% csrf_token %}
