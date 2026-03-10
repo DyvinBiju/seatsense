@@ -116,7 +116,12 @@ def seat_layout(request, event_id):
     ).order_by("row_label", "seat_number")
 
     locked_seats = SeatLock.objects.filter(event=event)
-    booked_seats = BookingSeat.objects.filter(booking__event=event)
+
+    # Only CONFIRMED bookings should mark seats as booked
+    booked_seats = BookingSeat.objects.filter(
+        booking__event=event,
+        booking__status="CONFIRMED"
+    )
 
     locked_ids = [lock.seat.id for lock in locked_seats]
     booked_ids = [b.seat.id for b in booked_seats]
@@ -560,6 +565,11 @@ def my_bookings(request):
 
 
 
+import qrcode
+import base64
+from io import BytesIO
+
+
 @login_required
 def booking_detail(request, booking_id):
 
@@ -569,13 +579,30 @@ def booking_detail(request, booking_id):
         user=request.user
     )
 
-    seats = BookingSeat.objects.filter(
-        booking=booking
-    )
+    booking_seats = BookingSeat.objects.filter(booking=booking)
+
+    seat_list = [str(seat.seat) for seat in booking_seats]
+
+    # QR Code Data (unique per booking)
+    qr_data = f"""
+SeatSense Ticket
+User: {request.user.username}
+Event: {booking.event.title}
+Seats: {', '.join(seat_list)}
+Date: {booking.event.event_date}
+"""
+
+    qr = qrcode.make(qr_data)
+
+    buffer = BytesIO()
+    qr.save(buffer, format="PNG")
+
+    qr_base64 = base64.b64encode(buffer.getvalue()).decode()
 
     context = {
         "booking": booking,
-        "seats": seats
+        "seats": seat_list,
+        "qr_code": qr_base64
     }
 
     return render(
@@ -583,6 +610,55 @@ def booking_detail(request, booking_id):
         "seatsense_app/booking_detail.html",
         context
     )
+
+
+
+from django.utils import timezone
+from datetime import datetime, timedelta
+from django.contrib import messages
+
+
+@login_required
+def cancel_booking(request, booking_id):
+
+    booking = get_object_or_404(
+        Booking,
+        id=booking_id,
+        user=request.user
+    )
+
+    if booking.status == "CANCELLED":
+        messages.warning(request, "This booking is already cancelled.")
+        return redirect("my_bookings")
+
+    event_datetime = timezone.make_aware(
+        datetime.combine(
+            booking.event.event_date,
+            booking.event.event_time
+        )
+    )
+
+    now = timezone.now()
+
+    # Allow cancellation only until 6 hours before event
+    if event_datetime - now < timedelta(hours=6):
+        messages.error(
+            request,
+            "Cancellation is not allowed within 6 hours of the event."
+        )
+        return redirect("booking_detail", booking_id=booking.id)
+
+    booking.status = "CANCELLED"
+    booking.save()
+
+    messages.success(
+        request,
+        "Booking cancelled successfully. Seats have been released. (No refund policy)"
+    )
+
+    return redirect("my_bookings")
+
+
 
 
 

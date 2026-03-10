@@ -77,11 +77,19 @@ Seats: -
 
 <div class="d-flex align-items-center mt-3 flex-wrap gap-2" style="gap:15px;">
 
-<span class="badge custom-badge-success d-flex align-items-center"
-style="border-radius:20px;padding:6px 14px;font-size:13px;font-weight:600;background-color:#e6f4ea;color:#34a853;">
-<i class="fa fa-check-circle" style="margin-right:6px;"></i>
+{% if booking.status == "CONFIRMED" %}
+
+<span class="badge custom-badge-success">
 Confirmed
 </span>
+
+{% else %}
+
+<span class="badge badge-danger">
+Cancelled
+</span>
+
+{% endif %}
 
 </div>
 

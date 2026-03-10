@@ -21,9 +21,8 @@ urlpatterns = [
     path('event/<int:event_id>/process-payment/', views.process_payment, name='process_payment'),
     path("payment-success/<int:booking_id>/", views.payment_success, name="payment_success"),
     path("my-bookings/", views.my_bookings, name="my_bookings"),
-
     path("booking/<int:booking_id>/", views.booking_detail, name="booking_detail"),
-
+    path("cancel-booking/<int:booking_id>/", views.cancel_booking, name="cancel_booking"),
     # path("event/<int:event_id>/finalize-booking/", views.finalize_booking, name="finalize_booking"),
     path("signup/", views.signup, name="signup"),
 
