@@ -117,6 +117,20 @@
                             View Ticket <i class="fa fa-arrow-right ml-2" style="font-size:12px;"></i>
                         </a>
 
+                        {% if booking.status == "CONFIRMED" and booking.is_past %}
+                        {% if booking.already_reviewed %}
+                        <a href="{% url 'event_detail' booking.event.id %}" class="btn w-100 mt-2"
+                            style="background: #10b981; color: white; border-radius: 25px; font-weight: 600; padding: 10px 0; border: none; font-size: 14px; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);">
+                            Feedback Completed <i class="fa fa-check-circle ml-2" style="font-size:12px;"></i>
+                        </a>
+                        {% else %}
+                        <a href="{% url 'event_detail' booking.event.id %}" class="btn btn-main-md w-100 mt-2"
+                            style="border-radius: 25px; padding: 10px 0; font-size: 14px;">
+                            Leave Feedback <i class="fa fa-star ml-2" style="font-size:12px;"></i>
+                        </a>
+                        {% endif %}
+                        {% endif %}
+
                     </div>
 
                 </div>

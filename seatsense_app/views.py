@@ -624,6 +624,18 @@ def my_bookings(request):
         user=request.user
     ).order_by("-booking_date")
 
+    for booking in bookings:
+        event_datetime = datetime.combine(booking.event.event_date, booking.event.event_time)
+        if timezone.is_naive(event_datetime):
+            event_datetime = timezone.make_aware(event_datetime)
+
+        booking.is_past = event_datetime <= timezone.now()
+        if booking.is_past and booking.status == "CONFIRMED":
+            booking.already_reviewed = Feedback.objects.filter(
+                user=request.user,
+                event=booking.event
+            ).exists()
+
     context = {
         "bookings": bookings
     }
@@ -760,11 +772,18 @@ def profile(request):
         status="CANCELLED"
     ).count()
 
+    recent_replies = FeedbackReply.objects.filter(
+        feedback__user=request.user
+    ).exclude(
+        user=request.user
+    ).order_by("-created_at")[:5]
+
     context = {
         "profile": profile,
         "total_bookings": total_bookings,
         "active_bookings": active_bookings,
-        "cancelled_bookings": cancelled_bookings
+        "cancelled_bookings": cancelled_bookings,
+        "recent_replies": recent_replies
     }
 
     return render(request, "seatsense_app/profile.html", context)
