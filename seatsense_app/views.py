@@ -335,6 +335,71 @@ def payment_page(request, event_id):
 
 
 
+@login_required
+def create_payment_pin(request, event_id):
+
+    event = get_object_or_404(Event, id=event_id)
+
+    seats = request.session.get("selected_seats")
+
+    if not seats:
+        return redirect("explore_events")
+
+    total_price = event.ticket_price * len(seats)
+
+    locks = SeatLock.objects.filter(user=request.user, event=event)
+    first_lock = locks.order_by("locked_at").first()
+
+    expiry_time = first_lock.locked_at + timedelta(minutes=5)
+    remaining_seconds = int((expiry_time - timezone.now()).total_seconds())
+
+    if remaining_seconds < 0:
+        remaining_seconds = 0
+
+
+    if request.method == "POST":
+
+        new_pin = request.POST.get("new_pin")
+        confirm_pin = request.POST.get("confirm_pin")
+
+        if not new_pin.isdigit() or not confirm_pin.isdigit():
+            return render(request, "seatsense_app/payment.html", {
+                "event": event,
+                "seats": seats,
+                "total_price": total_price,
+                "remaining_seconds": remaining_seconds,
+                "pin_exists": False,
+                "error": "PIN must contain only numbers."
+            })
+
+        if len(new_pin) < 4 or len(new_pin) > 6:
+            return render(request, "seatsense_app/payment.html", {
+                "event": event,
+                "seats": seats,
+                "total_price": total_price,
+                "remaining_seconds": remaining_seconds,
+                "pin_exists": False,
+                "error": "PIN must be between 4 and 6 digits."
+            })
+
+        if new_pin != confirm_pin:
+            return render(request, "seatsense_app/payment.html", {
+                "event": event,
+                "seats": seats,
+                "total_price": total_price,
+                "remaining_seconds": remaining_seconds,
+                "pin_exists": False,
+                "error": "PINs do not match."
+            })
+
+        profile = request.user.profile
+        profile.payment_pin = new_pin
+        profile.save()
+
+        return redirect("payment_page", event_id=event_id)
+
+
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Event, Seat, Booking, BookingSeat, SeatLock
@@ -401,6 +466,7 @@ def process_payment(request, event_id):
             "seats": seats,
             "total_price": total_price,
             "remaining_seconds": remaining_seconds,
+            "pin_exists": True,   # ✅ FIX: ensures Enter PIN form shows
             "error": f"Incorrect PIN. Attempts left: {3 - request.session['pin_attempts']}"
         })
 
@@ -439,12 +505,84 @@ def process_payment(request, event_id):
     if "selected_seats" in request.session:
         del request.session["selected_seats"]
 
-    return redirect("payment_success")
+    return redirect("payment_success", booking_id=booking.id)
 
 
 
-def payment_success(request):
-    return render(request, "seatsense_app/payment_success.html")
+@login_required
+def payment_success(request, booking_id):
+
+    booking = get_object_or_404(
+        Booking,
+        id=booking_id,
+        user=request.user
+    )
+
+    seats = BookingSeat.objects.filter(
+        booking=booking
+    )
+
+    seat_list = [str(seat.seat) for seat in seats]
+
+    context = {
+        "booking": booking,
+        "event": booking.event,
+        "seats": seat_list
+    }
+
+    return render(
+        request,
+        "seatsense_app/payment_success.html",
+        context
+    )
+
+
+
+
+
+@login_required
+def my_bookings(request):
+
+    bookings = Booking.objects.filter(
+        user=request.user
+    ).order_by("-booking_date")
+
+    context = {
+        "bookings": bookings
+    }
+
+    return render(
+        request,
+        "seatsense_app/my_bookings.html",
+        context
+    )
+
+
+
+
+@login_required
+def booking_detail(request, booking_id):
+
+    booking = get_object_or_404(
+        Booking,
+        id=booking_id,
+        user=request.user
+    )
+
+    seats = BookingSeat.objects.filter(
+        booking=booking
+    )
+
+    context = {
+        "booking": booking,
+        "seats": seats
+    }
+
+    return render(
+        request,
+        "seatsense_app/booking_detail.html",
+        context
+    )
 
 
 
