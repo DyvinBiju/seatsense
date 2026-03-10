@@ -10,38 +10,65 @@
 =            Banner            =
 =============================-->
 
-<section class="banner-two overlay-dark" style="background-image: url('{{ event.image.url }}'); background-size: cover; background-position: center center; padding: 150px 0; position: relative;">
-<div class="container" style="position: relative; z-index: 2;">
+<section class="banner-two overlay-dark"
+    style="background-image: url('{{ event.image.url }}'); background-size: cover; background-position: center center; padding: 150px 0; position: relative;">
+    <div class="container" style="position: relative; z-index: 2;">
 
-<div class="row">
+        <div class="row">
 
-<div class="col-md-10">
+            <div class="col-md-10">
 
-<div class="block" style="color: white; text-shadow: 1px 1px 5px rgba(0,0,0,0.8);">
+                <div class="block" style="color: white; text-shadow: 1px 1px 5px rgba(0,0,0,0.8);">
 
-<h1 style="color: #ffffff; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; text-shadow: 2px 4px 10px rgba(0,0,0,0.9); margin-bottom: 10px;">{{ event.title }}</h1>
+                    <h1
+                        style="color: #ffffff; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; text-shadow: 2px 4px 10px rgba(0,0,0,0.9); margin-bottom: 10px;">
+                        {{ event.title }}</h1>
 
-<h4 style="color: #ff5722; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 25px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">{{ event.category.name }}</h4>
+                    <h4
+                        style="color: #ff5722; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 25px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">
+                        {{ event.category.name }}</h4>
 
-<h6 style="color: #f8f9fa; font-size: 18px; margin-bottom: 15px; font-weight: 500;">
-<i class="fa fa-calendar" style="color: #ff5722; margin-right: 8px;"></i>{{ event.event_date|date:"F j, Y" }} &nbsp;&nbsp;|&nbsp;&nbsp; <i class="fa fa-clock-o" style="color: #ff5722; margin-right: 8px;"></i>{{ event.event_time }}
-</h6>
+                    <h6 style="color: #f8f9fa; font-size: 18px; margin-bottom: 15px; font-weight: 500;">
+                        <i class="fa fa-calendar" style="color: #ff5722; margin-right: 8px;"></i>
+                        <span>
+                            {{ event.event_date|date:"F j, Y" }}
+                        </span>
+                        &nbsp;&nbsp;|&nbsp;&nbsp;
+                        <i class="fa fa-clock-o" style="color: #ff5722; margin-right: 8px;"></i>
+                        <span>
+                            {{ event.event_time }}
+                        </span>
+                    </h6>
 
-<p style="color: #ffffff; font-size: 18px; margin-bottom: 30px; font-weight: 500;">
-<i class="fa fa-map-marker" style="color: #ff5722; font-size: 20px; margin-right: 8px;"></i>Venue: <span style="font-weight: 600;">{{ event.auditorium.name|title }}</span>
-</p>
+                    <p style="color: #ffffff; font-size: 18px; margin-bottom: 30px; font-weight: 500;">
+                        <i class="fa fa-map-marker"
+                            style="color: #ff5722; font-size: 20px; margin-right: 8px;"></i>Venue:
+                        <span style="font-weight: 600;">
+                            {{ event.auditorium.name|title }}
+                        </span>
+                    </p>
 
-<a href="{% url 'seat_layout' event.id %}" class="btn btn-main-md" style="text-shadow: none; box-shadow: 0 4px 15px rgba(255,87,34,0.4);">
-Book Seat
-</a>
+                    <div style="display: flex; gap: 15px;">
+                        {% if not is_past %}
+                        <a href="{% url 'seat_layout' event.id %}" class="btn btn-main-md"
+                            style="text-shadow: none; box-shadow: 0 4px 15px rgba(255,87,34,0.4);">
+                            Book Seat
+                        </a>
+                        {% else %}
+                        <button class="btn btn-main-md" disabled
+                            style="background-color: #d1d5db; border-color: #d1d5db; color: #6b7280; box-shadow: none; cursor: not-allowed;">
+                            Event Completed
+                        </button>
+                        {% endif %}
+                    </div>
 
-</div>
+                </div>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-</div>
+    </div>
 </section>
 
 
@@ -51,60 +78,69 @@ Book Seat
 =============================-->
 
 <section class="section about">
-<div class="container">
+    <div class="container">
 
-<div class="row">
+        <div class="row">
 
-<div class="col-lg-5 col-md-6 align-self-center">
+            <div class="col-lg-5 col-md-6 align-self-center">
 
-<div style="padding: 10px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
-<img class="img-fluid w-100"
-src="{{ event.image.url }}"
-alt="event image" style="border-radius: 15px; object-fit: cover;">
-</div>
+                <div
+                    style="padding: 10px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+                    <img class="img-fluid w-100" src="{{ event.image.url }}" alt="event image"
+                        style="border-radius: 15px; object-fit: cover;">
+                </div>
 
-</div>
+            </div>
 
-<div class="col-lg-6 col-md-6 align-self-center ml-lg-auto">
+            <div class="col-lg-6 col-md-6 align-self-center ml-lg-auto">
 
-<div class="content-block">
+                <div class="content-block">
 
-<h2 style="font-weight: 700; color: #202124; margin-bottom: 25px; position: relative; padding-bottom: 15px;">
-    About This Event
-    <span style="position: absolute; bottom: 0; left: 0; width: 60px; height: 3px; background-color: #ff5722; border-radius: 3px;"></span>
-</h2>
+                    <h2
+                        style="font-weight: 700; color: #202124; margin-bottom: 25px; position: relative; padding-bottom: 15px;">
+                        About This Event
+                        <span
+                            style="position: absolute; bottom: 0; left: 0; width: 60px; height: 3px; background-color: #ff5722; border-radius: 3px;"></span>
+                    </h2>
 
-<p style="font-size: 16px; line-height: 1.8; color: #5f6368; margin-bottom: 35px;">
-{{ event.description|capfirst }}
-</p>
+                    <p style="font-size: 16px; line-height: 1.8; color: #5f6368; margin-bottom: 35px;">
+                        {{ event.description|capfirst }}
+                    </p>
 
-<ul class="list-inline">
+                    <ul class="list-inline">
 
-<li class="list-inline-item">
+                        <li class="list-inline-item">
 
-<a href="{% url 'seat_layout' event.id %}" class="btn btn-main-md">
-Book Seat
-</a>
+                            {% if not is_past %}
+                            <a href="{% url 'seat_layout' event.id %}" class="btn btn-main-md">
+                                Book Seat
+                            </a>
+                            {% else %}
+                            <button class="btn btn-main-md" disabled
+                                style="background-color: #d1d5db; border-color: #d1d5db; color: #6b7280; box-shadow: none; cursor: not-allowed;">
+                                Event Completed
+                            </button>
+                            {% endif %}
 
-</li>
+                        </li>
 
-<li class="list-inline-item">
+                        <li class="list-inline-item">
 
-<a href="{% url 'explore_events' %}" class="btn btn-transparent-md">
-Back to Events
-</a>
+                            <a href="{% url 'explore_events' %}" class="btn btn-transparent-md">
+                                Back to Events
+                            </a>
 
-</li>
+                        </li>
 
-</ul>
+                    </ul>
 
-</div>
+                </div>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-</div>
+    </div>
 </section>
 
 
@@ -114,64 +150,269 @@ Back to Events
 =============================-->
 
 <section class="ticket-feature" style="background-color: #f8f9fa; padding: 60px 0;">
-<div class="container">
+    <div class="container">
 
-<div class="row text-center">
+        <div class="row text-center">
 
-<div class="col-md-4 mb-4 mb-md-0">
+            <div class="col-md-4 mb-4 mb-md-0">
 
-<div class="service-item" style="background: white; padding: 40px 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); height: 100%; transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)';" onmouseout="this.style.transform='translateY(0)';">
+                <div class="service-item"
+                    style="background: white; padding: 40px 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); height: 100%; transition: transform 0.3s ease;"
+                    onmouseover="this.style.transform='translateY(-5px)';"
+                    onmouseout="this.style.transform='translateY(0)';">
 
-<div style="width: 80px; height: 80px; background: #fff0eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto;">
-<i class="fa fa-map-marker" style="font-size: 32px; color: #ff5722; margin: 0;"></i>
-</div>
+                    <div
+                        style="width: 80px; height: 80px; background: #fff0eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto;">
+                        <i class="fa fa-map-marker" style="font-size: 32px; color: #ff5722; margin: 0;"></i>
+                    </div>
 
-<h5 style="font-weight: 700; color: #202124; margin-bottom: 10px; font-size: 18px;">{{ event.auditorium.name|title }}</h5>
+                    <h5 style="font-weight: 700; color: #202124; margin-bottom: 10px; font-size: 18px;">
+                        {{ event.auditorium.name|title }}
+                    </h5>
 
-<p style="color: #ff5722; font-weight: 600; font-size: 14px; margin: 0; text-transform: uppercase; letter-spacing: 1px;">Event Venue</p>
+                    <p
+                        style="color: #ff5722; font-weight: 600; font-size: 14px; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
+                        Event Venue</p>
 
-</div>
+                </div>
 
-</div>
-
-
-<div class="col-md-4 mb-4 mb-md-0">
-
-<div class="service-item" style="background: white; padding: 40px 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); height: 100%; transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)';" onmouseout="this.style.transform='translateY(0)';">
-
-<div style="width: 80px; height: 80px; background: #fff0eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto;">
-<i class="fa fa-calendar" style="font-size: 30px; color: #ff5722; margin: 0;"></i>
-</div>
-
-<h5 style="font-weight: 700; color: #202124; margin-bottom: 10px; font-size: 18px;">{{ event.event_date|date:"F d, Y" }}</h5>
-
-<p style="color: #ff5722; font-weight: 600; font-size: 14px; margin: 0; text-transform: uppercase; letter-spacing: 1px;">Event Date</p>
-
-</div>
-
-</div>
+            </div>
 
 
-<div class="col-md-4">
+            <div class="col-md-4 mb-4 mb-md-0">
 
-<div class="service-item" style="background: white; padding: 40px 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); height: 100%; transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)';" onmouseout="this.style.transform='translateY(0)';">
+                <div class="service-item"
+                    style="background: white; padding: 40px 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); height: 100%; transition: transform 0.3s ease;"
+                    onmouseover="this.style.transform='translateY(-5px)';"
+                    onmouseout="this.style.transform='translateY(0)';">
 
-<div style="width: 80px; height: 80px; background: #fff0eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto;">
-<i class="fa fa-ticket" style="font-size: 30px; color: #ff5722; margin: 0; transform: rotate(-45deg);"></i>
-</div>
+                    <div
+                        style="width: 80px; height: 80px; background: #fff0eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto;">
+                        <i class="fa fa-calendar" style="font-size: 30px; color: #ff5722; margin: 0;"></i>
+                    </div>
 
-<h5 style="font-weight: 700; color: #202124; margin-bottom: 10px; font-size: 18px;">₹ {{ event.ticket_price }}</h5>
+                    <h5 style="font-weight: 700; color: #202124; margin-bottom: 10px; font-size: 18px;">
+                        {{ event.event_date|date:"F d, Y" }}
+                    </h5>
 
-<p style="color: #ff5722; font-weight: 600; font-size: 14px; margin: 0; text-transform: uppercase; letter-spacing: 1px;">Ticket Price</p>
+                    <p
+                        style="color: #ff5722; font-weight: 600; font-size: 14px; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
+                        Event Date</p>
 
-</div>
+                </div>
 
-</div>
+            </div>
 
-</div>
 
-</div>
+            <div class="col-md-4">
+
+                <div class="service-item"
+                    style="background: white; padding: 40px 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); height: 100%; transition: transform 0.3s ease;"
+                    onmouseover="this.style.transform='translateY(-5px)';"
+                    onmouseout="this.style.transform='translateY(0)';">
+
+                    <div
+                        style="width: 80px; height: 80px; background: #fff0eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto;">
+                        <i class="fa fa-ticket"
+                            style="font-size: 30px; color: #ff5722; margin: 0; transform: rotate(-45deg);"></i>
+                    </div>
+
+                    <h5 style="font-weight: 700; color: #202124; margin-bottom: 10px; font-size: 18px;">
+                        ₹ {{ event.ticket_price }}
+                    </h5>
+
+                    <p
+                        style="color: #ff5722; font-weight: 600; font-size: 14px; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
+                        Ticket Price</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 </section>
 
+
+
+{% if is_past %}
+<!--============================
+=        Feedbacks Section    =
+=============================-->
+
+<section class="section pt-5 pb-5 bg-white">
+    <div class="container">
+
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h3 style="font-weight: 800; color: #111827; margin-bottom: 10px;">Event Feedback</h3>
+                <p style="color: #6b7280; font-size: 16px;">See what attendees had to say about {{ event.title }}</p>
+                <div
+                    style="width: 60px; height: 3px; background-color: #ff5722; border-radius: 3px; margin: 20px auto 0;">
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+
+                {% if messages %}
+                <div class="messages mb-4">
+                    {% for message in messages %}
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}"
+                        role="alert" style="border-radius: 12px; font-weight: 500;">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Feedback Form -->
+                {% if user.is_authenticated and attended and not already_reviewed %}
+                <div class="comment-form" style="margin-bottom: 40px;">
+                    <h5>Leave Your Feedback</h5>
+                    <form method="POST" action="{% url 'event_detail' event.id %}" class="row">
+                        {% csrf_token %}
+                        <div class="col-12 mb-3">
+                            <label style="font-weight: 600; color: #4b5563;">Rate this event (1-5 Stars)</label>
+                            <select name="rating" class="form-control main" required>
+                                <option value="" disabled selected>Select a rating...</option>
+                                <option value="5">⭐⭐⭐⭐⭐ (5) - Excellent</option>
+                                <option value="4">⭐⭐⭐⭐ (4) - Good</option>
+                                <option value="3">⭐⭐⭐ (3) - Average</option>
+                                <option value="2">⭐⭐ (2) - Poor</option>
+                                <option value="1">⭐ (1) - Terrible</option>
+                            </select>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label style="font-weight: 600; color: #4b5563;">Your Comments (Optional)</label>
+                            <textarea name="comment" class="form-control main" rows="5"
+                                placeholder="Tell us what you thought about the event..."></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-main-md">Submit Feedback</button>
+                        </div>
+                    </form>
+                </div>
+                {% elif user.is_authenticated and already_reviewed %}
+                <div class="alert alert-success text-center mb-5" style="border-radius: 12px; font-weight: 600;">
+                    <i class="fa fa-check-circle mr-2"></i> You have already provided feedback for this event. Thank
+                    you!
+                </div>
+                {% endif %}
+
+                <!-- Comment Section -->
+                <div class="comments">
+                    <h5>Feedbacks ({{ feedbacks.count }})</h5>
+
+                    {% for feedback in feedbacks %}
+                    <div class="media comment"
+                        style="background: white; border-radius: 16px; padding: 25px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #f3f4f6;">
+
+                        <div
+                            style="width: 50px; height: 50px; border-radius: 50%; background: #fff0eb; color: #ff5722; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; margin-right: 15px; margin-top: 5px; flex-shrink: 0;">
+                            <span>
+                                {{ feedback.user.username.0|upper }}
+                            </span>
+                        </div>
+
+                        <div class="media-body">
+                            <h6>
+                                {{ feedback.user.username|title }}
+                            </h6>
+                            <ul class="list-inline" style="margin-bottom: 5px;">
+                                <li class="list-inline-item">
+                                    <span class="fa fa-calendar"></span>
+                                    <span>
+                                        {{ feedback.created_at|date:"M d, Y" }}
+                                    </span>
+                                </li>
+                                <li class="list-inline-item">
+                                    <span
+                                        style="color: #ffb400; font-size: 14px; background: #fffbeb; padding: 2px 8px; border-radius: 20px; border: 1px solid #fef3c7; display: inline-block;">
+                                        {% if feedback.rating >= 1 %}<i class="fa fa-star"></i>{% else %}<i
+                                            class="fa fa-star-o" style="color: #d1d5db;"></i>{% endif %}
+                                        {% if feedback.rating >= 2 %}<i class="fa fa-star"></i>{% else %}<i
+                                            class="fa fa-star-o" style="color: #d1d5db;"></i>{% endif %}
+                                        {% if feedback.rating >= 3 %}<i class="fa fa-star"></i>{% else %}<i
+                                            class="fa fa-star-o" style="color: #d1d5db;"></i>{% endif %}
+                                        {% if feedback.rating >= 4 %}<i class="fa fa-star"></i>{% else %}<i
+                                            class="fa fa-star-o" style="color: #d1d5db;"></i>{% endif %}
+                                        {% if feedback.rating >= 5 %}<i class="fa fa-star"></i>{% else %}<i
+                                            class="fa fa-star-o" style="color: #d1d5db;"></i>{% endif %}
+                                    </span>
+                                </li>
+                            </ul>
+
+                            {% if feedback.comment %}
+                            <p style="color: #4b5563; font-size: 15px; line-height: 1.6; margin-bottom: 10px;">
+                                "{{ feedback.comment }}"
+                            </p>
+                            {% endif %}
+
+                            <!-- Replies Section -->
+                            {% for reply in feedback.replies.all %}
+                            <div class="media comment"
+                                style="border-top: 1px dashed #e5e7eb; padding-top: 15px; margin-top: 15px;">
+                                <div
+                                    style="width: 40px; height: 40px; border-radius: 50%; background: #f9fafb; color: #6b7280; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; margin-right: 15px; flex-shrink: 0;">
+                                    <span>
+                                        {{ reply.user.username.0|upper }}
+                                    </span>
+                                </div>
+                                <div class="media-body">
+                                    <h6 style="margin-bottom: 2px;">
+                                        {{ reply.user.username|title }}
+                                    </h6>
+                                    <ul class="list-inline" style="margin-bottom: 10px;">
+                                        <li class="list-inline-item" style="color: #9ca3af; font-size: 12px;">
+                                            <span class="fa fa-calendar"></span>
+                                            <span>
+                                                {{ reply.created_at|date:"M d, Y" }}
+                                            </span>
+                                        </li>
+                                    </ul>
+                                    <p style="margin: 0; font-size: 14px; color: #4b5563; line-height: 1.5;">
+                                        {{ reply.reply }}
+                                    </p>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                            <!-- Add Reply Form -->
+                            {% if user.is_authenticated %}
+                            <div class="add-reply-form mt-3 pt-3" style="border-top: 1px dashed #e5e7eb;">
+                                <form method="POST" action="{% url 'add_reply' feedback.id %}" class="d-flex"
+                                    style="gap: 10px;">
+                                    {% csrf_token %}
+                                    <input type="text" name="reply" class="form-control" placeholder="Write a reply..."
+                                        required
+                                        style="border-radius: 20px; font-size: 14px; padding: 8px 15px; height: 40px; border-color: #e5e7eb;">
+                                    <button type="submit" class="btn btn-main-md"
+                                        style="border-radius: 20px; padding: 8px 20px; height: 40px; line-height: 1; font-size: 13px;">Reply</button>
+                                </form>
+                            </div>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-5"
+                        style="background: #f9fafb; border-radius: 16px; border: 2px dashed #e5e7eb;">
+                        <i class="fa fa-comments-o" style="font-size: 40px; color: #d1d5db; margin-bottom: 15px;"></i>
+                        <h5 style="color: #4b5563; font-weight: 600;">No feedback yet</h5>
+                        <p style="color: #9ca3af; font-size: 15px; margin: 0;">Be the first to share your experience!
+                        </p>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endif %}
 
 {% endblock %}

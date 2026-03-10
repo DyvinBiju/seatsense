@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Event, Category, SeatLock
+from .models import Event, Category, SeatLock, Feedback, FeedbackReply
 from django.db.models import Q
 from django.utils import timezone
 from datetime import timedelta
@@ -147,8 +147,49 @@ def event_detail(request, event_id):
 
     event = get_object_or_404(Event, id=event_id)
 
+    event_datetime = datetime.combine(event.event_date, event.event_time)
+    if timezone.is_naive(event_datetime):
+        event_datetime = timezone.make_aware(event_datetime)
+
+    is_past = event_datetime <= timezone.now()
+
+    feedbacks = Feedback.objects.filter(event=event).order_by("-created_at")
+
+    attended = False
+    already_reviewed = False
+
+    if request.user.is_authenticated:
+        attended = Booking.objects.filter(
+            user=request.user,
+            event=event,
+            status="CONFIRMED"
+        ).exists()
+
+        already_reviewed = Feedback.objects.filter(
+            user=request.user,
+            event=event
+        ).exists()
+
+        if request.method == "POST" and is_past and attended and not already_reviewed:
+            rating = request.POST.get("rating")
+            comment = request.POST.get("comment")
+
+            if rating:
+                Feedback.objects.create(
+                    user=request.user,
+                    event=event,
+                    rating=rating,
+                    comment=comment
+                )
+                messages.success(request, "Feedback submitted successfully.")
+                return redirect("event_detail", event_id=event.id)
+    
     context = {
-        "event": event
+        "event": event,
+        "is_past": is_past,
+        "feedbacks": feedbacks,
+        "attended": attended,
+        "already_reviewed": already_reviewed
     }
 
     return render(request, "seatsense_app/event_detail.html", context)
@@ -793,43 +834,24 @@ def change_payment_pin(request):
 
 
 
-
-
-
-
-
 @login_required
-def change_payment_pin(request):
+def add_reply(request, feedback_id):
 
-    profile = request.user.profile
+    feedback = get_object_or_404(Feedback, id=feedback_id)
 
     if request.method == "POST":
 
-        current_pin = request.POST.get("current_pin")
-        new_pin = request.POST.get("new_pin")
-        confirm_pin = request.POST.get("confirm_pin")
+        reply_text = request.POST.get("reply")
 
-        if profile.payment_pin != current_pin:
-            return render(request, "seatsense_app/change_pin.html", {
-                "error": "Current PIN is incorrect"
-            })
+        if reply_text:
 
-        if new_pin != confirm_pin:
-            return render(request, "seatsense_app/change_pin.html", {
-                "error": "PINs do not match"
-            })
+            FeedbackReply.objects.create(
+                feedback=feedback,
+                user=request.user,
+                reply=reply_text
+            )
 
-        if len(new_pin) < 4:
-            return render(request, "seatsense_app/change_pin.html", {
-                "error": "PIN must be at least 4 digits"
-            })
-
-        profile.payment_pin = new_pin
-        profile.save()
-
-        return redirect("profile")
-
-    return render(request, "seatsense_app/change_pin.html")
+    return redirect("event_detail", event_id=feedback.event.id)
 
 
 

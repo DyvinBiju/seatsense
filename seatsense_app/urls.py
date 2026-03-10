@@ -29,6 +29,8 @@ urlpatterns = [
     path("profile/change-pin/", views.change_payment_pin, name="change_payment_pin"),
 
 
+    path("feedback/<int:feedback_id>/reply/", views.add_reply, name="add_reply"),
+
 
 
 

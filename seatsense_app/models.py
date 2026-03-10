@@ -165,3 +165,21 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
+
+
+class FeedbackReply(models.Model):
+
+    feedback = models.ForeignKey(
+        Feedback,
+        on_delete=models.CASCADE,
+        related_name="replies"
+    )
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    reply = models.TextField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Reply by {self.user.username}"
