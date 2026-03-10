@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
   <!-- SITE TITTLE -->
@@ -8,135 +9,136 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SeatSense</title>
-  
+
   <!-- PLUGINS CSS STYLE -->
   <!-- Bootstrap -->
-	<link href="{% static 'seatsense_app/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'seatsense_app/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
 
-	<link href="{% static 'seatsense_app/plugins/themefisher-font/style.css' %}" rel="stylesheet">
+  <link href="{% static 'seatsense_app/plugins/themefisher-font/style.css' %}" rel="stylesheet">
 
-	<link href="{% static 'seatsense_app/plugins/font-awsome/css/font-awesome.min.css' %}" rel="stylesheet">
+  <link href="{% static 'seatsense_app/plugins/font-awsome/css/font-awesome.min.css' %}" rel="stylesheet">
 
-	<link href="{% static 'seatsense_app/plugins/magnific-popup/magnific-popup.css' %}" rel="stylesheet">
+  <link href="{% static 'seatsense_app/plugins/magnific-popup/magnific-popup.css' %}" rel="stylesheet">
 
-	<link href="{% static 'seatsense_app/plugins/slick/slick.css' %}" rel="stylesheet">
+  <link href="{% static 'seatsense_app/plugins/slick/slick.css' %}" rel="stylesheet">
 
-	<link href="{% static 'seatsense_app/plugins/slick/slick-theme.css' %}" rel="stylesheet">
+  <link href="{% static 'seatsense_app/plugins/slick/slick-theme.css' %}" rel="stylesheet">
 
-	<link href="{% static 'seatsense_app/css/style.css' %}" rel="stylesheet">
+  <link href="{% static 'seatsense_app/css/style.css' %}" rel="stylesheet">
 
-	<link href="{% static 'seatsense_app/images/favicon.png' %}" rel="shortcut icon">
+  <link href="{% static 'seatsense_app/images/favicon.png' %}" rel="shortcut icon">
 
 </head>
 
 <body class="body-wrapper">
 
 
-<!--========================================
+  <!--========================================
 =            Navigation Section            =
 =========================================-->
 
-<nav class="navbar main-nav border-less fixed-top navbar-expand-lg p-0">
-  <div class="container-fluid p-0">
+  <nav class="navbar main-nav border-less fixed-top navbar-expand-lg p-0">
+    <div class="container-fluid p-0">
       <!-- logo -->
-	<a class="navbar-brand" href="{% url 'index' %}">
-	<img src="{% static 'seatsense_app/images/logo.png' %}" alt="logo" style="max-height: 50px; width: auto;">
-	</a>
+      <a class="navbar-brand" href="{% url 'index' %}">
+        <img src="{% static 'seatsense_app/images/logo.png' %}" alt="logo" style="max-height: 50px; width: auto;">
+      </a>
 
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-	<span class="fa fa-bars"></span>
-	</button>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <span class="fa fa-bars"></span>
+      </button>
 
-	<div class="collapse navbar-collapse" id="navbarNav">
-	<ul class="navbar-nav mx-auto">
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mx-auto">
 
-	<li class="nav-item dropdown active dropdown-slide">
-	<a class="nav-link" href="{% url 'index' %}" data-toggle="dropdown">
-	Home <span>/</span>
-	</a>
-          <!-- Dropdown list -->
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="{% url 'index' %}">Homepage</a>
-            <a class="dropdown-item" href="{% url 'homepage_two' %}">Homepage 2</a>
-          </div>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'explore_events' %}">Events
-            <span>/</span>
-          </a>
-        </li>
-        <li class="nav-item dropdown dropdown-slide">
-          <a class="nav-link" href="#" data-toggle="dropdown">My Bookings<span>/</span></a>
+          <li class="nav-item dropdown active dropdown-slide">
+            <a class="nav-link" href="{% url 'index' %}" data-toggle="dropdown">
+              Home <span>/</span>
+            </a>
             <!-- Dropdown list -->
-            <!-- <div class="dropdown-menu">
-              <a class="dropdown-item" href="{% url 'about_us' %}">About Us</a>
-              <a class="dropdown-item" href="{% url 'single_speaker' %}">Single Speaker</a>
-              <a class="dropdown-item" href="{% url 'gallery' %}">Gallery</a>
-              <a class="dropdown-item" href="{% url 'gallery_two' %}">Gallery-02</a>
-              <a class="dropdown-item" href="{% url 'testimonial' %}">Testimonial</a>
-              <a class="dropdown-item" href="{% url 'pricing' %}">Pricing</a>
-              <a class="dropdown-item" href="{% url 'faq' %}">FAQ</a>
-              <a class="dropdown-item" href="{% url 'page_404' %}">404</a>
-            </div> -->
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'schedule' %}">Profile<span>/</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'about_us' %}">About Us<span>/</span></a>
-        </li>
-        <!-- <li class="nav-item"></li>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="{% url 'index' %}">Homepage</a>
+              <a class="dropdown-item" href="{% url 'homepage_two' %}">Homepage 2</a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'explore_events' %}">Events
+              <span>/</span>
+            </a>
+          </li>
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'my_bookings' %}">My Bookings<span>/</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'profile' %}">Profile<span>/</span></a>
+          </li>
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'about_us' %}">About Us<span>/</span></a>
+          </li>
+          <!-- <li class="nav-item"></li>
         <a class="nav-link" href="{% url 'about_us' %}">About Us<span>/</span></a>
         </li> -->
-        <li class="nav-item dropdown dropdown-slide">
-          <a class="nav-link" href="#"  data-toggle="dropdown">News
-            <span>/</span>
+          <li class="nav-item dropdown dropdown-slide">
+            <a class="nav-link" href="#" data-toggle="dropdown">News
+              <span>/</span>
+            </a>
+            <!-- Dropdown list -->
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="{% url 'news' %}">News without sidebar</a>
+              <a class="dropdown-item" href="{% url 'explore_events' %}">Explore Events</a>
+              <a class="dropdown-item" href="{% url 'news_left_sidebar' %}">News with left sidebar</a>
+              <a class="dropdown-item" href="{% url 'news_single' %}">News Single</a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+          </li>
+        </ul>
+
+        <div class="d-flex align-items-center ml-lg-3 mt-3 mt-lg-0">
+          {% if user.is_authenticated %}
+          <a href="{% url 'profile' %}"
+            style="font-weight: 600; color: #202124; font-size: 15px; margin-right: 15px; text-decoration: none; transition: color 0.3s ease;"
+            onmouseover="this.style.color='#ff5722';" onmouseout="this.style.color='#202124';">
+            <i class="fa fa-user-circle"
+              style="color: #ff5722; font-size: 18px; margin-right: 6px; vertical-align: middle;"></i>{{
+            user.username|title }}
           </a>
-          <!-- Dropdown list -->
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="{% url 'news' %}">News without sidebar</a>
-            <a class="dropdown-item" href="{% url 'explore_events' %}">Explore Events</a>
-            <a class="dropdown-item" href="{% url 'news_left_sidebar' %}">News with left sidebar</a>
-            <a class="dropdown-item" href="{% url 'news_single' %}">News Single</a>
-          </div>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'contact' %}">Contact</a>
-        </li>
-      </ul>
-      
-      <div class="d-flex align-items-center ml-lg-3 mt-3 mt-lg-0">
-        {% if user.is_authenticated %}
-          <span style="font-weight: 600; color: #202124; font-size: 15px; margin-right: 15px;">
-              <i class="fa fa-user-circle" style="color: #ff5722; font-size: 18px; margin-right: 6px; vertical-align: middle;"></i>{{ user.username|title }}
-          </span>
           <form method="POST" action="{% url 'logout' %}" style="margin: 0;">
-              {% csrf_token %}
-              <button type="submit" class="btn" style="border: 2px solid #eef0f2; border-radius: 25px; padding: 8px 24px; font-weight: 600; color: #5f6368; background: transparent; transition: all 0.3s ease;" onmouseover="this.style.borderColor='#ff5722'; this.style.color='#ff5722';" onmouseout="this.style.borderColor='#eef0f2'; this.style.color='#5f6368';">
-                  Logout
-              </button>
+            {% csrf_token %}
+            <button type="submit" class="btn"
+              style="border: 2px solid #eef0f2; border-radius: 25px; padding: 8px 24px; font-weight: 600; color: #5f6368; background: transparent; transition: all 0.3s ease;"
+              onmouseover="this.style.borderColor='#ff5722'; this.style.color='#ff5722';"
+              onmouseout="this.style.borderColor='#eef0f2'; this.style.color='#5f6368';">
+              Logout
+            </button>
           </form>
-        {% else %}
-          <a href="{% url 'login' %}" style="font-weight: 600; color: #202124; margin-right: 20px; font-size: 15px; transition: color 0.3s ease;" onmouseover="this.style.color='#ff5722';" onmouseout="this.style.color='#202124';">Login</a>
-          
-          <a href="{% url 'signup' %}" class="btn btn-main-md" style="border-radius: 25px; padding: 10px 30px; font-weight: 600; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(255,87,34,0.3);">
-              Sign Up
+          {% else %}
+          <a href="{% url 'login' %}"
+            style="font-weight: 600; color: #202124; margin-right: 20px; font-size: 15px; transition: color 0.3s ease;"
+            onmouseover="this.style.color='#ff5722';" onmouseout="this.style.color='#202124';">Login</a>
+
+          <a href="{% url 'signup' %}" class="btn btn-main-md"
+            style="border-radius: 25px; padding: 10px 30px; font-weight: 600; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(255,87,34,0.3);">
+            Sign Up
           </a>
-        {% endif %}
+          {% endif %}
+        </div>
       </div>
-  </div>
-</nav>
+  </nav>
 
-<!--====  End of Navigation Section  ====-->
+  <!--====  End of Navigation Section  ====-->
 
-{% block content %}
-{% endblock %}
+  {% block content %}
+  {% endblock %}
 
-<!--============================
+  <!--============================
 =            Footer            =
 =============================-->
 
-<footer class="footer-main">
+  <footer class="footer-main">
     <div class="container">
       <div class="row">
         <div class="col-md-12">
@@ -162,26 +164,26 @@
               </li>
             </ul>
           </div>
-          
+
         </div>
       </div>
     </div>
-</footer>
-<!-- Subfooter -->
-<footer class="subfooter">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6 align-self-center">
-        <div class="copyright-text">
-          <p><a href="#">SeatSense</a> &#169; 2026 All Right Reserved</p>
+  </footer>
+  <!-- Subfooter -->
+  <footer class="subfooter">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 align-self-center">
+          <div class="copyright-text">
+            <p><a href="#">SeatSense</a> &#169; 2026 All Right Reserved</p>
+          </div>
         </div>
-      </div>
-      <div class="col-md-6">
+        <div class="col-md-6">
           <a href="#" class="to-top"><i class="fa fa-angle-up"></i></a>
+        </div>
       </div>
     </div>
-  </div>
-</footer>
+  </footer>
 
 
 
@@ -193,13 +195,13 @@
   <!-- Bootstrap 4 -->
   <script src="{% static 'seatsense_app/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
   <!-- Smooth Scroll -->
-  <script src="{% static 'seatsense_app/plugins/smoothscroll/SmoothScroll.min.js' %}"></script>  
+  <script src="{% static 'seatsense_app/plugins/smoothscroll/SmoothScroll.min.js' %}"></script>
   <!-- Isotope -->
-  <script src="{% static 'seatsense_app/plugins/isotope/mixitup.min.js' %}"></script>  
+  <script src="{% static 'seatsense_app/plugins/isotope/mixitup.min.js' %}"></script>
   <!-- Magnific Popup -->
   <script src="{% static 'seatsense_app/plugins/magnific-popup/jquery.magnific-popup.min.js' %}"></script>
   <!-- Slick Carousel -->
-  <script src="{% static 'seatsense_app/plugins/slick/slick.min.js' %}"></script>  
+  <script src="{% static 'seatsense_app/plugins/slick/slick.min.js' %}"></script>
   <!-- SyoTimer -->
   <script src="{% static 'seatsense_app/plugins/syotimer/jquery.syotimer.min.js' %}"></script>
   <!-- Google Mapl -->
@@ -210,6 +212,3 @@
 </body>
 
 </html>
-
-
-
