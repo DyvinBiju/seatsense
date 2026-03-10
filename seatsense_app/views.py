@@ -778,13 +778,16 @@ def edit_profile(request):
 
     if request.method == "POST":
 
-        phone = request.POST.get("phone")
+        if request.POST.get("remove_photo") == "true":
+            profile.profile_image = "profiles/default.png"
+        else:
+            phone = request.POST.get("phone")
 
-        if phone:
-            profile.phone = phone
+            if phone:
+                profile.phone = phone
 
-        if "profile_image" in request.FILES:
-            profile.profile_image = request.FILES["profile_image"]
+            if "profile_image" in request.FILES:
+                profile.profile_image = request.FILES["profile_image"]
 
         profile.save()
 

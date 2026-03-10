@@ -51,15 +51,10 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mx-auto">
 
-          <li class="nav-item dropdown active dropdown-slide">
-            <a class="nav-link" href="{% url 'index' %}" data-toggle="dropdown">
-              Home <span>/</span>
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'index' %}">Home
+              <span>/</span>
             </a>
-            <!-- Dropdown list -->
-            <div class="dropdown-menu">
-              <a class="dropdown-item" href="{% url 'index' %}">Homepage</a>
-              <a class="dropdown-item" href="{% url 'homepage_two' %}">Homepage 2</a>
-            </div>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'explore_events' %}">Events
@@ -100,10 +95,16 @@
         <div class="d-flex align-items-center ml-lg-3 mt-3 mt-lg-0">
           {% if user.is_authenticated %}
           <a href="{% url 'profile' %}"
-            style="font-weight: 600; color: #202124; font-size: 15px; margin-right: 15px; text-decoration: none; transition: color 0.3s ease;"
+            style="font-weight: 600; color: #202124; font-size: 15px; margin-right: 15px; text-decoration: none; transition: color 0.3s ease; display: inline-flex; align-items: center;"
             onmouseover="this.style.color='#ff5722';" onmouseout="this.style.color='#202124';">
-            <i class="fa fa-user-circle"
-              style="color: #ff5722; font-size: 18px; margin-right: 6px; vertical-align: middle;"></i>
+            {% with img=user.profile.profile_image %}
+            {% if img and img.name != 'profiles/default.png' %}
+            <img src="{{ img.url }}"
+              style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-right: 6px; border: 1px solid #ff5722;">
+            {% else %}
+            <i class="fa fa-user-circle" style="color: #ff5722; font-size: 18px; margin-right: 6px;"></i>
+            {% endif %}
+            {% endwith %}
             <span>{{ user.username|title }}</span>
           </a>
           <form method="POST" action="{% url 'logout' %}" style="margin: 0;">
