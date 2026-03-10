@@ -270,14 +270,15 @@
 
                 <!-- Feedback Form -->
                 {% if user.is_authenticated and attended and not already_reviewed %}
-                <div class="comment-form" style="margin-bottom: 40px;">
-                    <h5>Leave Your Feedback</h5>
+                <div class="comment-form"
+                    style="margin-bottom: 40px; padding: 30px; background: #f9fafb; border-radius: 12px; border: 1px solid #e5e7eb;">
+                    <h5 style="margin-bottom: 20px;">Leave Your Feedback</h5>
                     <form method="POST" action="{% url 'event_detail' event.id %}" class="row">
                         {% csrf_token %}
-                        <div class="col-12 mb-3">
-                            <label style="font-weight: 600; color: #4b5563;">Rate this event (1-5 Stars)</label>
-                            <select name="rating" class="form-control main" required>
-                                <option value="" disabled selected>Select a rating...</option>
+                        <div class="col-md-12 mb-3">
+                            <select name="rating" class="form-control main" required
+                                style="cursor: pointer; padding-left: 20px;">
+                                <option value="" disabled selected>Select a rating (1-5 Stars) *</option>
                                 <option value="5">⭐⭐⭐⭐⭐ (5) - Excellent</option>
                                 <option value="4">⭐⭐⭐⭐ (4) - Good</option>
                                 <option value="3">⭐⭐⭐ (3) - Average</option>
@@ -285,10 +286,9 @@
                                 <option value="1">⭐ (1) - Terrible</option>
                             </select>
                         </div>
-                        <div class="col-12 mb-3">
-                            <label style="font-weight: 600; color: #4b5563;">Your Comments (Optional)</label>
+                        <div class="col-md-12 mb-3">
                             <textarea name="comment" class="form-control main" rows="5"
-                                placeholder="Tell us what you thought about the event..."></textarea>
+                                placeholder="Your Comments (Optional)" style="padding-left: 20px;"></textarea>
                         </div>
                         <div class="col-12">
                             <button type="submit" class="btn btn-main-md">Submit Feedback</button>
@@ -311,10 +311,17 @@
                         style="background: white; border-radius: 16px; padding: 25px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #f3f4f6;">
 
                         <div
-                            style="width: 50px; height: 50px; border-radius: 50%; background: #fff0eb; color: #ff5722; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; margin-right: 15px; margin-top: 5px; flex-shrink: 0;">
+                            style="width: 50px; height: 50px; border-radius: 50%; background: #fff0eb; color: #ff5722; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; margin-right: 15px; margin-top: 5px; flex-shrink: 0; overflow: hidden;">
+                            {% with img=feedback.user.profile.profile_image %}
+                            {% if img and img.name != 'profiles/default.png' %}
+                            <img src="{{ img.url }}" alt="Profile"
+                                style="width: 100%; height: 100%; object-fit: cover;">
+                            {% else %}
                             <span>
                                 {{ feedback.user.username.0|upper }}
                             </span>
+                            {% endif %}
+                            {% endwith %}
                         </div>
 
                         <div class="media-body">
@@ -356,10 +363,17 @@
                             <div class="media comment"
                                 style="border-top: 1px dashed #e5e7eb; padding-top: 15px; margin-top: 15px;">
                                 <div
-                                    style="width: 40px; height: 40px; border-radius: 50%; background: #f9fafb; color: #6b7280; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; margin-right: 15px; flex-shrink: 0;">
+                                    style="width: 40px; height: 40px; border-radius: 50%; background: #f9fafb; color: #6b7280; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; margin-right: 15px; flex-shrink: 0; overflow: hidden;">
+                                    {% with img=reply.user.profile.profile_image %}
+                                    {% if img and img.name != 'profiles/default.png' %}
+                                    <img src="{{ img.url }}" alt="Profile"
+                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                    {% else %}
                                     <span>
                                         {{ reply.user.username.0|upper }}
                                     </span>
+                                    {% endif %}
+                                    {% endwith %}
                                 </div>
                                 <div class="media-body">
                                     <h6 style="margin-bottom: 2px;">
