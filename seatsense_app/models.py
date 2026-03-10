@@ -81,6 +81,7 @@ class Booking(models.Model):
         ],
         default="CONFIRMED",
     )
+    cancelled_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"Booking {self.id}"

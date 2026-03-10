@@ -649,6 +649,10 @@ def cancel_booking(request, booking_id):
         return redirect("booking_detail", booking_id=booking.id)
 
     booking.status = "CANCELLED"
+
+    # ⭐ NEW LINE (store cancellation time)
+    booking.cancelled_at = timezone.now()
+
     booking.save()
 
     messages.success(
