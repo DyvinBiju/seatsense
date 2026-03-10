@@ -122,7 +122,7 @@ class Profile(models.Model):
         blank=True
     )
 
-    phone = models.CharField(max_length=15, blank=True)
+    phone = models.CharField(max_length=10, blank=True)
 
     payment_pin = models.CharField(max_length=10, blank=True)
 
