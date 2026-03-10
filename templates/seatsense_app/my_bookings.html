@@ -1,0 +1,182 @@
+{% extends "seatsense_app/base.html" %}
+
+{% block content %}
+<section class="section pt-5 pb-5" style="margin-top: 80px; min-height: 80vh; background-color: #fcfcfc;">
+    <div class="container">
+
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h2 style="font-weight: 700; color: #202124;">My Bookings</h2>
+                <p class="text-muted mt-2" style="font-size: 1.1rem;">Manage your tickets and upcoming events</p>
+            </div>
+        </div>
+
+        {% if bookings %}
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                {% for booking in bookings %}
+                <div class="booking-card mb-4 d-flex flex-column flex-md-row bg-white align-items-center">
+
+                    <!-- Date/Time Block -->
+                    <div class="booking-date text-center py-4 px-4 flex-shrink-0" style="background-color: #fcf8f5;">
+                        <span class="d-block text-uppercase"
+                            style="color: #ff5722; font-weight: 700; font-size: 14px; letter-spacing: 1px;">
+                            {{ booking.event.event_date|date:"M" }}
+                        </span>
+                        <span class="d-block"
+                            style="font-size: 36px; font-weight: 800; color: #202124; line-height: 1.1; margin: 5px 0;">
+                            {{ booking.event.event_date|date:"d" }}
+                        </span>
+                        <span class="d-block text-muted" style="font-size: 13px; font-weight: 600; margin-top: 5px;">
+                            {{ booking.event.event_time|time:"h:i A"|default:"TBD" }}
+                        </span>
+                    </div>
+
+                    <!-- Detail Block -->
+                    <div class="booking-info flex-grow-1 py-4 px-4 px-md-5">
+                        <h4 style="font-weight: 700; color: #202124; margin-bottom: 8px;">{{ booking.event.title }}</h4>
+                        <p class="text-muted mb-3" style="font-size: 15px;">
+                            <i class="fa fa-map-marker-alt"
+                                style="color: #ff5722; margin-right: 6px; width: 14px; text-align: center;"></i>
+                            {{ booking.event.auditorium.name|default:"Main Auditorium" }}
+                        </p>
+                        <div class="d-flex align-items-center mt-3 flex-wrap gap-2" style="gap: 15px;">
+                            <span class="badge custom-badge-success d-flex align-items-center"
+                                style="border-radius: 20px; padding: 6px 14px; font-size: 13px; font-weight: 600; background-color: #e6f4ea; color: #34a853;">
+                                <i class="fa fa-check-circle" style="margin-right: 6px;"></i> Confirmed
+                            </span>
+                            <span class="text-muted d-flex align-items-center"
+                                style="font-size: 14px; font-weight: 600; padding: 6px 0;">
+                                <i class="fa fa-hashtag"
+                                    style="margin-right: 4px; font-size: 12px; color: #dadce0;"></i>{{ booking.id }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Action Block -->
+                    <div class="booking-action text-center text-md-right py-4 px-4 px-md-5"
+                        style="border-left: 1px dashed #eef0f2; min-width: 220px;">
+                        <div class="mb-3 text-center text-md-right">
+                            <span class="text-muted"
+                                style="font-size: 13px; font-weight: 600; display: block; text-transform: uppercase; letter-spacing: 0.5px;">Total
+                                Paid</span>
+                            <span style="font-size: 26px; font-weight: 800; color: #ff5722;">₹{{ booking.total_amount
+                                }}</span>
+                        </div>
+                        <a href="{% url 'booking_detail' booking.id %}" class="btn btn-view-ticket w-100 mt-2">
+                            View Ticket <i class="fa fa-arrow-right ml-2" style="font-size: 12px;"></i>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <div class="mb-4 mt-3">
+                <div
+                    style="width: 100px; height: 100px; background-color: #f8f9fa; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                    <i class="fa fa-ticket-alt" style="font-size: 40px; color: #dadce0;"></i>
+                </div>
+            </div>
+            <h4 style="font-weight: 700; color: #202124;">No Bookings Found</h4>
+            <p class="text-muted mb-4" style="font-size: 1.1rem; max-width: 400px; margin: 0 auto;">You haven't booked
+                any events yet. Start exploring now and grab your seats before they run out!</p>
+            <div class="mt-4">
+                <a href="{% url 'explore_events' %}" class="btn btn-primary-custom">Explore Events</a>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</section>
+
+<!-- ================= CSS ================= -->
+<style>
+    .booking-card {
+        border-radius: 20px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.03);
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        border: 1px solid #eef0f2;
+        overflow: hidden;
+    }
+
+    .booking-card:hover {
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+        transform: translateY(-4px);
+        border-color: #ffe6dd;
+    }
+
+    .booking-date {
+        min-width: 140px;
+        height: 100%;
+        min-height: 160px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .btn-view-ticket {
+        background-color: white;
+        color: #ff5722;
+        border: 2px solid #ff5722;
+        border-radius: 30px;
+        padding: 12px 20px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        font-size: 15px;
+    }
+
+    .btn-view-ticket:hover {
+        background-color: #ff5722;
+        color: white;
+        box-shadow: 0 6px 15px rgba(255, 87, 34, 0.3);
+        transform: translateY(-2px);
+    }
+
+    .btn-primary-custom {
+        background-color: #ff5722;
+        color: white;
+        border: none;
+        padding: 14px 35px;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 87, 34, 0.3);
+    }
+
+    .btn-primary-custom:hover {
+        background-color: #e64a19;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 87, 34, 0.4);
+    }
+
+    @media (max-width: 768px) {
+        .booking-card {
+            flex-direction: column !important;
+        }
+
+        .booking-date {
+            width: 100%;
+            min-height: auto;
+            border-bottom: 2px dashed #eef0f2;
+            padding: 25px !important;
+        }
+
+        .booking-action {
+            width: 100%;
+            border-left: none !important;
+            border-top: 2px dashed #eef0f2;
+        }
+
+        .btn-view-ticket {
+            max-width: 250px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+</style>
+
+{% endblock %}

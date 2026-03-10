@@ -1,0 +1,341 @@
+{% extends "seatsense_app/base.html" %}
+
+{% block content %}
+<section class="section pt-5 pb-5" style="margin-top: 80px; min-height: 80vh; background-color: #f3f4f6;">
+    <div class="container">
+
+        <div class="row mb-4">
+            <div class="col-12 text-center mt-3">
+                <h2 style="font-weight: 700; color: #202124;">Your Ticket</h2>
+                <p class="text-muted" style="font-size: 1.1rem;">Present this ticket at the venue</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+
+                <!-- Ticket Container -->
+                <div class="ticket-container">
+
+                    <!-- Ticket Top half -->
+                    <div class="ticket-top text-center">
+                        <!-- Event Image Placeholder or Icon -->
+                        <div class="ticket-icon-wrapper mx-auto mb-3">
+                            <i class="fa fa-star" style="font-size: 24px; color: #ff5722;"></i>
+                        </div>
+
+                        <h3 class="ticket-title">{{ booking.event.title }}</h3>
+                        <p class="ticket-subtitle mb-4">
+                            <i class="fa fa-map-marker-alt" style="color: #ff5722; margin-right: 5px;"></i>
+                            {{ booking.event.auditorium.name|default:"Main Auditorium" }}
+                        </p>
+
+                        <div class="row text-left mb-2">
+                            <div class="col-6">
+                                <span class="info-label">Date</span>
+                                <span class="info-value">{{ booking.event.event_date|date:"j M, Y" }}</span>
+                            </div>
+                            <div class="col-6">
+                                <span class="info-label">Time</span>
+                                <span class="info-value">{{ booking.event.event_time|time:"h:i A"|default:"TBD"
+                                    }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row text-left mt-4">
+                            <div class="col-12">
+                                <span class="info-label text-center text-sm-left" style="margin-bottom: 10px;">Seats
+                                    Booked</span>
+                                <div class="text-center text-sm-left"
+                                    style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px;">
+                                    {% for seat in seats %}
+                                    <span class="seat-badge d-inline-flex align-items-center justify-content-center">
+                                        {{ seat.seat }}
+                                    </span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Tear line -->
+                    <div class="ticket-divider"></div>
+
+                    <!-- Ticket Bottom half -->
+                    <div class="ticket-bottom text-center">
+
+                        <div class="row text-left mb-4 mt-2">
+                            <div class="col-6 text-center text-sm-left">
+                                <span class="info-label">Ticket No.</span>
+                                <span class="info-value"
+                                    style="font-family: monospace; letter-spacing: 1px; color:#5f6368;">#SENSE-{{
+                                    booking.id }}</span>
+                            </div>
+                            <div class="col-6 text-center text-sm-right mt-3 mt-sm-0">
+                                <span class="info-label text-sm-right d-block">Total Paid</span>
+                                <span class="info-value text-sm-right d-block"
+                                    style="color: #ff5722; font-size: 22px; font-weight:800;">₹{{ booking.total_amount
+                                    }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Barcode -->
+                        <div class="barcode-area">
+                            <div class="barcode-lines mx-auto"></div>
+                        </div>
+                        <p class="mt-2 text-muted" style="font-size: 11px; letter-spacing: 3px; font-weight:600;">SCAN
+                            TO ENTER</p>
+
+                    </div>
+
+                </div> <!-- End Ticket -->
+
+                <div class="text-center mt-5 mb-5 action-buttons">
+                    <a href="{% url 'my_bookings' %}" class="btn btn-secondary-custom mb-3 mb-sm-0">
+                        <i class="fa fa-arrow-left mr-2"></i> Back to My Bookings
+                    </a>
+                    <button class="btn btn-primary-custom ml-0 ml-sm-3" onclick="window.print()">
+                        <i class="fa fa-print mr-2"></i> Print Ticket
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ================= CSS ================= -->
+<style>
+    .ticket-container {
+        background-color: transparent;
+        filter: drop-shadow(0 15px 40px rgba(0, 0, 0, 0.06));
+        margin: 0 auto;
+        max-width: 450px;
+        width: 100%;
+    }
+
+    .ticket-top {
+        background-color: #ffffff;
+        padding: 40px 30px 30px 30px;
+        border-radius: 24px 24px 0 0;
+        position: relative;
+        border-bottom: 2px dashed #eef0f2;
+    }
+
+    .ticket-icon-wrapper {
+        width: 64px;
+        height: 64px;
+        background-color: #fff0eb;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 10px rgba(255, 87, 34, 0.1);
+    }
+
+    .ticket-title {
+        font-weight: 800;
+        color: #202124;
+        font-size: 26px;
+        margin-bottom: 6px;
+    }
+
+    .ticket-subtitle {
+        font-size: 15px;
+        color: #5f6368;
+        font-weight: 600;
+    }
+
+    .info-label {
+        display: block;
+        font-size: 12px;
+        text-transform: uppercase;
+        color: #70757a;
+        letter-spacing: 1px;
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
+
+    .info-value {
+        display: block;
+        font-size: 16px;
+        color: #202124;
+        font-weight: 700;
+    }
+
+    .seat-badge {
+        background: #fdfaf8;
+        color: #ff5722;
+        padding: 8px 16px;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 800;
+        border: 1px solid #ffece6;
+        min-width: 45px;
+    }
+
+    .ticket-divider {
+        position: relative;
+        height: 1px;
+        background: transparent;
+    }
+
+    .ticket-divider::before,
+    .ticket-divider::after {
+        content: '';
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        background-color: #f3f4f6;
+        /* matches body bg */
+        border-radius: 50%;
+        top: -15px;
+        z-index: 2;
+    }
+
+    .ticket-divider::before {
+        left: -15px;
+    }
+
+    .ticket-divider::after {
+        right: -15px;
+    }
+
+    .ticket-bottom {
+        background-color: #ffffff;
+        padding: 30px 30px 40px 30px;
+        border-radius: 0 0 24px 24px;
+        position: relative;
+    }
+
+    .barcode-area {
+        margin-top: 25px;
+        width: 100%;
+        opacity: 0.7;
+    }
+
+    .barcode-lines {
+        height: 60px;
+        max-width: 320px;
+        background: repeating-linear-gradient(to right,
+                #202124,
+                #202124 3px,
+                transparent 3px,
+                transparent 7px,
+                #202124 7px,
+                #202124 10px,
+                transparent 10px,
+                transparent 13px,
+                #202124 13px,
+                #202124 19px,
+                transparent 19px,
+                transparent 25px);
+    }
+
+    .btn-primary-custom {
+        background-color: #ff5722;
+        color: white;
+        border: none;
+        padding: 14px 30px;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 15px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 87, 34, 0.3);
+    }
+
+    .btn-primary-custom:hover {
+        background-color: #e64a19;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 87, 34, 0.4);
+    }
+
+    .btn-secondary-custom {
+        background-color: #ffffff;
+        color: #202124;
+        border: 1px solid #dadce0;
+        padding: 14px 30px;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 15px;
+        transition: all 0.3s ease;
+        text-decoration: none !important;
+        display: inline-block;
+    }
+
+    .btn-secondary-custom:hover {
+        background-color: #f8f9fa;
+        border-color: #d5d7db;
+        color: #202124;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    @media print {
+        body {
+            background-color: white !important;
+        }
+
+        body * {
+            visibility: hidden;
+        }
+
+        .ticket-container,
+        .ticket-container * {
+            visibility: visible;
+        }
+
+        .ticket-container {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translate(-50%, 0);
+            width: 100%;
+            max-width: 100%;
+            filter: none;
+            box-shadow: none;
+            border: 1px solid #dadce0;
+            border-radius: 24px;
+        }
+
+        .ticket-divider::before,
+        .ticket-divider::after {
+            background-color: white !important;
+            border: 1px solid #dadce0;
+        }
+
+        .ticket-divider::before {
+            border-right: 0;
+            border-top: 0;
+            border-bottom: 0;
+        }
+
+        .ticket-divider::after {
+            border-left: 0;
+            border-top: 0;
+            border-bottom: 0;
+        }
+
+        .ticket-top {
+            border-bottom: 2px dashed #dadce0;
+        }
+
+        .action-buttons {
+            display: none !important;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .seat-badge {
+            flex: 1 1 30%;
+        }
+
+        .info-label {
+            margin-top: 10px;
+        }
+    }
+</style>
+{% endblock %}

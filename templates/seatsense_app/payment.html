@@ -4,7 +4,7 @@
 {% block content %}
 <style>
     body {
-        background-color: #f8f9fa; /* slightly grey background like GPay transaction screen */
+        background-color: #f8f9fa;
     }
     .gpay-card {
         max-width: 420px;
@@ -100,10 +100,6 @@
         border-color: #ff5722;
         outline: none;
     }
-    .gpay-input::placeholder {
-        letter-spacing: normal;
-        color: #9aa0a6;
-    }
     .gpay-btn {
         background-color: #ff5722;
         color: white;
@@ -141,17 +137,18 @@
 
 <div class="container">
     <div class="gpay-card">
+
         <div class="gpay-avatar">
             <i class="fa fa-building-o"></i>
         </div>
-        
+
         <div class="gpay-vendor">SeatSense Events</div>
         <div class="gpay-paying">Paying SeatSense</div>
-        
+
         <div class="gpay-amount">
             <span style="font-size: 32px; vertical-align: super; margin-right: 2px; color: #5f6368;">₹</span>{{ total_price }}
         </div>
-        
+
         <div class="gpay-details">
             <div class="gpay-details-row">
                 <i class="fa fa-ticket gpay-details-icon"></i>
@@ -170,44 +167,73 @@
         </div>
 
         <div class="gpay-timer">
-            <i class="fa fa-clock-o"></i> <span>Complete payment in <span id="timer">05:00</span></span>
+            <i class="fa fa-clock-o"></i>
+            <span>Complete payment in <span id="timer">05:00</span></span>
         </div>
+
+        {% if pin_exists %}
+
+        <!-- Existing Payment Form -->
 
         <form method="POST" action="{% url 'process_payment' event.id %}">
             {% csrf_token %}
-            
+
             <div class="gpay-input-container">
                 <input type="password" name="pin" class="gpay-input" placeholder="Enter UPI PIN" maxlength="6" required>
             </div>
-            
+
             <button type="submit" class="gpay-btn">
                 <i class="fa fa-lock" style="margin-right: 6px;"></i> Secure Pay
             </button>
         </form>
 
+        {% else %}
+
+        <!-- Create PIN Form -->
+
+        <form method="POST" action="{% url 'create_payment_pin' event.id %}">
+            {% csrf_token %}
+
+            <div class="gpay-input-container">
+                <input type="password" name="new_pin" class="gpay-input" placeholder="Create Payment PIN" maxlength="6" required>
+            </div>
+
+            <div class="gpay-input-container">
+                <input type="password" name="confirm_pin" class="gpay-input" placeholder="Confirm Payment PIN" maxlength="6" required>
+            </div>
+
+            <button type="submit" class="gpay-btn">
+                Create PIN & Continue
+            </button>
+        </form>
+
+        {% endif %}
+
         {% if error %}
         <div class="gpay-error">
-            <i class="fa fa-exclamation-circle text-danger"></i> {{ error }}
+            <i class="fa fa-exclamation-circle"></i> {{ error }}
         </div>
         {% endif %}
-        
+
         <div class="gpay-footer">
             <i class="fa fa-shield"></i> Secured by SeatSense
         </div>
+
     </div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+
     let timeLeft = parseInt("{{ remaining_seconds }}");
     let redirectURL = "{% url 'seat_layout' event.id %}";
 
-    // Handle timer formatting safely if parsed as NaN
     if (isNaN(timeLeft)) {
-        timeLeft = 300; 
+        timeLeft = 300;
     }
 
     let timer = setInterval(function(){
+
         if(timeLeft <= 0){
             clearInterval(timer);
             alert("Payment session expired!");
@@ -220,10 +246,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         seconds = seconds < 10 ? "0" + seconds : seconds;
 
-        document.getElementById("timer").innerText = "0" + minutes + ":" + seconds;
+        document.getElementById("timer").innerText =
+            minutes + ":" + seconds;
 
         timeLeft--;
-    }, 1000);
+
+    },1000);
+
 });
 </script>
+
 {% endblock %}

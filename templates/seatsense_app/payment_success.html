@@ -2,236 +2,313 @@
 
 {% block content %}
 <section class="section pt-5 pb-5" style="margin-top: 100px;">
-<div class="container text-center">
+    <div class="container text-center">
 
-    <!-- Success Animation/Icon -->
-    <div class="success-icon-wrapper mx-auto mb-4">
-        <i class="fa fa-check success-icon"></i>
+        <!-- Success Icon -->
+        <div class="success-icon-wrapper mx-auto mb-4">
+            <i class="fa fa-check success-icon"></i>
+        </div>
+
+        <h2 class="mb-2" style="font-weight:700;color:#202124;">Payment Successful</h2>
+        <p class="text-muted mb-5" style="font-size:1.1rem;color:#5f6368;">
+            Your ticket booking has been confirmed.
+        </p>
+
+        <!-- Receipt Card -->
+        <div class="receipt-card mx-auto">
+
+            <h5 class="receipt-title">Booking Details</h5>
+
+            <div class="receipt-divider"></div>
+
+            <div class="receipt-row">
+                <span class="receipt-label">Event</span>
+                <span class="receipt-value">
+                    {{ event.title|default:"Event" }}
+                </span>
+            </div>
+
+            <div class="receipt-row">
+                <span class="receipt-label">Seat(s)</span>
+                <span class="receipt-value seats-highlight">
+                    {{ seats|join:", "|default:"-" }}
+                </span>
+            </div>
+
+            <div class="receipt-divider"></div>
+
+            <div class="receipt-row receipt-total">
+                <span class="receipt-label">Total Paid</span>
+                <span class="receipt-value total-amount">
+                    <span style="font-size:18px;vertical-align:middle;color:#5f6368;margin-right:2px;">₹</span>
+                    {{ booking.total_amount|default:"0" }}
+                </span>
+            </div>
+
+            <!-- Decorative Barcode -->
+            <div class="barcode-container mt-4 pt-3">
+                <div class="barcode-lines"></div>
+                <div style="font-size:11px;color:#a0aab2;letter-spacing:3px;margin-top:5px;">
+                    {{ booking.id|default:"SENSE-TKT-0000" }}
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Actions -->
+        <div class="action-buttons mt-5">
+
+            <a href="{% url 'explore_events' %}" class="btn btn-main-md primary-action-btn">
+                Browse More Events <i class="fa fa-arrow-right ml-2"></i>
+            </a>
+
+            <!-- Optional but recommended -->
+            <a href="{% url 'my_bookings' %}" class="btn secondary-action-btn">
+                View My Bookings
+            </a>
+
+        </div>
+
     </div>
-    
-    <h2 class="mb-2" style="font-weight: 700; color: #202124;">Payment Successful</h2>
-    <p class="text-muted mb-5" style="font-size: 1.1rem; color: #5f6368;">Your ticket booking has been confirmed.</p>
-
-    <!-- Receipt Card -->
-    <div class="receipt-card mx-auto">
-        
-        <h5 class="receipt-title">Booking Details</h5>
-        
-        <div class="receipt-divider"></div>
-        
-        <div class="receipt-row">
-            <span class="receipt-label">Event</span>
-            <span class="receipt-value">{{ event.title }}</span>
-        </div>
-        
-        <div class="receipt-row">
-            <span class="receipt-label">Seat(s)</span>
-            <span class="receipt-value seats-highlight">{{ seats|join:", " }}</span>
-        </div>
-        
-        <div class="receipt-divider"></div>
-        
-        <div class="receipt-row receipt-total">
-            <span class="receipt-label">Total Paid</span>
-            <span class="receipt-value total-amount">
-                <span style="font-size: 18px; vertical-align: middle; color: #5f6368; margin-right: 2px;">₹</span>{{ booking.total_amount }}
-            </span>
-        </div>
-        
-        <!-- Barcode Decorative Element -->
-        <div class="barcode-container mt-4 pt-3">
-            <div class="barcode-lines"></div>
-            <div style="font-size: 11px; color: #a0aab2; letter-spacing: 3px; margin-top: 5px;">{{ booking.id|default:"SENSE-TKT-0892" }}</div>
-        </div>
-
-    </div>
-
-    <!-- Actions -->
-    <div class="action-buttons mt-5">
-        <a href="{% url 'explore_events' %}" class="btn btn-main-md primary-action-btn">
-            Browse More Events <i class="fa fa-arrow-right ml-2"></i>
-        </a>
-    </div>
-
-</div>
 </section>
+
 
 <!-- ================= CSS ================= -->
 <style>
-/* Success Icon */
-.success-icon-wrapper {
-    width: 80px;
-    height: 80px;
-    background: #e6f4ea;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 8px 20px rgba(52, 168, 83, 0.2);
-    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
+    /* Success Icon */
 
-.success-icon {
-    font-size: 40px;
-    color: #34a853;
-}
+    .success-icon-wrapper {
+        width: 80px;
+        height: 80px;
+        background: #e6f4ea;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 8px 20px rgba(52, 168, 83, 0.2);
+        animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
 
-@keyframes popIn {
-    0% { transform: scale(0); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
-}
+    .success-icon {
+        font-size: 40px;
+        color: #34a853;
+    }
 
-/* Receipt Card */
-.receipt-card {
-    max-width: 450px;
-    background: #ffffff;
-    border-radius: 24px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.06);
-    border: 1px solid #eef0f2;
-    padding: 35px;
-    position: relative;
-    overflow: hidden;
-}
+    @keyframes popIn {
+        0% {
+            transform: scale(0);
+            opacity: 0;
+        }
 
-/* Decorative Ticket Notches */
-.receipt-card::before, .receipt-card::after {
-    content: '';
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    background-color: #f8f9fa; /* Matches the assumed body/section bg */
-    border-radius: 50%;
-    top: 65px;
-}
-.receipt-card::before { left: -15px; border-right: 1px solid #eef0f2; }
-.receipt-card::after { right: -15px; border-left: 1px solid #eef0f2; }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
 
-.receipt-title {
-    color: #ff5722;
-    font-weight: 600;
-    font-size: 16px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 20px;
-}
 
-.receipt-divider {
-    height: 0;
-    border-top: 1px dashed #dadce0;
-    margin: 20px 0;
-}
+    /* Receipt Card */
 
-/* Row Details */
-.receipt-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.receipt-label {
-    color: #5f6368;
-    font-size: 15px;
-    font-weight: 500;
-}
-
-.receipt-value {
-    color: #202124;
-    font-size: 15px;
-    font-weight: 600;
-    text-align: right;
-    max-width: 60%;
-}
-
-.seats-highlight {
-    background: #f1f3f4;
-    padding: 4px 12px;
-    border-radius: 12px;
-    color: #ff5722;
-    letter-spacing: 0.5px;
-}
-
-.receipt-total {
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-
-.receipt-total .receipt-label {
-    font-size: 18px;
-    font-weight: 600;
-    color: #202124;
-}
-
-.total-amount {
-    font-size: 26px;
-    color: #ff5722;
-    font-weight: 700;
-}
-
-/* Barcode */
-.barcode-container {
-    opacity: 0.6;
-}
-.barcode-lines {
-    height: 30px;
-    background: repeating-linear-gradient(
-        to right,
-        #202124,
-        #202124 2px,
-        transparent 2px,
-        transparent 5px,
-        #202124 5px,
-        #202124 6px,
-        transparent 6px,
-        transparent 10px,
-        #202124 10px,
-        #202124 14px,
-        transparent 14px,
-        transparent 16px
-    );
-}
-
-/* Buttons */
-.action-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-.primary-action-btn {
-    padding: 14px 35px;
-    font-size: 16px;
-    border-radius: 30px;
-    font-weight: 600;
-    background-color: #ff5722;
-    color: white;
-    box-shadow: 0 4px 15px rgba(255,87,34,0.3);
-    transition: all 0.3s ease;
-}
-
-.primary-action-btn:hover {
-    background-color: #e64a19;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255,87,34,0.4);
-    color: white;
-}
-
-/* Mobile Responsiveness */
-@media (max-width: 480px) {
     .receipt-card {
-        padding: 25px 20px;
-        border-radius: 20px;
+        max-width: 450px;
+        background: #ffffff;
+        border-radius: 24px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+        border: 1px solid #eef0f2;
+        padding: 35px;
+        position: relative;
+        overflow: hidden;
     }
-    .receipt-label, .receipt-value {
-        font-size: 14px;
+
+
+    /* Ticket Notches */
+
+    .receipt-card::before,
+    .receipt-card::after {
+        content: '';
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        background-color: #f8f9fa;
+        border-radius: 50%;
+        top: 65px;
     }
-    .receipt-total .receipt-label {
+
+    .receipt-card::before {
+        left: -15px;
+        border-right: 1px solid #eef0f2;
+    }
+
+    .receipt-card::after {
+        right: -15px;
+        border-left: 1px solid #eef0f2;
+    }
+
+
+    .receipt-title {
+        color: #ff5722;
+        font-weight: 600;
         font-size: 16px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 20px;
     }
+
+
+    .receipt-divider {
+        height: 0;
+        border-top: 1px dashed #dadce0;
+        margin: 20px 0;
+    }
+
+
+    .receipt-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+
+    .receipt-label {
+        color: #5f6368;
+        font-size: 15px;
+        font-weight: 500;
+    }
+
+
+    .receipt-value {
+        color: #202124;
+        font-size: 15px;
+        font-weight: 600;
+        text-align: right;
+        max-width: 60%;
+    }
+
+
+    .seats-highlight {
+        background: #f1f3f4;
+        padding: 4px 12px;
+        border-radius: 12px;
+        color: #ff5722;
+        letter-spacing: 0.5px;
+    }
+
+
+    .receipt-total {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    .receipt-total .receipt-label {
+        font-size: 18px;
+        font-weight: 600;
+        color: #202124;
+    }
+
+
     .total-amount {
-        font-size: 22px;
+        font-size: 26px;
+        color: #ff5722;
+        font-weight: 700;
     }
-}
+
+
+    /* Barcode */
+
+    .barcode-container {
+        opacity: 0.6;
+    }
+
+    .barcode-lines {
+        height: 30px;
+        background: repeating-linear-gradient(to right,
+                #202124,
+                #202124 2px,
+                transparent 2px,
+                transparent 5px,
+                #202124 5px,
+                #202124 6px,
+                transparent 6px,
+                transparent 10px,
+                #202124 10px,
+                #202124 14px,
+                transparent 14px,
+                transparent 16px);
+    }
+
+
+    /* Buttons */
+
+    .action-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .primary-action-btn {
+        padding: 14px 35px;
+        font-size: 16px;
+        border-radius: 30px;
+        font-weight: 600;
+        background-color: #ff5722;
+        color: white;
+        box-shadow: 0 4px 15px rgba(255, 87, 34, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .primary-action-btn:hover {
+        background-color: #e64a19;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 87, 34, 0.4);
+        color: white;
+    }
+
+    .secondary-action-btn {
+        padding: 14px 35px;
+        font-size: 16px;
+        border-radius: 30px;
+        font-weight: 600;
+        background-color: #ffffff;
+        color: #202124;
+        border: 1px solid #dadce0;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        transition: all 0.3s ease;
+    }
+
+    .secondary-action-btn:hover {
+        background-color: #f8f9fa;
+        border-color: #d5d7db;
+        color: #202124;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    }
+
+
+    /* Mobile */
+
+    @media (max-width:480px) {
+
+        .receipt-card {
+            padding: 25px 20px;
+            border-radius: 20px;
+        }
+
+        .receipt-label,
+        .receipt-value {
+            font-size: 14px;
+        }
+
+        .receipt-total .receipt-label {
+            font-size: 16px;
+        }
+
+        .total-amount {
+            font-size: 22px;
+        }
+
+    }
 </style>
+
 {% endblock %}
