@@ -667,10 +667,14 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .models import Profile, Booking
 
+from django.contrib.auth.decorators import login_required
+from .models import Profile, Booking
+
 @login_required
 def profile(request):
 
-    profile = request.user.profile
+    # Ensure profile exists
+    profile, created = Profile.objects.get_or_create(user=request.user)
 
     total_bookings = Booking.objects.filter(user=request.user).count()
 

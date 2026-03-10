@@ -1,59 +1,270 @@
 {% extends "seatsense_app/base.html" %}
 
 {% block content %}
+<section class="section pt-5 pb-5 change-pin-section">
+       <div class="container">
 
-<section class="section pt-5 pb-5" style="margin-top:80px;">
+              <div class="row mb-4">
+                     <div class="col-12 text-center mt-3">
+                            <h2 class="section-title">Change Payment PIN</h2>
+                            <p class="section-subtitle text-muted">Secure your SeatSense transactions</p>
+                     </div>
+              </div>
 
-<div class="container">
+              <div class="row justify-content-center">
+                     <div class="col-lg-5 col-md-8">
 
-<div class="row justify-content-center">
+                            <div class="pin-card">
 
-<div class="col-lg-5">
+                                   <div class="pin-header text-center pb-4">
+                                          <div class="lock-icon-wrapper mx-auto mb-3">
+                                                 <i class="fa fa-lock" style="font-size: 32px; color: #f97316;"></i>
+                                          </div>
+                                          <h3 class="pin-title">Update Your PIN</h3>
+                                          <p class="pin-subtitle text-muted mb-0">Use a 4-6 digit number</p>
+                                   </div>
 
-<div class="card p-4">
+                                   <div class="pin-divider"></div>
 
-<h3>Change Payment PIN</h3>
+                                   <div class="form-body py-4 px-4 px-md-5">
 
-{% if error %}
-<p style="color:red">{{ error }}</p>
-{% endif %}
+                                          {% if error %}
+                                          <div class="alert alert-danger" role="alert"
+                                                 style="border-radius: 12px; font-size: 14px; font-weight: 500;">
+                                                 <i class="fa fa-exclamation-circle mr-2"></i> {{ error }}
+                                          </div>
+                                          {% endif %}
 
-<form method="POST">
+                                          <form method="POST" id="change-pin-form">
+                                                 {% csrf_token %}
 
-{% csrf_token %}
+                                                 <div class="form-group mb-4">
+                                                        <label class="form-label text-muted text-uppercase"
+                                                               style="font-size: 11px; font-weight: 700; letter-spacing: 1px;">Current
+                                                               PIN</label>
+                                                        <div class="input-group-custom">
+                                                               <span class="input-icon"><i class="fa fa-key"></i></span>
+                                                               <input type="password" name="current_pin"
+                                                                      class="form-control-custom"
+                                                                      placeholder="Enter Current PIN" required>
+                                                        </div>
+                                                 </div>
 
-<input type="password"
-       name="current_pin"
-       class="form-control mb-3"
-       placeholder="Current PIN"
-       required>
+                                                 <div class="form-group mb-4">
+                                                        <label class="form-label text-muted text-uppercase"
+                                                               style="font-size: 11px; font-weight: 700; letter-spacing: 1px;">New
+                                                               PIN</label>
+                                                        <div class="input-group-custom">
+                                                               <span class="input-icon"><i
+                                                                             class="fa fa-lock"></i></span>
+                                                               <input type="password" name="new_pin"
+                                                                      class="form-control-custom"
+                                                                      placeholder="Create New PIN" required
+                                                                      minlength="4" maxlength="6">
+                                                        </div>
+                                                 </div>
 
-<input type="password"
-       name="new_pin"
-       class="form-control mb-3"
-       placeholder="New PIN"
-       required>
+                                                 <div class="form-group mb-0">
+                                                        <label class="form-label text-muted text-uppercase"
+                                                               style="font-size: 11px; font-weight: 700; letter-spacing: 1px;">Confirm
+                                                               New PIN</label>
+                                                        <div class="input-group-custom">
+                                                               <span class="input-icon"><i
+                                                                             class="fa fa-check-circle"></i></span>
+                                                               <input type="password" name="confirm_pin"
+                                                                      class="form-control-custom"
+                                                                      placeholder="Re-enter New PIN" required
+                                                                      minlength="4" maxlength="6">
+                                                        </div>
+                                                 </div>
 
-<input type="password"
-       name="confirm_pin"
-       class="form-control mb-3"
-       placeholder="Confirm PIN"
-       required>
+                                   </div>
 
-<button type="submit" class="btn btn-main-md">
-Update PIN
-</button>
+                                   <div class="pin-divider"></div>
 
-</form>
+                                   <div class="form-footer text-center py-4 px-3 d-flex justify-content-center"
+                                          style="gap: 15px;">
+                                          <a href="{% url 'profile' %}" class="btn-custom btn-secondary-custom">
+                                                 <i class="fa fa-times mr-1"></i> Cancel
+                                          </a>
+                                          <button type="submit" class="btn-custom btn-orange-custom">
+                                                 <i class="fa fa-save mr-1"></i> Update PIN
+                                          </button>
+                                   </div>
 
-</div>
+                                   </form>
 
-</div>
+                            </div>
 
-</div>
+                     </div>
+              </div>
 
-</div>
-
+       </div>
 </section>
 
+<style>
+       /* Utilities */
+       .change-pin-section {
+              margin-top: 80px;
+              min-height: 80vh;
+              background-color: #fcfcfc;
+              font-family: 'Inter', system-ui, -apple-system, sans-serif;
+       }
+
+       .section-title {
+              font-weight: 800;
+              color: #111827;
+              letter-spacing: -0.5px;
+              margin-bottom: 8px;
+       }
+
+       .section-subtitle {
+              font-size: 1.1rem;
+              font-weight: 500;
+       }
+
+       .pin-card {
+              background: #ffffff;
+              border-radius: 20px;
+              position: relative;
+              overflow: hidden;
+              color: #333;
+              border: 1px solid rgba(0, 0, 0, 0.05);
+              filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.06));
+       }
+
+       .pin-header {
+              padding-top: 40px;
+              background: linear-gradient(to bottom, #fcf8f5 0%, #ffffff 100%);
+       }
+
+       .pin-divider {
+              border-top: 2px dashed #e5e7eb;
+              margin: 0 20px;
+       }
+
+       /* Icons */
+       .lock-icon-wrapper {
+              width: 80px;
+              height: 80px;
+              border-radius: 50%;
+              background: white;
+              border: 2px dashed #f97316;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              box-shadow: 0 4px 10px rgba(249, 115, 22, 0.1);
+       }
+
+       .pin-title {
+              font-size: 22px;
+              font-weight: 800;
+              color: #111827;
+              margin-bottom: 5px;
+              letter-spacing: -0.5px;
+       }
+
+       .pin-subtitle {
+              font-size: 14px;
+              color: #6b7280;
+              font-weight: 500;
+       }
+
+       /* Forms */
+       .form-body {
+              background: #ffffff;
+       }
+
+       .input-group-custom {
+              position: relative;
+              display: flex;
+              align-items: center;
+       }
+
+       .input-icon {
+              position: absolute;
+              left: 15px;
+              color: #9ca3af;
+              z-index: 10;
+       }
+
+       .form-control-custom {
+              width: 100%;
+              padding: 14px 15px 14px 45px;
+              border: 1px solid #e5e7eb;
+              border-radius: 12px;
+              font-size: 15px;
+              color: #374151;
+              font-weight: 500;
+              transition: all 0.2s ease;
+              background: #f9fafb;
+       }
+
+       .form-control-custom:focus {
+              outline: none;
+              border-color: #f97316;
+              background: #ffffff;
+              box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1);
+       }
+
+       /* Buttons */
+       .form-footer {
+              display: flex;
+              justify-content: center;
+              flex-wrap: wrap;
+       }
+
+       .btn-custom {
+              padding: 12px 24px;
+              border-radius: 12px;
+              font-weight: 600;
+              font-size: 15px;
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              transition: all 0.2s ease;
+              border: none;
+              cursor: pointer;
+              text-decoration: none;
+       }
+
+       .btn-orange-custom {
+              background: #f97316;
+              color: white;
+              box-shadow: 0 4px 12px rgba(249, 115, 22, 0.25);
+       }
+
+       .btn-orange-custom:hover {
+              background: #ea580c;
+              color: white;
+              transform: translateY(-2px);
+              box-shadow: 0 6px 16px rgba(249, 115, 22, 0.3);
+              text-decoration: none;
+       }
+
+       .btn-secondary-custom {
+              background: #ffffff;
+              color: #374151;
+              border: 1px solid #d1d5db;
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+       }
+
+       .btn-secondary-custom:hover {
+              background: #f9fafb;
+              color: #111827;
+              transform: translateY(-2px);
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+              text-decoration: none;
+       }
+
+       @media (max-width: 576px) {
+              .form-footer {
+                     flex-direction: column;
+              }
+
+              .form-footer .btn-custom {
+                     width: 100%;
+              }
+       }
+</style>
 {% endblock %}
