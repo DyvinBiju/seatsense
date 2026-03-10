@@ -650,7 +650,6 @@ def cancel_booking(request, booking_id):
 
     booking.status = "CANCELLED"
 
-    # ⭐ NEW LINE (store cancellation time)
     booking.cancelled_at = timezone.now()
 
     booking.save()
@@ -661,6 +660,142 @@ def cancel_booking(request, booking_id):
     )
 
     return redirect("my_bookings")
+
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from .models import Profile, Booking
+
+@login_required
+def profile(request):
+
+    profile = request.user.profile
+
+    total_bookings = Booking.objects.filter(user=request.user).count()
+
+    active_bookings = Booking.objects.filter(
+        user=request.user,
+        status="CONFIRMED"
+    ).count()
+
+    cancelled_bookings = Booking.objects.filter(
+        user=request.user,
+        status="CANCELLED"
+    ).count()
+
+    context = {
+        "profile": profile,
+        "total_bookings": total_bookings,
+        "active_bookings": active_bookings,
+        "cancelled_bookings": cancelled_bookings
+    }
+
+    return render(request, "seatsense_app/profile.html", context)
+
+
+
+@login_required
+def edit_profile(request):
+
+    profile = request.user.profile
+
+    if request.method == "POST":
+
+        phone = request.POST.get("phone")
+
+        if phone:
+            profile.phone = phone
+
+        if "profile_image" in request.FILES:
+            profile.profile_image = request.FILES["profile_image"]
+
+        profile.save()
+
+        return redirect("profile")
+
+    return render(request, "seatsense_app/edit_profile.html", {
+        "profile": profile
+    })
+
+
+
+
+
+@login_required
+def change_payment_pin(request):
+
+    profile = request.user.profile
+
+    if request.method == "POST":
+
+        current_pin = request.POST.get("current_pin")
+        new_pin = request.POST.get("new_pin")
+        confirm_pin = request.POST.get("confirm_pin")
+
+        if profile.payment_pin != current_pin:
+            return render(request, "seatsense_app/change_pin.html", {
+                "error": "Current PIN is incorrect"
+            })
+
+        if new_pin != confirm_pin:
+            return render(request, "seatsense_app/change_pin.html", {
+                "error": "PINs do not match"
+            })
+
+        if len(new_pin) < 4:
+            return render(request, "seatsense_app/change_pin.html", {
+                "error": "PIN must be at least 4 digits"
+            })
+
+        profile.payment_pin = new_pin
+        profile.save()
+
+        return redirect("profile")
+
+    return render(request, "seatsense_app/change_pin.html")
+
+
+
+
+
+
+
+
+
+@login_required
+def change_payment_pin(request):
+
+    profile = request.user.profile
+
+    if request.method == "POST":
+
+        current_pin = request.POST.get("current_pin")
+        new_pin = request.POST.get("new_pin")
+        confirm_pin = request.POST.get("confirm_pin")
+
+        if profile.payment_pin != current_pin:
+            return render(request, "seatsense_app/change_pin.html", {
+                "error": "Current PIN is incorrect"
+            })
+
+        if new_pin != confirm_pin:
+            return render(request, "seatsense_app/change_pin.html", {
+                "error": "PINs do not match"
+            })
+
+        if len(new_pin) < 4:
+            return render(request, "seatsense_app/change_pin.html", {
+                "error": "PIN must be at least 4 digits"
+            })
+
+        profile.payment_pin = new_pin
+        profile.save()
+
+        return redirect("profile")
+
+    return render(request, "seatsense_app/change_pin.html")
+
 
 
 

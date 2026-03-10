@@ -1,0 +1,59 @@
+{% extends "seatsense_app/base.html" %}
+
+{% block content %}
+
+<section class="section pt-5 pb-5" style="margin-top:80px;">
+
+<div class="container">
+
+<div class="row justify-content-center">
+
+<div class="col-lg-5">
+
+<div class="card p-4">
+
+<h3>Change Payment PIN</h3>
+
+{% if error %}
+<p style="color:red">{{ error }}</p>
+{% endif %}
+
+<form method="POST">
+
+{% csrf_token %}
+
+<input type="password"
+       name="current_pin"
+       class="form-control mb-3"
+       placeholder="Current PIN"
+       required>
+
+<input type="password"
+       name="new_pin"
+       class="form-control mb-3"
+       placeholder="New PIN"
+       required>
+
+<input type="password"
+       name="confirm_pin"
+       class="form-control mb-3"
+       placeholder="Confirm PIN"
+       required>
+
+<button type="submit" class="btn btn-main-md">
+Update PIN
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+{% endblock %}

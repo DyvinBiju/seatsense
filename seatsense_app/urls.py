@@ -23,8 +23,14 @@ urlpatterns = [
     path("my-bookings/", views.my_bookings, name="my_bookings"),
     path("booking/<int:booking_id>/", views.booking_detail, name="booking_detail"),
     path("cancel-booking/<int:booking_id>/", views.cancel_booking, name="cancel_booking"),
-    # path("event/<int:event_id>/finalize-booking/", views.finalize_booking, name="finalize_booking"),
     path("signup/", views.signup, name="signup"),
+    path("profile/", views.profile, name="profile"),
+    path("profile/edit/", views.edit_profile, name="edit_profile"),
+    path("profile/change-pin/", views.change_payment_pin, name="change_payment_pin"),
+
+
+
+
 
 
     path('news-single/', views.news_single, name='news_single'),

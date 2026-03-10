@@ -1,0 +1,60 @@
+{% extends "seatsense_app/base.html" %}
+
+{% block content %}
+
+<section class="section pt-5 pb-5" style="margin-top:80px;">
+
+<div class="container">
+
+<div class="row justify-content-center">
+
+<div class="col-lg-6">
+
+<div class="card p-4">
+
+<h3>Edit Profile</h3>
+
+<form method="POST" enctype="multipart/form-data">
+
+{% csrf_token %}
+
+<div class="form-group">
+
+<label>Phone</label>
+
+<input type="text"
+       name="phone"
+       class="form-control"
+       value="{{ profile.phone }}">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Profile Image</label>
+
+<input type="file"
+       name="profile_image"
+       class="form-control">
+
+</div>
+
+
+<button type="submit" class="btn btn-main-md">
+Save Changes
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+{% endblock %}
