@@ -1,228 +1,514 @@
 {% extends "seatsense_app/base.html" %}
 
 {% block content %}
-<section class="section pt-5 pb-5" style="margin-top: 80px; min-height: 80vh; background-color: #f3f4f6;">
-<div class="container">
-
-<div class="row mb-4">
-<div class="col-12 text-center mt-3">
-<h2 style="font-weight:700;color:#202124;">Your Ticket</h2>
-
-{% if booking.status == "CONFIRMED" %}
-<p class="text-muted" style="font-size:1.1rem;">Present this ticket at the venue</p>
-{% else %}
-<p class="text-danger" style="font-size:1.1rem;font-weight:600;">This ticket has been cancelled</p>
-{% endif %}
-
-</div>
-</div>
-
-<div class="row justify-content-center">
-<div class="col-lg-6 col-md-8">
-
-<div class="ticket-container">
-
-<div class="ticket-top text-center">
-
-<div class="ticket-icon-wrapper mx-auto mb-3">
-<i class="fa fa-star" style="font-size:24px;color:#ff5722;"></i>
-</div>
-
-<h3 class="ticket-title">
-{{ booking.event.title|default:"Event" }}
-</h3>
-
-<p class="ticket-subtitle mb-4">
-<i class="fa fa-map-marker-alt" style="color:#ff5722;margin-right:5px;"></i>
-{{ booking.event.auditorium.name|default:"Auditorium" }}
-</p>
-
-<div class="row text-left mb-2">
-
-<div class="col-6">
-<span class="info-label">Date</span>
-<span class="info-value">
-{{ booking.event.event_date|date:"j M Y" }}
-</span>
-</div>
-
-<div class="col-6">
-<span class="info-label">Time</span>
-<span class="info-value">
-{{ booking.event.event_time|time:"h:i A"|default:"TBD" }}
-</span>
-</div>
-
-</div>
-
-
-<div class="row text-left mt-3">
-<div class="col-12">
-<span class="info-label">Booked On</span>
-<span class="info-value">
-{{ booking.booking_date|date:"d M Y • h:i A" }}
-</span>
-</div>
-</div>
-
-
-{% if booking.status == "CANCELLED" %}
-<div class="row text-left mt-2">
-<div class="col-12">
-<span class="info-label">Cancelled On</span>
-<span class="info-value text-danger">
-{{ booking.cancelled_at|date:"d M Y • h:i A" }}
-</span>
-</div>
-</div>
-{% endif %}
-
-
-<div class="row text-left mt-4">
-
-<div class="col-12">
-
-<span class="info-label text-center text-sm-left" style="margin-bottom:10px;">
-Seats Booked
-</span>
-
-<div class="text-center text-sm-left"
-style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;">
-
-{% for seat in seats %}
-
-<span class="seat-badge d-inline-flex align-items-center justify-content-center
-{% if booking.status == 'CANCELLED' %}seat-cancelled{% endif %}">
-{{ seat }}
-</span>
-
-{% empty %}
-<span class="text-muted">No seats</span>
-{% endfor %}
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-
-<div class="ticket-divider"></div>
-
-
-<div class="ticket-bottom text-center">
-
-<div class="row text-left mb-4 mt-2">
-
-<div class="col-6 text-center text-sm-left">
-<span class="info-label">Payment</span>
-<span class="info-value" style="color:#5f6368;">
-SeatSense Payment
-</span>
-</div>
-
-<div class="col-6 text-center text-sm-right mt-3 mt-sm-0">
-
-<span class="info-label text-sm-right d-block">
-Total Paid
-</span>
-
-<span class="info-value text-sm-right d-block
-{% if booking.status == 'CANCELLED' %}amount-cancelled{% endif %}"
-style="font-size:22px;font-weight:800;">
-
-₹{{ booking.total_amount|default:"0" }}
-
-</span>
-
-</div>
-
-</div>
-
-
-{% if booking.status == "CONFIRMED" %}
-
-<div class="barcode-area text-center">
-
-<img src="data:image/png;base64,{{ qr_code }}"
-     alt="QR Code Ticket"
-     style="width:150px;height:150px;margin:auto;">
-
-</div>
-
-<p class="mt-2 text-muted"
-style="font-size:11px;letter-spacing:3px;font-weight:600;">
-SCAN TO ENTER
-</p>
-
-{% endif %}
-
-</div>
-
-</div>
-
-
-<div class="text-center mt-5 mb-5 action-buttons">
-
-<a href="{% url 'my_bookings' %}" class="btn btn-secondary-custom mb-3 mb-sm-0">
-<i class="fa fa-arrow-left mr-2"></i>
-Back to My Bookings
-</a>
-
-{% if booking.status == "CONFIRMED" %}
-
-<button class="btn btn-primary-custom ml-0 ml-sm-3" onclick="window.print()">
-<i class="fa fa-print mr-2"></i>
-Print Ticket
-</button>
-
-<a href="{% url 'cancel_booking' booking.id %}"
-   class="btn btn-danger ml-3"
-   onclick="return confirm('Are you sure you want to cancel this ticket? This action will not refund the payment.')">
-
-<i class="fa fa-times mr-2"></i>
-Cancel Ticket
-
-</a>
-
-{% else %}
-
-<button class="btn btn-secondary-custom ml-3" disabled>
-<i class="fa fa-print mr-2"></i>
-Print Disabled
-</button>
-
-<span class="badge badge-danger p-2 ml-3">
-Ticket Cancelled
-</span>
-
-{% endif %}
-
-</div>
-
-</div>
-</div>
-
-</div>
+<section class="section pt-5 pb-5"
+   style="margin-top: 80px; min-height: 80vh; background-color: #f3f4f6; font-family: 'Inter', system-ui, -apple-system, sans-serif;">
+   <div class="container">
+
+      <div class="row mb-4">
+         <div class="col-12 text-center mt-3">
+            <h2 style="font-weight:800; color:#111827; letter-spacing: -0.5px; margin-bottom: 8px;">Ticket Details</h2>
+            {% if booking.status == "CONFIRMED" %}
+            <p class="text-muted" style="font-size:1.1rem; font-weight: 500;">Present this ticket at the venue</p>
+            {% else %}
+            <p class="text-danger" style="font-size:1.1rem; font-weight:600;">This ticket has been cancelled</p>
+            {% endif %}
+         </div>
+      </div>
+
+      <div class="row justify-content-center">
+         <div class="col-lg-6 col-md-8 col-sm-10">
+
+            <div class="ticket-wrapper {% if booking.status == 'CANCELLED' %}ticket-cancelled{% endif %}">
+               <div class="ticket-card">
+
+                  {% if booking.status == "CANCELLED" %}
+                  <div class="watermark">CANCELLED</div>
+                  <div class="status-badge status-cancelled">Cancelled</div>
+                  {% else %}
+                  <div class="status-badge status-confirmed">Confirmed</div>
+                  {% endif %}
+
+                  <div class="ticket-top">
+                     <div class="ticket-header">
+                        <div class="ticket-icon-wrapper mx-auto mb-3">
+                           <i class="fa fa-ticket {% if booking.status == 'CANCELLED' %}text-danger-icon{% else %}text-primary-icon{% endif %}"
+                              style="font-size:32px;"></i>
+                        </div>
+                        <h3 class="ticket-title cap-text">{{ booking.event.title|default:"Event" }}</h3>
+                        <p class="ticket-subtitle">
+                           <i class="fa fa-map-marker {% if booking.status == 'CANCELLED' %}text-danger-icon{% else %}text-primary-icon{% endif %}"
+                              style="margin-right:5px;"></i>
+                           <span class="cap-text">{{ booking.event.auditorium.name|default:"Auditorium" }}</span>
+                        </p>
+                     </div>
+
+                     <div class="info-grid">
+                        <div class="info-item">
+                           <span class="info-label">Date</span>
+                           <span class="info-value">{{ booking.event.event_date|date:"j M Y" }}</span>
+                        </div>
+                        <div class="info-item">
+                           <span class="info-label">Time</span>
+                           <span class="info-value">{{ booking.event.event_time|time:"h:i A"|default:"TBD" }}</span>
+                        </div>
+                        <div class="info-item">
+                           <span class="info-label">Booked On</span>
+                           <span class="info-value">{{ booking.booking_date|date:"d M Y, h:i A" }}</span>
+                        </div>
+                        {% if booking.status == "CANCELLED" %}
+                        <div class="info-item">
+                           <span class="info-label text-danger">Cancelled On</span>
+                           <span class="info-value text-danger">{{ booking.cancelled_at|date:"d M Y, h:i A" }}</span>
+                        </div>
+                        {% else %}
+                        <div class="info-item">
+                           <span class="info-label">Booking ID</span>
+                           <span class="info-value">#{{ booking.id|stringformat:"06d" }}</span>
+                        </div>
+                        {% endif %}
+                     </div>
+
+                     <div class="info-item mt-4">
+                        <span class="info-label">Seats Booked</span>
+                        <div class="seat-list">
+                           {% for seat in seats %}
+                           <span class="seat-badge">{{ seat }}</span>
+                           {% empty %}
+                           <span class="text-muted" style="font-size: 14px; font-weight: 500;">No seats</span>
+                           {% endfor %}
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="ticket-divider"></div>
+
+                  <div class="ticket-bottom">
+                     <div class="payment-info">
+                        <div class="info-item">
+                           <span class="info-label">Payment Method</span>
+                           <span class="info-value" style="color:#6b7280; font-size: 14px;">SeatSense Payment</span>
+                        </div>
+                        <div class="info-item text-right" style="text-align: right;">
+                           <span class="info-label">Total Amount</span>
+                           <span class="amount-value">₹{{ booking.total_amount|default:"0" }}</span>
+                        </div>
+                     </div>
+
+                     {% if booking.status == "CONFIRMED" %}
+                     <div class="barcode-area text-center mt-4">
+                        <div class="qr-container">
+                           <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code Ticket"
+                              style="width:140px; height:140px; display:block; margin:auto;">
+                        </div>
+                        <p class="mt-2 mb-0"
+                           style="font-size:12px; letter-spacing:4px; font-weight:700; color:#9ca3af;">SCAN TO ENTER</p>
+                     </div>
+                     {% endif %}
+                  </div>
+               </div>
+            </div>
+
+            <div class="action-buttons">
+               <a href="{% url 'my_bookings' %}" class="btn-custom btn-orange-custom">
+                  <i class="fa fa-arrow-left"></i> Back to My Bookings
+               </a>
+
+               {% if booking.status == "CONFIRMED" %}
+               <button class="btn-custom btn-primary-custom" onclick="window.print()">
+                  <i class="fa fa-print"></i> Print Ticket
+               </button>
+
+               <a href="{% url 'cancel_booking' booking.id %}" class="btn-custom btn-danger-custom"
+                  onclick="return confirm('Are you sure you want to cancel this ticket? This action cannot be undone.')">
+                  <i class="fa fa-times"></i> Cancel Ticket
+               </a>
+               {% else %}
+               <button class="btn-custom btn-disabled" disabled>
+                  <i class="fa fa-print"></i> Print Disabled
+               </button>
+               {% endif %}
+            </div>
+
+         </div>
+      </div>
+
+   </div>
 </section>
 
-
-
 <style>
+   /* Ticket Container */
+   .ticket-wrapper {
+      position: relative;
+      max-width: 480px;
+      margin: 0 auto;
+      filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.06));
+      transition: transform 0.3s ease;
+   }
 
-.seat-cancelled{
-background:#e0e0e0;
-color:#8a8a8a;
-border:1px dashed #bdbdbd;
-}
+   .ticket-wrapper:hover {
+      transform: translateY(-5px);
+   }
 
-.amount-cancelled{
-color:#9e9e9e;
-text-decoration:line-through;
-}
+   .ticket-card {
+      background: #ffffff;
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+      color: #333;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+   }
 
+   .ticket-top {
+      padding: 35px 35px 25px 35px;
+      position: relative;
+   }
+
+   /* Tear-off semicircles */
+   .ticket-top::after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: -12px;
+      width: 24px;
+      height: 24px;
+      background-color: #f3f4f6;
+      border-radius: 50%;
+      z-index: 10;
+      box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.03);
+   }
+
+   .ticket-top::before {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      right: -12px;
+      width: 24px;
+      height: 24px;
+      background-color: #f3f4f6;
+      border-radius: 50%;
+      z-index: 10;
+      box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.03);
+   }
+
+   .ticket-divider {
+      border-top: 2px dashed #e5e7eb;
+      margin: 0 20px;
+      position: relative;
+   }
+
+   .ticket-bottom {
+      padding: 25px 35px 35px 35px;
+      background: #fafafa;
+   }
+
+   /* Event Details */
+   .ticket-header {
+      text-align: center;
+      margin-bottom: 30px;
+   }
+
+   .ticket-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+   }
+
+   .ticket-subtitle {
+      font-size: 15px;
+      color: #6b7280;
+      font-weight: 500;
+      margin-bottom: 0;
+   }
+
+   .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px 15px;
+   }
+
+   .info-item {
+      display: flex;
+      flex-direction: column;
+   }
+
+   .info-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #9ca3af;
+      margin-bottom: 6px;
+      font-weight: 700;
+   }
+
+   .info-value {
+      font-size: 15px;
+      font-weight: 700;
+      color: #374151;
+   }
+
+   .seat-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 2px;
+   }
+
+   .seat-badge {
+      background: #f3f4f6;
+      color: #1f2937;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      border: 1px solid #e5e7eb;
+   }
+
+   /* Bottom Section */
+   .payment-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+   }
+
+   .amount-value {
+      font-size: 26px;
+      font-weight: 900;
+      color: #111827;
+      letter-spacing: -1px;
+   }
+
+   .qr-container {
+      background: #fff;
+      padding: 15px;
+      border-radius: 12px;
+      display: inline-block;
+      border: 1px solid #e5e7eb;
+   }
+
+   /* Status variants */
+   .status-badge {
+      position: absolute;
+      top: 24px;
+      right: -35px;
+      transform: rotate(45deg);
+      padding: 6px 40px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      z-index: 5;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+   }
+
+   .status-confirmed {
+      background: #10b981;
+      color: white;
+   }
+
+   .status-cancelled {
+      background: #ef4444;
+      color: white;
+   }
+
+   .ticket-cancelled {
+      opacity: 0.9;
+      filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.03));
+   }
+
+   .ticket-cancelled:hover {
+      transform: translateY(0);
+   }
+
+   .ticket-cancelled .ticket-card {
+      background: #fffafa;
+   }
+
+   .ticket-cancelled .ticket-bottom {
+      background: #fdf2f2;
+   }
+
+   .ticket-cancelled .seat-badge {
+      background: #fee2e2;
+      color: #ef4444;
+      border-color: #fca5a5;
+      text-decoration: line-through;
+      opacity: 0.8;
+   }
+
+   .ticket-cancelled .amount-value {
+      color: #9ca3af;
+      text-decoration: line-through;
+   }
+
+   .ticket-cancelled .info-value,
+   .ticket-cancelled .ticket-title {
+      color: #6b7280;
+   }
+
+   .ticket-cancelled .ticket-top::after,
+   .ticket-cancelled .ticket-top::before {
+      background-color: #f3f4f6;
+   }
+
+   .watermark {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-35deg);
+      font-size: 56px;
+      font-weight: 900;
+      color: rgba(239, 68, 68, 0.08);
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 1;
+      text-transform: uppercase;
+      letter-spacing: 12px;
+   }
+
+   /* Buttons */
+   .action-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 35px;
+   }
+
+   .btn-custom {
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 15px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+   }
+
+   .btn-custom i {
+      font-size: 16px;
+   }
+
+   .btn-primary-custom {
+      background: #2563eb;
+      color: white;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+   }
+
+   .btn-primary-custom:hover {
+      background: #1d4ed8;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+      text-decoration: none;
+   }
+
+   .btn-orange-custom {
+      background: #f97316;
+      color: white;
+      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.25);
+   }
+
+   .btn-orange-custom:hover {
+      background: #ea580c;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(249, 115, 22, 0.3);
+      text-decoration: none;
+   }
+
+   .btn-secondary-custom {
+      background: #ffffff;
+      color: #374151;
+      border: 1px solid #d1d5db;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+   }
+
+   .btn-secondary-custom:hover {
+      background: #f9fafb;
+      color: #111827;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+      text-decoration: none;
+   }
+
+   .text-danger-icon {
+      color: #ef4444 !important;
+   }
+
+   .text-primary-icon {
+      color: #2563eb !important;
+   }
+
+   .cap-text {
+      text-transform: capitalize;
+   }
+
+   .btn-danger-custom {
+      background: #ef4444;
+      color: white;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+   }
+
+   .btn-danger-custom:hover {
+      background: #dc2626;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
+      text-decoration: none;
+   }
+
+   .btn-disabled {
+      background: #e5e7eb;
+      color: #9ca3af;
+      cursor: not-allowed;
+      border: 1px solid #e5e7eb;
+   }
+
+   @media print {
+      body {
+         background: white !important;
+      }
+
+      body * {
+         visibility: hidden;
+      }
+
+      .ticket-wrapper,
+      .ticket-wrapper * {
+         visibility: visible;
+      }
+
+      .ticket-wrapper {
+         position: absolute;
+         left: 50%;
+         top: 0;
+         transform: translateX(-50%) !important;
+         filter: none;
+         box-shadow: none;
+         margin: 0;
+         width: 100%;
+         max-width: 500px;
+      }
+
+      .action-buttons,
+      .section>.container>.row:first-child {
+         display: none !important;
+      }
+
+      .ticket-card {
+         border: 2px solid #e5e7eb;
+         box-shadow: none;
+      }
+   }
 </style>
 
 {% endblock %}
