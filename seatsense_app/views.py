@@ -259,6 +259,7 @@ def signup(request):
 
         if form.is_valid():
             form.save()
+            messages.success(request, "Account created successfully. Please log in.")
             return redirect("login")
 
     else:
@@ -803,6 +804,9 @@ def edit_profile(request):
             phone = request.POST.get("phone")
 
             if phone:
+                if len(phone) != 10 or not phone.isdigit():
+                    messages.error(request, "Phone number must be exactly 10 digits.")
+                    return render(request, "seatsense_app/edit_profile.html", {"profile": profile})
                 profile.phone = phone
 
             if "profile_image" in request.FILES:

@@ -18,6 +18,16 @@
 
                                    <form method="POST" enctype="multipart/form-data" id="profile-edit-form">
                                           {% csrf_token %}
+                                          {% if messages %}
+                                                 {% for message in messages %}
+                                                 <div class="alert alert-{{ message.tags }} alert-dismissible fade show mx-4 mt-3 mb-0" role="alert" style="border-radius: 12px; font-size: 14px;">
+                                                        {{ message }}
+                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="padding: 10px 15px;">
+                                                               <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                 </div>
+                                                 {% endfor %}
+                                          {% endif %}
 
                                           <div class="profile-header text-center pb-4">
                                                  <!-- Image Upload Area -->
@@ -80,7 +90,11 @@
                                                                <input type="text" name="phone"
                                                                       class="form-control-custom cap-text"
                                                                       value="{{ profile.phone|default:'' }}"
-                                                                      placeholder="Enter your phone number">
+                                                                      placeholder="Enter your phone number"
+                                                                      minlength="10"
+                                                                      maxlength="10"
+                                                                      pattern="\d{10}"
+                                                                      title="Phone number must be exactly 10 digits">
                                                         </div>
                                                  </div>
 

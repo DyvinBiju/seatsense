@@ -9,7 +9,7 @@ class Auditorium(models.Model):
     total_rows = models.IntegerField()
     seats_per_row = models.IntegerField()
 
-    description = models.TextField(blank=True)
+    # description = models.TextField(blank=True)
 
     def __str__(self):
         return self.name
@@ -41,7 +41,7 @@ class Seat(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
+    # description = models.TextField(blank=True)
 
     def __str__(self):
         return self.name

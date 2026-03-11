@@ -75,19 +75,19 @@
           <!-- <li class="nav-item">
             <a class="nav-link" href="{% url 'about_us' %}">About Us<span>/</span></a>
           </li> -->
-          <li
+          <!-- <li
             class="nav-item dropdown dropdown-slide {% if 'news' in request.resolver_match.url_name %}active{% endif %}">
             <a class="nav-link" href="#" data-toggle="dropdown">News
               <span>/</span>
-            </a>
+            </a> -->
             <!-- Dropdown list -->
-            <div class="dropdown-menu">
+            <!-- <div class="dropdown-menu">
               <a class="dropdown-item" href="{% url 'news' %}">News without sidebar</a>
               <a class="dropdown-item" href="{% url 'explore_events' %}">Explore Events</a>
               <a class="dropdown-item" href="{% url 'news_left_sidebar' %}">News with left sidebar</a>
               <a class="dropdown-item" href="{% url 'news_single' %}">News Single</a>
             </div>
-          </li>
+          </li> -->
           <li class="nav-item {% if request.resolver_match.url_name == 'contact' %}active{% endif %}">
             <a class="nav-link" href="{% url 'contact' %}">Contact</a>
           </li>
