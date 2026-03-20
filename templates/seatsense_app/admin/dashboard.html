@@ -1,0 +1,181 @@
+{% extends "seatsense_app/admin/admin_base.html" %}
+
+{% block page_title %}Dashboard Overview{% endblock %}
+
+{% block admin_content %}
+<div class="row">
+    <!-- Stat Cards -->
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card card-orange">
+            <div class="card-body">
+                <div class="stat-icon"><i class="fa fa-money"></i></div>
+                <div class="stat-value">₹{{ total_revenue|floatformat:2 }}</div>
+                <div class="stat-label">Total Revenue</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card card-blue">
+            <div class="card-body">
+                <div class="stat-icon"><i class="fa fa-ticket"></i></div>
+                <div class="stat-value">{{ total_bookings }}</div>
+                <div class="stat-label">Total Bookings</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card card-green">
+            <div class="card-body">
+                <div class="stat-icon"><i class="fa fa-calendar"></i></div>
+                <div class="stat-value">{{ total_events }}</div>
+                <div class="stat-label">Total Events</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card card-red">
+            <div class="card-body">
+                <div class="stat-icon"><i class="fa fa-users"></i></div>
+                <div class="stat-value">{{ total_users }}</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <!-- Recent Bookings Table -->
+    <div class="col-lg-8 mb-4">
+        <div class="card content-card border-0 shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0" style="font-weight: 700;">Recent Bookings</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="border-0 px-4">User</th>
+                                <th class="border-0">Event</th>
+                                <th class="border-0">Amount</th>
+                                <th class="border-0">Status</th>
+                                <th class="border-0">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for booking in recent_bookings %}
+                            <tr>
+                                <td class="px-4 py-3 align-middle font-weight-bold">{{ booking.user.username }}</td>
+                                <td class="py-3 align-middle">{{ booking.event.title|truncatechars:30 }}</td>
+                                <td class="py-3 align-middle">₹{{ booking.total_amount }}</td>
+                                <td class="py-3 align-middle">
+                                    <span class="badge badg-pill {% if booking.status == 'CONFIRMED' %}badge-success{% else %}badge-danger{% endif %} py-2 px-3">
+                                        {{ booking.status }}
+                                    </span>
+                                </td>
+                                <td class="py-3 align-middle text-muted" style="font-size: 13px;">{{ booking.booking_date|date:"M d, Y" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center py-5 text-muted">No bookings found</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Top Events -->
+    <div class="col-lg-4 mb-4">
+        <div class="card content-card border-0 shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0" style="font-weight: 700;">Top Events</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    {% for event in top_events %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
+                        <div class="d-flex align-items-center">
+                            <div class="event-mini-img mr-3">
+                                {% if event.image %}
+                                <img src="{{ event.image.url }}" alt="Event" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;">
+                                {% else %}
+                                <div style="width: 40px; height: 40px; border-radius: 8px; background: #eee;"></div>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <h6 class="mb-0" style="font-size: 14px; font-weight: 600;">{{ event.title|truncatechars:20 }}</h6>
+                                <small class="text-muted">{{ event.category.name }}</small>
+                            </div>
+                        </div>
+                        <span class="badge badge-primary badge-pill" style="font-size: 11px;">{{ event.num_bookings }} bookings</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .stat-card {
+        border: none;
+        border-radius: 16px;
+        color: white;
+        overflow: hidden;
+        position: relative;
+        transition: transform 0.2s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .card-orange { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
+    .card-blue { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+    .card-green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+    .card-red { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+    
+    .stat-icon {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 35px;
+        opacity: 0.2;
+    }
+    
+    .stat-value {
+        font-size: 28px;
+        font-weight: 800;
+        margin-bottom: 5px;
+    }
+    
+    .stat-label {
+        font-size: 14px;
+        font-weight: 500;
+        opacity: 0.9;
+    }
+    
+    .content-card {
+        border-radius: 16px;
+    }
+    
+    .table thead th {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #64748b;
+        font-weight: 700;
+    }
+    
+    .badge-pill {
+        font-size: 11px;
+        font-weight: 700;
+    }
+</style>
+{% endblock %}

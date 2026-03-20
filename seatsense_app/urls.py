@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from . import views, admin_views
 
 urlpatterns = [
     path('404/', views.page_404, name='page_404'),
@@ -11,6 +11,11 @@ urlpatterns = [
     path('homepage-two/', views.homepage_two, name='homepage_two'),
     path('', views.index, name='index'),
     path('news-left-sidebar/', views.news_left_sidebar, name='news_left_sidebar'),
+    path('admin-panel/', admin_views.admin_dashboard, name='admin_dashboard'),
+    path('admin-panel/events/', admin_views.admin_event_list, name='admin_event_list'),
+    path('admin-panel/events/create/', admin_views.admin_event_create, name='admin_event_create'),
+    path('admin-panel/events/<int:event_id>/edit/', admin_views.admin_event_edit, name='admin_event_edit'),
+    path('admin-panel/events/<int:event_id>/delete/', admin_views.admin_event_delete, name='admin_event_delete'),
 
     path("events/", views.explore_events, name="explore_events"),
     path("event/<int:event_id>/", views.event_detail, name="event_detail"),

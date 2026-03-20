@@ -88,6 +88,13 @@ class Event(models.Model):
         return self.total_seats - self.booked_seats
 
     @property
+    def booking_percentage(self):
+        total = self.total_seats
+        if total > 0:
+            return (self.booked_seats / total) * 100
+        return 0
+
+    @property
     def is_past(self):
         from django.utils import timezone
         from datetime import datetime
