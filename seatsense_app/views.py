@@ -951,3 +951,46 @@ def sponsors(request):
 def testimonial(request):
     return render(request, 'seatsense_app/testimonial.html')
 
+def forgot_password(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        pin = request.POST.get("pin")
+        
+        from django.contrib.auth.models import User
+        user = User.objects.filter(username=username).first()
+        
+        if user and hasattr(user, 'profile') and user.profile.payment_pin == pin:
+            request.session['reset_user_id'] = user.id
+            return redirect('reset_password')
+        else:
+            messages.error(request, "Invalid username or PIN.")
+            
+    return render(request, "seatsense_app/forgot_password.html")
+
+def reset_password(request):
+    user_id = request.session.get('reset_user_id')
+    if not user_id:
+        return redirect('forgot_password')
+        
+    from django.contrib.auth.models import User
+    user = User.objects.filter(id=user_id).first()
+    if not user:
+        return redirect('forgot_password')
+    
+    if request.method == "POST":
+        new_password = request.POST.get("new_password")
+        confirm_password = request.POST.get("confirm_password")
+        
+        if len(new_password) < 8:
+            messages.error(request, "Password must be at least 8 characters.")
+        elif new_password != confirm_password:
+            messages.error(request, "Passwords do not match.")
+        else:
+            user.set_password(new_password)
+            user.save()
+            if 'reset_user_id' in request.session:
+                del request.session['reset_user_id']
+            messages.success(request, "Password reset successfully. Please login.")
+            return redirect('login')
+            
+    return render(request, "seatsense_app/reset_password.html", {"reset_user": user})
