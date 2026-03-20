@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import user_passes_test
 from .models import Event, Booking, Category, Speaker, User
 from django.db.models import Sum, Count
-from .forms import EventForm
+from .forms import EventForm, CategoryForm, SpeakerForm
 from django.contrib import messages
 
 def admin_required(user):
@@ -68,3 +68,84 @@ def admin_event_delete(request, event_id):
         messages.success(request, "Event deleted successfully!")
         return redirect('admin_event_list')
     return render(request, 'seatsense_app/admin/event_confirm_delete.html', {'event': event})
+
+@user_passes_test(admin_required, login_url='login')
+def admin_booking_list(request):
+    bookings = Booking.objects.all().order_by('-booking_date')
+    return render(request, 'seatsense_app/admin/booking_list.html', {'bookings': bookings})
+
+# Categories
+@user_passes_test(admin_required, login_url='login')
+def admin_category_list(request):
+    categories = Category.objects.all()
+    return render(request, 'seatsense_app/admin/category_list.html', {'categories': categories})
+
+@user_passes_test(admin_required, login_url='login')
+def admin_category_create(request):
+    if request.method == "POST":
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Category created!")
+            return redirect('admin_category_list')
+    else:
+        form = CategoryForm()
+    return render(request, 'seatsense_app/admin/generic_form.html', {'form': form, 'title': 'Add Category', 'back_url': 'admin_category_list'})
+
+@user_passes_test(admin_required, login_url='login')
+def admin_category_edit(request, cat_id):
+    category = get_object_or_404(Category, id=cat_id)
+    if request.method == "POST":
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Category updated!")
+            return redirect('admin_category_list')
+    else:
+        form = CategoryForm(instance=category)
+    return render(request, 'seatsense_app/admin/generic_form.html', {'form': form, 'title': 'Edit Category', 'back_url': 'admin_category_list'})
+
+@user_passes_test(admin_required, login_url='login')
+def admin_category_delete(request, cat_id):
+    category = get_object_or_404(Category, id=cat_id)
+    category.delete()
+    messages.success(request, "Category deleted!")
+    return redirect('admin_category_list')
+
+# Speakers
+@user_passes_test(admin_required, login_url='login')
+def admin_speaker_list(request):
+    speakers = Speaker.objects.all()
+    return render(request, 'seatsense_app/admin/speaker_list.html', {'speakers': speakers})
+
+@user_passes_test(admin_required, login_url='login')
+def admin_speaker_create(request):
+    if request.method == "POST":
+        form = SpeakerForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Speaker added!")
+            return redirect('admin_speaker_list')
+    else:
+        form = SpeakerForm()
+    return render(request, 'seatsense_app/admin/generic_form.html', {'form': form, 'title': 'Add Speaker', 'back_url': 'admin_speaker_list'})
+
+@user_passes_test(admin_required, login_url='login')
+def admin_speaker_edit(request, speaker_id):
+    speaker = get_object_or_404(Speaker, id=speaker_id)
+    if request.method == "POST":
+        form = SpeakerForm(request.POST, request.FILES, instance=speaker)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Speaker updated!")
+            return redirect('admin_speaker_list')
+    else:
+        form = SpeakerForm(instance=speaker)
+    return render(request, 'seatsense_app/admin/generic_form.html', {'form': form, 'title': 'Edit Speaker', 'back_url': 'admin_speaker_list'})
+
+@user_passes_test(admin_required, login_url='login')
+def admin_speaker_delete(request, speaker_id):
+    speaker = get_object_or_404(Speaker, id=speaker_id)
+    speaker.delete()
+    messages.success(request, "Speaker deleted!")
+    return redirect('admin_speaker_list')

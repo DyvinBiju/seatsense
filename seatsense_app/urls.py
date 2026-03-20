@@ -16,6 +16,19 @@ urlpatterns = [
     path('admin-panel/events/create/', admin_views.admin_event_create, name='admin_event_create'),
     path('admin-panel/events/<int:event_id>/edit/', admin_views.admin_event_edit, name='admin_event_edit'),
     path('admin-panel/events/<int:event_id>/delete/', admin_views.admin_event_delete, name='admin_event_delete'),
+    path('admin-panel/bookings/', admin_views.admin_booking_list, name='admin_booking_list'),
+    
+    # Categories
+    path('admin-panel/categories/', admin_views.admin_category_list, name='admin_category_list'),
+    path('admin-panel/categories/create/', admin_views.admin_category_create, name='admin_category_create'),
+    path('admin-panel/categories/<int:cat_id>/edit/', admin_views.admin_category_edit, name='admin_category_edit'),
+    path('admin-panel/categories/<int:cat_id>/delete/', admin_views.admin_category_delete, name='admin_category_delete'),
+
+    # Speakers
+    path('admin-panel/speakers/', admin_views.admin_speaker_list, name='admin_speaker_list'),
+    path('admin-panel/speakers/create/', admin_views.admin_speaker_create, name='admin_speaker_create'),
+    path('admin-panel/speakers/<int:speaker_id>/edit/', admin_views.admin_speaker_edit, name='admin_speaker_edit'),
+    path('admin-panel/speakers/<int:speaker_id>/delete/', admin_views.admin_speaker_delete, name='admin_speaker_delete'),
 
     path("events/", views.explore_events, name="explore_events"),
     path("event/<int:event_id>/", views.event_detail, name="event_detail"),

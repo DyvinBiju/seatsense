@@ -190,17 +190,17 @@
                 </a>
             </li>
             <li class="menu-item">
-                <a href="#" class="menu-link">
+                <a href="{% url 'admin_booking_list' %}" class="menu-link {% if request.resolver_match.url_name == 'admin_booking_list' %}active{% endif %}">
                     <i class="fa fa-ticket"></i> Bookings
                 </a>
             </li>
             <li class="menu-item">
-                <a href="#" class="menu-link">
+                <a href="{% url 'admin_category_list' %}" class="menu-link {% if request.resolver_match.url_name == 'admin_category_list' %}active{% endif %}">
                     <i class="fa fa-tags"></i> Categories
                 </a>
             </li>
             <li class="menu-item">
-                <a href="#" class="menu-link">
+                <a href="{% url 'admin_speaker_list' %}" class="menu-link {% if request.resolver_match.url_name == 'admin_speaker_list' %}active{% endif %}">
                     <i class="fa fa-microphone"></i> Speakers
                 </a>
             </li>

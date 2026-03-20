@@ -1,0 +1,60 @@
+{% extends "seatsense_app/admin/admin_base.html" %}
+
+{% block page_title %}Speakers manager{% endblock %}
+
+{% block admin_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0" style="font-weight: 700; color: #111827;">System Speakers</h4>
+    <a href="{% url 'admin_speaker_create' %}" class="btn btn-orange-custom">
+        <i class="fa fa-plus mr-2"></i> Add Speaker
+    </a>
+</div>
+
+<div class="card content-card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="thead-light">
+                    <tr>
+                        <th class="border-0 px-4">Speaker</th>
+                        <th class="border-0">Designation</th>
+                        <th class="border-0 text-right px-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for speaker in speakers %}
+                    <tr>
+                        <td class="px-4 py-3 align-middle">
+                            <div class="d-flex align-items-center">
+                                <div class="speaker-img-sm mr-3">
+                                    {% if speaker.image %}
+                                    <img src="{{ speaker.image.url }}" alt="Speaker" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #eee;">
+                                    {% else %}
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #f3f4f6; color: #f97316; display: flex; align-items: center; justify-content: center; font-weight: 700;">
+                                        {{ speaker.name.0|upper }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <span style="font-weight: 700;">{{ speaker.name }}</span>
+                            </div>
+                        </td>
+                        <td class="py-3 align-middle text-muted">{{ speaker.designation }}</td>
+                        <td class="py-3 align-middle text-right px-4">
+                            <a href="{% url 'admin_speaker_edit' speaker.id %}" class="btn btn-light btn-sm mr-1"><i class="fa fa-edit text-info"></i></a>
+                            <a href="{% url 'admin_speaker_delete' speaker.id %}" class="btn btn-light btn-sm" onclick="return confirm('Delete this speaker?')"><i class="fa fa-trash text-danger"></i></a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="3" class="text-center py-4 text-muted">No speakers found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-orange-custom { background: #f97316; color: white; border-radius: 10px; font-weight: 600; padding: 10px 20px; border: none; }
+    .content-card { border-radius: 16px; }
+</style>
+{% endblock %}

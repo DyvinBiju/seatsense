@@ -38,3 +38,22 @@ class EventForm(forms.ModelForm):
             'category': forms.Select(attrs={'class': 'form-control'}),
             'speakers': forms.SelectMultiple(attrs={'class': 'form-control'}),
         }
+
+from .models import Category, Speaker
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Category Name'}),
+        }
+
+class SpeakerForm(forms.ModelForm):
+    class Meta:
+        model = Speaker
+        fields = ['name', 'designation', 'image']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Speaker Name'}),
+            'designation': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Speaker Designation'}),
+        }
