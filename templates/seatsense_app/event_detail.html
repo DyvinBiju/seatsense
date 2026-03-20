@@ -144,6 +144,39 @@
 </section>
 
 
+{% if event.speakers.exists %}
+<!--==============================
+=            Speakers            =
+===============================-->
+<section class="section speakers bg-speaker overlay-lighter" style="padding-top: 60px; padding-bottom: 60px;">
+	<div class="container">
+		<div class="row">
+			<div class="col-12">
+				<div class="section-title white">
+					<h3 style="font-weight: 800; color: #ffffff; margin-bottom: 10px;">Event <span class="alternate" style="color: #ff5722;">Speakers</span></h3>
+					<p style="color: #e5e7eb; font-size: 16px;">Meet the distinguished experts sharing their knowledge at this event</p>
+					<div style="width: 60px; height: 3px; background-color: #ff5722; border-radius: 3px; margin: 20px auto 0;"></div>
+				</div>
+			</div>
+		</div>
+		<div class="row justify-content-center">
+			{% for speaker in event.speakers.all %}
+			<div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+				<div class="speaker-item" style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.03); transition: transform 0.3s ease;">
+					<div class="image" style="position: relative; overflow: hidden;">
+						<img src="{{ speaker.image.url }}" alt="{{ speaker.name }}" class="img-fluid" style="width: 100%; height: 280px; object-fit: cover;">
+					</div>
+					<div class="content text-center" style="padding: 20px;">
+						<h5 style="font-weight: 700; color: #202124; margin-bottom: 5px;">{{ speaker.name }}</h5>
+						<p style="color: #ff5722; font-weight: 600; font-size: 13px; margin: 0; text-transform: uppercase;">{{ speaker.designation }}</p>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+</section>
+{% endif %}
 
 <!--============================
 =        Event Details        =
@@ -230,7 +263,6 @@
 
     </div>
 </section>
-
 
 
 {% if is_past %}

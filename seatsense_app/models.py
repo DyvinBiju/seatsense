@@ -47,6 +47,15 @@ class Category(models.Model):
         return self.name
 
 
+class Speaker(models.Model):
+    name = models.CharField(max_length=200)
+    designation = models.CharField(max_length=200)
+    image = models.ImageField(upload_to="speakers/")
+
+    def __str__(self):
+        return self.name
+
+
 class Event(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
@@ -60,6 +69,7 @@ class Event(models.Model):
     ticket_price = models.DecimalField(max_digits=8, decimal_places=2)
 
     image = models.ImageField(upload_to="events/", blank=True)
+    speakers = models.ManyToManyField(Speaker, related_name="events", blank=True)
 
     def __str__(self):
         return self.title
