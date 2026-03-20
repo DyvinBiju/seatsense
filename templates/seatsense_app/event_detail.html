@@ -154,79 +154,76 @@
 
         <div class="row text-center">
 
-            <div class="col-md-4 mb-4 mb-md-0">
-
+            <!-- Venue -->
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
                 <div class="service-item"
-                    style="background: white; padding: 40px 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); height: 100%; transition: transform 0.3s ease;"
+                    style="background: white; padding: 30px 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); height: 100%; transition: transform 0.3s ease;"
                     onmouseover="this.style.transform='translateY(-5px)';"
                     onmouseout="this.style.transform='translateY(0)';">
-
-                    <div
-                        style="width: 80px; height: 80px; background: #fff0eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto;">
-                        <i class="fa fa-map-marker" style="font-size: 32px; color: #ff5722; margin: 0;"></i>
+                    <div style="width: 65px; height: 65px; background: #fff0eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto;">
+                        <i class="fa fa-map-marker" style="font-size: 24px; color: #ff5722; margin: 0;"></i>
                     </div>
-
-                    <h5 style="font-weight: 700; color: #202124; margin-bottom: 10px; font-size: 18px;">
+                    <h5 style="font-weight: 700; color: #202124; margin-bottom: 5px; font-size: 16px;">
                         {{ event.auditorium.name|title }}
                     </h5>
-
-                    <p
-                        style="color: #ff5722; font-weight: 600; font-size: 14px; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
-                        Event Venue</p>
-
+                    <p style="color: #ff5722; font-weight: 600; font-size: 13px; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
+                        Venue</p>
                 </div>
-
             </div>
 
-
-            <div class="col-md-4 mb-4 mb-md-0">
-
+            <!-- Date -->
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
                 <div class="service-item"
-                    style="background: white; padding: 40px 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); height: 100%; transition: transform 0.3s ease;"
+                    style="background: white; padding: 30px 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); height: 100%; transition: transform 0.3s ease;"
                     onmouseover="this.style.transform='translateY(-5px)';"
                     onmouseout="this.style.transform='translateY(0)';">
-
-                    <div
-                        style="width: 80px; height: 80px; background: #fff0eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto;">
-                        <i class="fa fa-calendar" style="font-size: 30px; color: #ff5722; margin: 0;"></i>
+                    <div style="width: 65px; height: 65px; background: #fff0eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto;">
+                        <i class="fa fa-calendar" style="font-size: 24px; color: #ff5722; margin: 0;"></i>
                     </div>
-
-                    <h5 style="font-weight: 700; color: #202124; margin-bottom: 10px; font-size: 18px;">
+                    <h5 style="font-weight: 700; color: #202124; margin-bottom: 5px; font-size: 16px;">
                         {{ event.event_date|date:"F d, Y" }}
                     </h5>
-
-                    <p
-                        style="color: #ff5722; font-weight: 600; font-size: 14px; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
-                        Event Date</p>
-
+                    <p style="color: #ff5722; font-weight: 600; font-size: 13px; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
+                        Date</p>
                 </div>
-
             </div>
 
-
-            <div class="col-md-4">
-
+            <!-- Price -->
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
                 <div class="service-item"
-                    style="background: white; padding: 40px 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); height: 100%; transition: transform 0.3s ease;"
+                    style="background: white; padding: 30px 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); height: 100%; transition: transform 0.3s ease;"
                     onmouseover="this.style.transform='translateY(-5px)';"
                     onmouseout="this.style.transform='translateY(0)';">
-
-                    <div
-                        style="width: 80px; height: 80px; background: #fff0eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto;">
-                        <i class="fa fa-ticket"
-                            style="font-size: 30px; color: #ff5722; margin: 0; transform: rotate(-45deg);"></i>
+                    <div style="width: 65px; height: 65px; background: #fff0eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto;">
+                        <i class="fa fa-ticket" style="font-size: 24px; color: #ff5722; margin: 0; transform: rotate(-45deg);"></i>
                     </div>
-
-                    <h5 style="font-weight: 700; color: #202124; margin-bottom: 10px; font-size: 18px;">
+                    <h5 style="font-weight: 700; color: #202124; margin-bottom: 5px; font-size: 16px;">
                         ₹ {{ event.ticket_price }}
                     </h5>
-
-                    <p
-                        style="color: #ff5722; font-weight: 600; font-size: 14px; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
+                    <p style="color: #ff5722; font-weight: 600; font-size: 13px; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
                         Ticket Price</p>
-
                 </div>
+            </div>
 
+            <!-- Availability -->
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                <div class="service-item"
+                    style="background: white; padding: 30px 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); height: 100%; transition: transform 0.3s ease;"
+                    onmouseover="this.style.transform='translateY(-5px)';"
+                    onmouseout="this.style.transform='translateY(0)';">
+                    <div style="width: 65px; height: 65px; background: #fff0eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto;">
+                        <i class="fa fa-users" style="font-size: 24px; color: #ff5722; margin: 0;"></i>
+                    </div>
+                    <h5 style="font-weight: 700; color: #202124; margin-bottom: 5px; font-size: 16px;">
+                        {% if is_past %}
+                            {{ event.booked_seats }} / {{ event.total_seats }}
+                        {% else %}
+                            {{ event.remaining_seats }} / {{ event.total_seats }}
+                        {% endif %}
+                    </h5>
+                    <p style="color: #ff5722; font-weight: 600; font-size: 13px; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
+                        {% if is_past %}Seats Booked{% else %}Seats Remaining{% endif %}</p>
+                </div>
             </div>
 
         </div>

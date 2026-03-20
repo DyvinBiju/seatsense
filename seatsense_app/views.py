@@ -59,32 +59,40 @@ def explore_events(request):
 
     now = timezone.now()
 
-    # Get all events once
     all_events = Event.objects.all()
 
     valid_events = []
     upcoming_events_count = 0
     past_events_count = 0
+    
+    # Track category counts dynamically based on the current mode
+    category_counts = {}
 
     for event in all_events:
-
         event_datetime = datetime.combine(event.event_date, event.event_time)
-
         if timezone.is_naive(event_datetime):
             event_datetime = timezone.make_aware(event_datetime)
 
+        is_event_past = event_datetime <= now
+
         # Count upcoming vs past
-        if event_datetime > now:
+        if not is_event_past:
             upcoming_events_count += 1
         else:
             past_events_count += 1
 
+        # Calculate counts for the sidebar categories
+        # If show_past=True, count past events per category. If False, count upcoming events.
+        if is_event_past == show_past:
+            cat_id = event.category_id
+            category_counts[cat_id] = category_counts.get(cat_id, 0) + 1
+
         # Filter depending on view mode
         if show_past:
-            if event_datetime <= now:
+            if is_event_past:
                 valid_events.append(event)
         else:
-            if event_datetime > now:
+            if not is_event_past:
                 valid_events.append(event)
 
     # Order events correctly
@@ -125,6 +133,9 @@ def explore_events(request):
     page_obj = paginator.get_page(page_number)
 
     categories = Category.objects.all()
+    # Apply the dynamic counts to categories
+    for cat in categories:
+        cat.display_count = category_counts.get(cat.id, 0)
 
     context = {
         "events": page_obj,

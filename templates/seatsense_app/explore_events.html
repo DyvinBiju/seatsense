@@ -110,12 +110,34 @@
                                             </span>
                                         </div>
                                         <div
-                                            style="display: flex; align-items: center; color: #5f6368; font-size: 14px;">
+                                            style="display: flex; align-items: center; margin-bottom: 10px; color: #5f6368; font-size: 14px;">
                                             <i class="fa fa-calendar"
                                                 style="color: #ff5722; width: 24px; font-size: 16px; text-align: center;"></i>
                                             <strong
                                                 style="color: #202124; font-weight: 600; margin-right: 5px; margin-left: 5px;">Date:</strong>
                                             <span>{{ event.event_date|date:"F j, Y" }}</span>
+                                        </div>
+                                        <div
+                                            style="display: flex; align-items: center; color: #5f6368; font-size: 14px;">
+                                            <i class="fa fa-users"
+                                                style="color: #ff5722; width: 24px; font-size: 14px; text-align: center;"></i>
+                                            <strong
+                                                style="color: #202124; font-weight: 600; margin-right: 5px; margin-left: 5px;">Seats:</strong>
+                                            <span 
+                                                {% if not event.is_past %}
+                                                    {% if event.remaining_seats == 0 %} style="color: #ef4444; font-weight: 700;" 
+                                                    {% elif event.remaining_seats < 10 %} style="color: #f97316; font-weight: 600;" 
+                                                    {% endif %}
+                                                {% endif %}>
+                                                {% if event.is_past %}
+                                                    {{ event.booked_seats }} / {{ event.total_seats }} Seats Booked
+                                                {% else %}
+                                                    {{ event.remaining_seats }} / {{ event.total_seats }} Remaining
+                                                    {% if event.remaining_seats == 0 %}
+                                                        <span class="badge badge-danger ml-2" style="font-size: 10px; background-color: #ef4444;">SOLD OUT</span>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </span>
                                         </div>
                                     </div>
 
@@ -246,9 +268,11 @@
                                     class="{% if current_category == category.id|stringformat:'s' %}active-category{% else %}inactive-category{% endif %}"
                                     style="text-decoration: none; color: inherit; font-weight: {% if current_category == category.id|stringformat:'s' %}700; color: #ff5722;{% else %}500;{% endif %}; transition: color 0.3s ease;">
                                     {{ category.name|title }}
+                                    {% if not show_past %}
                                     <span class="count-badge">
-                                        ({{ category.event_set.count }})
+                                        ({{ category.display_count }})
                                     </span>
+                                    {% endif %}
                                 </a>
                             </li>
                             {% endfor %}

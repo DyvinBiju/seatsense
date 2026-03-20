@@ -64,6 +64,27 @@ class Event(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def total_seats(self):
+        return self.auditorium.seat_set.count()
+
+    @property
+    def booked_seats(self):
+        return BookingSeat.objects.filter(booking__event=self, booking__status='CONFIRMED').count()
+
+    @property
+    def remaining_seats(self):
+        return self.total_seats - self.booked_seats
+
+    @property
+    def is_past(self):
+        from django.utils import timezone
+        from datetime import datetime
+        event_datetime = datetime.combine(self.event_date, self.event_time)
+        if timezone.is_naive(event_datetime):
+            event_datetime = timezone.make_aware(event_datetime)
+        return event_datetime <= timezone.now()
+
 
 class Booking(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
