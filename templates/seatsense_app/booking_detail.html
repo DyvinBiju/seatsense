@@ -9,7 +9,11 @@
          <div class="col-12 text-center mt-3">
             <h2 style="font-weight:800; color:#111827; letter-spacing: -0.5px; margin-bottom: 8px;">Ticket Details</h2>
             {% if booking.status == "CONFIRMED" %}
-            <p class="text-muted" style="font-size:1.1rem; font-weight: 500;">Present this ticket at the venue</p>
+               {% if is_past %}
+               <p class="text-info" style="font-size:1.1rem; font-weight: 600;">This event has concluded. Thank you for attending!</p>
+               {% else %}
+               <p class="text-muted" style="font-size:1.1rem; font-weight: 500;">Present this ticket at the venue</p>
+               {% endif %}
             {% else %}
             <p class="text-danger" style="font-size:1.1rem; font-weight:600;">This ticket has been cancelled</p>
             {% endif %}
@@ -26,7 +30,11 @@
                   <div class="watermark">CANCELLED</div>
                   <div class="status-badge status-cancelled">Cancelled</div>
                   {% else %}
-                  <div class="status-badge status-confirmed">Confirmed</div>
+                     {% if is_past %}
+                     <div class="status-badge status-completed">Completed</div>
+                     {% else %}
+                     <div class="status-badge status-booked">Booked</div>
+                     {% endif %}
                   {% endif %}
 
                   <div class="ticket-top">
@@ -95,7 +103,7 @@
                         </div>
                      </div>
 
-                     {% if booking.status == "CONFIRMED" %}
+                     {% if booking.status == "CONFIRMED" and not is_past %}
                      <div class="barcode-area text-center mt-4">
                         <div class="qr-container">
                            <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code Ticket"
@@ -115,14 +123,23 @@
                </a>
 
                {% if booking.status == "CONFIRMED" %}
-               <button class="btn-custom btn-primary-custom" onclick="window.print()">
-                  <i class="fa fa-print"></i> Print Ticket
-               </button>
+                  {% if is_past %}
+                  <button class="btn-custom btn-disabled" disabled style="cursor: not-allowed; background-color: #f3f4f6; color: #9ca3af; border:1px solid #e5e7eb;">
+                     <i class="fa fa-print"></i> Print Locked
+                  </button>
+                  <button class="btn-custom btn-disabled" disabled style="cursor: not-allowed; background-color: #f3f4f6; color: #9ca3af; border:1px solid #e5e7eb;">
+                     <i class="fa fa-times-circle"></i> Cancellation Closed
+                  </button>
+                  {% else %}
+                  <button class="btn-custom btn-primary-custom" onclick="window.print()">
+                     <i class="fa fa-print"></i> Print Ticket
+                  </button>
 
-               <a href="{% url 'cancel_booking' booking.id %}" class="btn-custom btn-danger-custom"
-                  onclick="return confirm('Are you sure you want to cancel this ticket? This action cannot be undone.')">
-                  <i class="fa fa-times"></i> Cancel Ticket
-               </a>
+                  <a href="{% url 'cancel_booking' booking.id %}" class="btn-custom btn-danger-custom"
+                     onclick="return confirm('Are you sure you want to cancel this ticket? This action cannot be undone.')">
+                     <i class="fa fa-times"></i> Cancel Ticket
+                  </a>
+                  {% endif %}
                {% else %}
                <button class="btn-custom btn-disabled" disabled>
                   <i class="fa fa-print"></i> Print Disabled
@@ -304,15 +321,20 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
    }
 
-   .status-confirmed {
-      background: #10b981;
-      color: white;
-   }
-
-   .status-cancelled {
-      background: #ef4444;
-      color: white;
-   }
+    .status-booked {
+       background: #10b981;
+       color: white;
+    }
+ 
+    .status-completed {
+       background: #3b82f6;
+       color: white;
+    }
+ 
+    .status-cancelled {
+       background: #ef4444;
+       color: white;
+    }
 
    .ticket-cancelled {
       opacity: 0.9;

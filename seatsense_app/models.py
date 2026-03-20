@@ -69,6 +69,7 @@ class Event(models.Model):
     ticket_price = models.DecimalField(max_digits=8, decimal_places=2)
 
     image = models.ImageField(upload_to="events/", blank=True)
+    duration = models.CharField(max_length=50, blank=True, null=True, help_text="e.g. 2 Hours, 3 Days, Full Day")
     speakers = models.ManyToManyField(Speaker, related_name="events", blank=True)
 
     def __str__(self):

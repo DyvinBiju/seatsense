@@ -117,6 +117,16 @@
                                                 style="color: #202124; font-weight: 600; margin-right: 5px; margin-left: 5px;">Date:</strong>
                                             <span>{{ event.event_date|date:"F j, Y" }}</span>
                                         </div>
+                                        {% if event.duration %}
+                                        <div
+                                            style="display: flex; align-items: center; margin-bottom: 10px; color: #5f6368; font-size: 14px;">
+                                            <i class="fa fa-clock-o"
+                                                style="color: #ff5722; width: 24px; font-size: 16px; text-align: center;"></i>
+                                            <strong
+                                                style="color: #202124; font-weight: 600; margin-right: 5px; margin-left: 5px;">Duration:</strong>
+                                            <span>{{ event.duration }}</span>
+                                        </div>
+                                        {% endif %}
                                         <div
                                             style="display: flex; align-items: center; color: #5f6368; font-size: 14px;">
                                             <i class="fa fa-users"

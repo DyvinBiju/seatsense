@@ -695,10 +695,18 @@ Date: {booking.event.event_date}
 
     qr_base64 = base64.b64encode(buffer.getvalue()).decode()
 
+    # Calculate if event is past
+    event_datetime = datetime.combine(booking.event.event_date, booking.event.event_time)
+    if timezone.is_naive(event_datetime):
+        event_datetime = timezone.make_aware(event_datetime)
+    
+    is_past = event_datetime <= timezone.now()
+
     context = {
         "booking": booking,
         "seats": seat_list,
-        "qr_code": qr_base64
+        "qr_code": qr_base64,
+        "is_past": is_past
     }
 
     return render(

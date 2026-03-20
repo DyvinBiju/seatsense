@@ -38,6 +38,13 @@
                         <span>
                             {{ event.event_time }}
                         </span>
+                        {% if event.duration %}
+                        &nbsp;&nbsp;|&nbsp;&nbsp;
+                        <i class="fa fa-hourglass-half" style="color: #ff5722; margin-right: 8px;"></i>
+                        <span>
+                            {{ event.duration }}
+                        </span>
+                        {% endif %}
                     </h6>
 
                     <p style="color: #ffffff; font-size: 18px; margin-bottom: 30px; font-weight: 500;">
@@ -185,7 +192,7 @@
 <section class="ticket-feature" style="background-color: #f8f9fa; padding: 60px 0;">
     <div class="container">
 
-        <div class="row text-center">
+        <div class="row text-center justify-content-center">
 
             <!-- Venue -->
             <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
