@@ -32,39 +32,43 @@
                                           <div class="profile-header text-center pb-4">
                                                  <!-- Image Upload Area -->
                                                  <div class="profile-img-upload-wrapper mx-auto mb-3"
-                                                        onclick="document.getElementById('profile_image_input').click();"
-                                                        style="overflow: hidden;">
+                                                        style="overflow: visible;">
+                                                        
+                                                        <div onclick="document.getElementById('profile_image_input').click();" style="width:100%; height:100%; border-radius:50%; overflow:hidden; position:relative; cursor:pointer;">
+                                                            {% with img=profile.profile_image %}
+                                                            {% if img and img.name != 'profiles/default.png' %}
+                                                            <img src="{{ img.url }}" class="profile-img-preview"
+                                                                   id="profile_image_preview" alt="Profile"
+                                                                   style="display: block;">
+                                                            {% else %}
+                                                            <div id="profile_image_fallback"
+                                                                   style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 50px; font-weight: 700; color: #f97316; background: #fff0eb; border-radius: 50%;">
+                                                                   {{ request.user.username.0|upper }}
+                                                            </div>
+                                                            <img src="" class="profile-img-preview"
+                                                                   id="profile_image_preview" style="display: none;"
+                                                                   alt="Profile">
+                                                            {% endif %}
+                                                            {% endwith %}
+
+                                                            <!-- Camera Overlay -->
+                                                            <div class="upload-overlay">
+                                                                <i class="fa fa-camera"></i>
+                                                            </div>
+                                                        </div>
+
                                                         {% with img=profile.profile_image %}
                                                         {% if img and img.name != 'profiles/default.png' %}
-                                                        <img src="{{ img.url }}" class="profile-img-preview"
-                                                               id="profile_image_preview" alt="Profile"
-                                                               style="display: block;">
-                                                        {% else %}
-                                                        <div id="profile_image_fallback"
-                                                               style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 50px; font-weight: 700; color: #f97316; background: #fff0eb; border-radius: 50%;">
-                                                               {{ request.user.username.0|upper }}
-                                                        </div>
-                                                        <img src="" class="profile-img-preview"
-                                                               id="profile_image_preview" style="display: none;"
-                                                               alt="Profile">
+                                                        <!-- Remove Photo Icon Button -->
+                                                        <button type="submit" name="remove_photo" value="true"
+                                                               class="remove-photo-badge" 
+                                                               title="Remove Profile Photo"
+                                                               onclick="return confirm('Are you sure you want to remove your profile photo?')">
+                                                               <i class="fa fa-trash"></i>
+                                                        </button>
                                                         {% endif %}
                                                         {% endwith %}
-
-                                                        <!-- Plus Icon Overlay -->
-                                                        <div class="upload-overlay">
-                                                               <i class="fa fa-camera"></i>
-                                                        </div>
                                                  </div>
-
-                                                 {% with img=profile.profile_image %}
-                                                 {% if img and img.name != 'profiles/default.png' %}
-                                                 <button type="submit" name="remove_photo" value="true"
-                                                        class="btn btn-sm mt-0 mb-3"
-                                                        style="background: none; border: none; font-weight: 600; text-decoration: underline; color: #ef4444; width: auto; box-shadow: none; padding: 0;">
-                                                        Remove Photo
-                                                 </button>
-                                                 {% endif %}
-                                                 {% endwith %}
 
                                                  <!-- Hidden File Input -->
                                                  <input type="file" name="profile_image" id="profile_image_input"
@@ -79,6 +83,19 @@
                                           <div class="profile-edit-divider"></div>
 
                                           <div class="form-body py-4 px-4 px-md-5">
+
+                                                 <div class="form-group mb-4">
+                                                        <label class="form-label text-muted text-uppercase"
+                                                                style="font-size: 11px; font-weight: 700; letter-spacing: 1px;">Email Address</label>
+                                                        <div class="input-group-custom">
+                                                                <span class="input-icon"><i
+                                                                              class="fa fa-envelope"></i></span>
+                                                                <input type="email" name="email"
+                                                                       class="form-control-custom"
+                                                                       value="{{ request.user.email|default:'' }}"
+                                                                       placeholder="Enter your email address">
+                                                        </div>
+                                                 </div>
 
                                                  <div class="form-group mb-0">
                                                         <label class="form-label text-muted text-uppercase"
@@ -196,15 +213,15 @@
               transition: all 0.3s ease;
        }
 
-       /* Instagram-like Plus Overlay */
+       /* Floating Action Icons */
        .upload-overlay {
               position: absolute;
-              bottom: 5px;
-              right: 5px;
+              bottom: 8px;
+              right: 8px;
               background: #f97316;
               color: white;
-              width: 40px;
-              height: 40px;
+              width: 38px;
+              height: 38px;
               border-radius: 50%;
               display: flex;
               align-items: center;
@@ -213,6 +230,34 @@
               border: 3px solid white;
               box-shadow: 0 4px 8px rgba(249, 115, 22, 0.3);
               transition: transform 0.2s ease;
+              z-index: 10;
+       }
+
+       .remove-photo-badge {
+              position: absolute;
+              top: 8px;
+              right: 8px;
+              background: #ef4444;
+              color: white;
+              width: 34px;
+              height: 34px;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 14px;
+              border: 3px solid white;
+              box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+              cursor: pointer;
+              transition: transform 0.2s ease;
+              z-index: 15;
+              padding: 0;
+       }
+
+       .remove-photo-badge:hover {
+              transform: scale(1.1);
+              background: #dc2626;
+              color: white;
        }
 
        .profile-img-upload-wrapper:hover .upload-overlay {

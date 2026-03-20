@@ -821,17 +821,35 @@ def edit_profile(request):
             profile.profile_image = "profiles/default.png"
         else:
             phone = request.POST.get("phone")
+            email = request.POST.get("email")
+
+            if email:
+                from django.core.validators import validate_email
+                from django.core.exceptions import ValidationError
+                try:
+                    validate_email(email)
+                except ValidationError:
+                    messages.error(request, "Please enter a valid email address.")
+                    return redirect("edit_profile")
+
+                from django.contrib.auth.models import User
+                if User.objects.filter(email=email).exclude(id=request.user.id).exists():
+                    messages.error(request, "This email is already in use by another account.")
+                    return redirect("edit_profile")
+                request.user.email = email
+                request.user.save()
 
             if phone:
                 if len(phone) != 10 or not phone.isdigit():
                     messages.error(request, "Phone number must be exactly 10 digits.")
-                    return render(request, "seatsense_app/edit_profile.html", {"profile": profile})
+                    return redirect("edit_profile")
                 profile.phone = phone
 
             if "profile_image" in request.FILES:
                 profile.profile_image = request.FILES["profile_image"]
 
         profile.save()
+        messages.success(request, "Profile updated successfully.")
 
         return redirect("profile")
 
