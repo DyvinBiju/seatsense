@@ -290,6 +290,12 @@
             <a href="{% url 'index' %}" class="menu-link" style="padding-left: 0;">
                 <i class="fa fa-arrow-left"></i> Main Site
             </a>
+            <a href="#" onclick="document.getElementById('logout-form').submit(); return false;" class="menu-link mt-2" style="padding-left: 0; color: #ef4444;" onmouseover="this.style.color='#dc2626'" onmouseout="this.style.color='#ef4444'">
+                <i class="fa fa-sign-out"></i> Logout
+            </a>
+            <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
+                {% csrf_token %}
+            </form>
         </div>
     </div>
 
@@ -306,9 +312,12 @@
                 </div>
             </div>
             
-            <div class="user-nav">
-                <div class="admin-badge">Staff Mode</div>
-                <div style="font-weight: 500;">{{ request.user.username }}</div>
+            <div class="user-nav d-flex align-items-center">
+                <div class="admin-badge mr-3">Staff Mode</div>
+                <div class="mr-3" style="font-weight: 500;">{{ request.user.username }}</div>
+                <a href="#" onclick="document.getElementById('logout-form').submit(); return false;" title="Logout" style="color: #94a3b8; font-size: 1.25rem; transition: color 0.2s;" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#94a3b8'">
+                    <i class="fa fa-power-off"></i>
+                </a>
             </div>
         </div>
         

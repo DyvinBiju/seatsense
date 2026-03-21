@@ -16,10 +16,10 @@
                     <option value="{{ cat.id }}" {% if selected_cat == cat.id %}selected{% endif %}>{{ cat.name }}</option>
                     {% endfor %}
                 </select>
-                <div class="input-group">
-                    <input type="text" name="q" class="form-control" placeholder="Search events..." value="{{ search_query|default:'' }}" style="border-radius: 10px 0 0 10px; border-right: none;">
+                <div class="input-group bg-white" style="border-radius: 10px; overflow: hidden; border: 1px solid #ced4da; flex-wrap: nowrap;">
+                    <input type="text" name="q" class="form-control border-0 shadow-none" placeholder="Search events..." value="{{ search_query|default:'' }}" style="background: transparent;">
                     <div class="input-group-append">
-                        <button class="btn btn-light bg-white" type="submit" style="border-radius: 0 10px 10px 0; border: 1px solid #ced4da; border-left: none;">
+                        <button class="btn border-0 shadow-none" type="submit" style="background: transparent;">
                             <i class="fa fa-search text-muted"></i>
                         </button>
                     </div>

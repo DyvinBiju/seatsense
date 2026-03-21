@@ -68,8 +68,25 @@ class Event(models.Model):
 
     ticket_price = models.DecimalField(max_digits=8, decimal_places=2)
 
-    image = models.ImageField(upload_to="events/", blank=True)
-    duration = models.CharField(max_length=50, blank=True, null=True, help_text="e.g. 2 Hours, 3 Days, Full Day")
+    DURATION_CHOICES = [
+        ('1', '1 Hour'),
+        ('1.5', '1.5 Hours'),
+        ('2', '2 Hours'),
+        ('2.5', '2.5 Hours'),
+        ('3', '3 Hours'),
+        ('3.5', '3.5 Hours'),
+        ('4', '4 Hours'),
+        ('5', '5 Hours'),
+        ('6', '6 Hours'),
+        ('8', '8 Hours / Full Day'),
+        ('12', '12 Hours / Half Day'),
+        ('24', '1 Day (24 Hours)'),
+        ('48', '2 Days (48 Hours)'),
+        ('72', '3 Days (72 Hours)'),
+    ]
+
+    image = models.ImageField(upload_to="events/")
+    duration = models.CharField(max_length=50, blank=True, null=True, choices=DURATION_CHOICES, help_text="Select the estimated duration of the event")
     speakers = models.ManyToManyField(Speaker, related_name="events", blank=True)
 
     def __str__(self):

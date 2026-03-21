@@ -92,9 +92,18 @@ def admin_event_create(request):
 @user_passes_test(admin_required, login_url='login')
 def admin_event_edit(request, event_id):
     event = get_object_or_404(Event, id=event_id)
+    old_auditorium = event.auditorium
+    
     if request.method == "POST":
         form = EventForm(request.POST, request.FILES, instance=event)
         if form.is_valid():
+            new_auditorium = form.cleaned_data['auditorium']
+            
+            # Booking Guard: Block venue change if bookings exist
+            if new_auditorium != old_auditorium and event.booking_set.filter(status='CONFIRMED').exists():
+                messages.error(request, f"Cannot change the venue for '{event.title}' because seats have already been booked. Cancel the bookings or create a new event instead.")
+                return render(request, 'seatsense_app/admin/event_form.html', {'form': form, 'title': 'Edit Event', 'edit': True})
+                
             form.save()
             messages.success(request, "Event updated successfully!")
             return redirect('admin_event_list')
@@ -105,7 +114,13 @@ def admin_event_edit(request, event_id):
 @user_passes_test(admin_required, login_url='login')
 def admin_event_delete(request, event_id):
     event = get_object_or_404(Event, id=event_id)
+    
     if request.method == "POST":
+        # Booking Guard: Block deletion if bookings exist
+        if event.booking_set.filter(status='CONFIRMED').exists():
+            messages.error(request, f"Cannot delete '{event.title}' because it has active bookings. Cancel the bookings first.")
+            return redirect('admin_event_list')
+            
         event.delete()
         messages.success(request, "Event deleted successfully!")
         return redirect('admin_event_list')
