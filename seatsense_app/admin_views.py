@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import user_passes_test
-from .models import Event, Booking, Category, Speaker, User, Feedback, FeedbackReply
+from .models import Event, Booking, Category, Speaker, User, Feedback, FeedbackReply, Auditorium
 from django.db.models import Sum, Count, Q
-from .forms import EventForm, CategoryForm, SpeakerForm
+from .forms import EventForm, CategoryForm, SpeakerForm, AuditoriumForm
+
+# ... rest of file (I'll use multi-replace for cleaner injection)
+
 from django.contrib import messages
 
 def admin_required(user):
@@ -15,6 +18,7 @@ def admin_dashboard(request):
     total_bookings = Booking.objects.filter(status='CONFIRMED').count()
     total_revenue = Booking.objects.filter(status='CONFIRMED').aggregate(Sum('total_amount'))['total_amount__sum'] or 0
     total_users = User.objects.all().count()
+    total_auditoriums = Auditorium.objects.all().count()
 
     # Charts Data
     # 1. Revenue by Category
@@ -42,6 +46,7 @@ def admin_dashboard(request):
         'total_bookings': total_bookings,
         'total_revenue': total_revenue,
         'total_users': total_users,
+        'total_auditoriums': total_auditoriums,
         'recent_bookings': recent_bookings,
         'top_events': top_events,
         # Charts
@@ -261,3 +266,78 @@ def admin_feedback_delete(request, feedback_id):
     feedback.delete()
     messages.success(request, "Feedback removed.")
     return redirect('admin_feedback_list')
+
+# Auditoriums
+@user_passes_test(admin_required, login_url='login')
+def admin_auditorium_list(request):
+    search_query = request.GET.get('q')
+    if search_query:
+        auditoriums = Auditorium.objects.filter(Q(name__icontains=search_query) | Q(location__icontains=search_query))
+    else:
+        auditoriums = Auditorium.objects.all()
+    
+    return render(request, 'seatsense_app/admin/auditorium_list.html', {
+        'auditoriums': auditoriums,
+        'search_query': search_query
+    })
+
+@user_passes_test(admin_required, login_url='login')
+def admin_auditorium_create(request):
+    if request.method == 'POST':
+        form = AuditoriumForm(request.POST)
+        if form.is_valid():
+            auditorium = form.save()
+            auditorium.generate_seats()
+            messages.success(request, f"Auditorium '{auditorium.name}' created with seats.")
+            return redirect('admin_auditorium_list')
+    else:
+        form = AuditoriumForm()
+    
+    return render(request, 'seatsense_app/admin/auditorium_form.html', {
+        'form': form,
+        'title': 'Add Auditorium'
+    })
+
+@user_passes_test(admin_required, login_url='login')
+def admin_auditorium_edit(request, auditorium_id):
+    auditorium = get_object_or_404(Auditorium, id=auditorium_id)
+    old_rows = auditorium.total_rows
+    old_seats_per_row = auditorium.seats_per_row
+    
+    if request.method == 'POST':
+        form = AuditoriumForm(request.POST, instance=auditorium)
+        if form.is_valid():
+            new_rows = form.cleaned_data['total_rows']
+            new_seats_per_row = form.cleaned_data['seats_per_row']
+            
+            # Inventory Guard: Block reduction if events are linked
+            if auditorium.event_set.exists():
+                if new_rows < old_rows or new_seats_per_row < old_seats_per_row:
+                    messages.error(request, "Cannot reduce seating capacity while active events are scheduled in this venue.")
+                    return render(request, 'seatsense_app/admin/auditorium_form.html', {'form': form, 'title': 'Edit Auditorium'})
+            
+            form.save()
+            # If expanded, generate new seats (generate_seats handles get_or_create)
+            auditorium.generate_seats()
+            messages.success(request, f"Auditorium '{auditorium.name}' updated successfully.")
+            return redirect('admin_auditorium_list')
+    else:
+        form = AuditoriumForm(instance=auditorium)
+    
+    return render(request, 'seatsense_app/admin/auditorium_form.html', {
+        'form': form,
+        'title': 'Edit Auditorium'
+    })
+
+@user_passes_test(admin_required, login_url='login')
+def admin_auditorium_delete(request, auditorium_id):
+    auditorium = get_object_or_404(Auditorium, id=auditorium_id)
+    
+    # Relational Guard: Block deletion if events are linked
+    if auditorium.event_set.exists():
+        messages.error(request, f"Cannot delete '{auditorium.name}' because it has active events. Delete the events first.")
+        return redirect('admin_auditorium_list')
+    
+    auditorium.delete()
+    messages.success(request, "Auditorium and its seats deleted successfully.")
+    return redirect('admin_auditorium_list')

@@ -22,7 +22,7 @@ class Auditorium(models.Model):
 
             for seat_num in range(1, self.seats_per_row + 1):
 
-                Seat.objects.create(
+                Seat.objects.get_or_create(
                     auditorium=self,
                     row_label=row,
                     seat_number=seat_num

@@ -1,0 +1,87 @@
+{% extends "seatsense_app/admin/admin_base.html" %}
+
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block admin_content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card content-card border-0 shadow-sm" style="border-radius: 20px;">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="mr-3" style="width: 50px; height: 50px; background: rgba(249, 115, 22, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #f97316;">
+                        <i class="fa fa-building fa-lg"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-0" style="font-weight: 700;">{{ title }}</h5>
+                        <p class="text-muted small mb-0">Configure venue details and seating grid capacity</p>
+                    </div>
+                </div>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group mb-4">
+                                <label class="small font-weight-bold text-muted">AUDITORIUM NAME</label>
+                                {{ form.name }}
+                                {% if form.name.errors %}<div class="text-danger small mt-1">{{ form.name.errors }}</div>{% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group mb-4">
+                                <label class="small font-weight-bold text-muted">LOCATION / ADDRESS</label>
+                                {{ form.location }}
+                                {% if form.location.errors %}<div class="text-danger small mt-1">{{ form.location.errors }}</div>{% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-4">
+                                <label class="small font-weight-bold text-muted">TOTAL ROWS (A-Z)</label>
+                                {{ form.total_rows }}
+                                <small class="form-text text-muted">Number of lettered rows (e.g. 10)</small>
+                                {% if form.total_rows.errors %}<div class="text-danger small mt-1">{{ form.total_rows.errors }}</div>{% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-4">
+                                <label class="small font-weight-bold text-muted">SEATS PER ROW</label>
+                                {{ form.seats_per_row }}
+                                <small class="form-text text-muted">Number of chairs per horizontal row</small>
+                                {% if form.seats_per_row.errors %}<div class="text-danger small mt-1">{{ form.seats_per_row.errors }}</div>{% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if title == "Edit Auditorium" %}
+                    <div class="alert alert-warning border-0 small mb-4" style="background: #fffbeb; color: #92400e; border-radius: 12px;">
+                        <i class="fa fa-exclamation-triangle mr-2"></i>
+                        <strong>Note:</strong> Increasing the rows or seats per row will automatically generate new seats. Capacity cannot be reduced if events are already linked.
+                    </div>
+                    {% endif %}
+
+                    <hr class="my-4">
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'admin_auditorium_list' %}" class="btn btn-light px-4" style="border-radius: 10px; font-weight: 600;">Cancel</a>
+                        <button type="submit" class="btn btn-orange-custom px-4">Save Venue Configuration</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-orange-custom { background: #f97316; color: white; font-weight: 600; border-radius: 10px; transition: all 0.2s; border: none; padding: 10px 25px; }
+    .btn-orange-custom:hover { background: #ea580c; color: white; transform: translateY(-2px); }
+    .form-control { border-radius: 10px; border: 1px solid #eef0f2; padding: 12px 15px; height: auto; transition: all 0.2s; }
+    .form-control:focus { border-color: #f97316; box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1); }
+</style>
+{% endblock %}

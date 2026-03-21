@@ -161,10 +161,75 @@
             .sidebar {
                 transform: translateX(-100%);
             }
+            .sidebar.active {
+                transform: translateX(0);
+            }
             .main-content {
                 margin-left: 0;
                 width: 100%;
+                margin-bottom: 70px; /* Space for bottom tabs */
             }
+            .top-bar {
+                padding: 0 20px;
+            }
+            .user-nav {
+                display: none; /* Hide on mobile to save space */
+            }
+            .content-area {
+                padding: 20px;
+            }
+            .mobile-nav-toggle {
+                display: block !important;
+            }
+            .mobile-tab-bar {
+                display: flex !important;
+            }
+        }
+
+        /* Mobile Tab Bar */
+        .mobile-tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: white;
+            display: none;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 1100;
+            border-top: 1px solid #eef2f6;
+            padding: 0 10px;
+        }
+
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #94a3b8;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.2s;
+            flex: 1;
+        }
+
+        .tab-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .tab-item.active {
+            color: var(--primary-orange);
+        }
+
+        .mobile-nav-toggle {
+            display: none;
+            font-size: 24px;
+            color: #111827;
+            cursor: pointer;
+            margin-right: 15px;
         }
     </style>
     
@@ -214,6 +279,11 @@
                     <i class="fa fa-users"></i> Users
                 </a>
             </li>
+            <li class="menu-item">
+                <a href="{% url 'admin_auditorium_list' %}" class="menu-link {% if 'auditorium' in request.resolver_match.url_name %}active{% endif %}">
+                    <i class="fa fa-building"></i> Venues
+                </a>
+            </li>
         </ul>
         
         <div class="sidebar-footer">
@@ -227,8 +297,13 @@
     <div class="main-content">
         <!-- Top Bar -->
         <div class="top-bar">
-            <div class="page-title">
-                {% block page_title %}Dashboard Overview{% endblock %}
+            <div class="d-flex align-items-center">
+                <div class="mobile-nav-toggle" id="sidebarToggle">
+                    <i class="fa fa-bars"></i>
+                </div>
+                <div class="page-title">
+                    {% block page_title %}Dashboard Overview{% endblock %}
+                </div>
             </div>
             
             <div class="user-nav">
@@ -239,8 +314,48 @@
         
         <!-- Inner Content Area -->
         <div class="content-area">
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert" style="border-radius: 12px; font-weight: 500;">
+                    {% if message.tags == 'error' %}
+                        <i class="fa fa-exclamation-circle mr-2"></i>
+                    {% elif message.tags == 'success' %}
+                        <i class="fa fa-check-circle mr-2"></i>
+                    {% endif %}
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endfor %}
+            {% endif %}
+
             {% block admin_content %}{% endblock %}
         </div>
+    </div>
+
+    <!-- Mobile Tab Bar -->
+    <div class="mobile-tab-bar">
+        <a href="{% url 'admin_dashboard' %}" class="tab-item {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
+            <i class="fa fa-th-large"></i>
+            <span>Dash</span>
+        </a>
+        <a href="{% url 'admin_event_list' %}" class="tab-item {% if 'event' in request.resolver_match.url_name %}active{% endif %}">
+            <i class="fa fa-calendar"></i>
+            <span>Events</span>
+        </a>
+        <a href="{% url 'admin_auditorium_list' %}" class="tab-item {% if 'auditorium' in request.resolver_match.url_name %}active{% endif %}">
+            <i class="fa fa-building"></i>
+            <span>Venues</span>
+        </a>
+        <a href="{% url 'admin_booking_list' %}" class="tab-item {% if 'booking' in request.resolver_match.url_name %}active{% endif %}">
+            <i class="fa fa-ticket"></i>
+            <span>Bookings</span>
+        </a>
+        <a href="{% url 'admin_feedback_list' %}" class="tab-item {% if 'feedback' in request.resolver_match.url_name %}active{% endif %}">
+            <i class="fa fa-comments"></i>
+            <span>Feed</span>
+        </a>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -248,6 +363,21 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
+    <script>
+        $(document).ready(function() {
+            $('#sidebarToggle').on('click', function() {
+                $('.sidebar').toggleClass('active');
+            });
+
+            // Close sidebar when clicking outside on mobile
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.sidebar, #sidebarToggle').length) {
+                    $('.sidebar').removeClass('active');
+                }
+            });
+        });
+    </script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>
+```

@@ -38,6 +38,12 @@ urlpatterns = [
     path('admin-panel/feedback/<int:feedback_id>/reply/', admin_views.admin_feedback_reply, name='admin_feedback_reply'),
     path('admin-panel/feedback/<int:feedback_id>/delete/', admin_views.admin_feedback_delete, name='admin_feedback_delete'),
 
+    # Auditoriums
+    path('admin-panel/auditoriums/', admin_views.admin_auditorium_list, name='admin_auditorium_list'),
+    path('admin-panel/auditoriums/create/', admin_views.admin_auditorium_create, name='admin_auditorium_create'),
+    path('admin-panel/auditoriums/<int:auditorium_id>/edit/', admin_views.admin_auditorium_edit, name='admin_auditorium_edit'),
+    path('admin-panel/auditoriums/<int:auditorium_id>/delete/', admin_views.admin_auditorium_delete, name='admin_auditorium_delete'),
+
     path("events/", views.explore_events, name="explore_events"),
     path("event/<int:event_id>/", views.event_detail, name="event_detail"),
     path("event/<int:event_id>/seats/", views.seat_layout, name="seat_layout"),

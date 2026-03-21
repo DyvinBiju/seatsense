@@ -1,0 +1,93 @@
+{% extends "seatsense_app/admin/admin_base.html" %}
+
+{% block page_title %}Venue Management{% endblock %}
+
+{% block admin_content %}
+<div class="row mb-4 align-items-center">
+    <div class="col-md-4">
+        <h4 class="mb-0" style="font-weight: 700; color: #111827;">All Auditoriums</h4>
+    </div>
+    <div class="col-md-8 text-right d-flex justify-content-end align-items-center">
+        <form class="mr-2" method="GET">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Search venues..." value="{{ search_query|default:'' }}" style="border-radius: 10px 0 0 10px;">
+                <div class="input-group-append">
+                    <button class="btn btn-light bg-white border-left-0" style="border: 1px solid #ced4da; border-left: none; border-radius: 0 10px 10px 0;" type="submit">
+                        <i class="fa fa-search text-muted"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+        <a href="{% url 'admin_auditorium_create' %}" class="btn btn-orange-custom">
+            <i class="fa fa-plus mr-2"></i> Add Auditorium
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    {% for auditorium in auditoriums %}
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card content-card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div class="venue-icon" style="width: 45px; height: 45px; border-radius: 12px; background: rgba(249, 115, 22, 0.1); color: #f97316; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                        <i class="fa fa-building"></i>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-link text-muted p-0" data-toggle="dropdown">
+                            <i class="fa fa-ellipsis-v"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right shadow-sm border-0" style="border-radius: 10px;">
+                            <a class="dropdown-item py-2" href="{% url 'admin_auditorium_edit' auditorium.id %}"><i class="fa fa-edit mr-2 text-primary"></i> Edit</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item py-2 text-danger" href="{% url 'admin_auditorium_delete' auditorium.id %}" onclick="return confirm('Delete this auditorium? All linked seats will be removed.')"><i class="fa fa-trash mr-2"></i> Delete</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <h5 class="card-title mb-1" style="font-weight: 700;">{{ auditorium.name }}</h5>
+                <p class="text-muted small mb-3"><i class="fa fa-map-marker mr-1"></i> {{ auditorium.location }}</p>
+                
+                <div class="venue-stats p-3" style="background: #f8fafc; border-radius: 12px;">
+                    <div class="row no-gutters">
+                        <div class="col-6 border-right">
+                            <div class="small text-muted font-weight-bold">ROWS</div>
+                            <div class="h5 mb-0" style="font-weight: 700;">{{ auditorium.total_rows }}</div>
+                        </div>
+                        <div class="col-6 pl-3">
+                            <div class="small text-muted font-weight-bold">SEATS/ROW</div>
+                            <div class="h5 mb-0" style="font-weight: 700;">{{ auditorium.seats_per_row }}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-3 d-flex justify-content-between align-items-center">
+                    <div class="text-muted small">
+                        <strong>Total Capacity:</strong> {{ auditorium.seat_set.count }} seats
+                    </div>
+                    {% if auditorium.event_set.exists %}
+                    <span class="badge badge-soft-blue" style="padding: 6px 10px;">{{ auditorium.event_set.count }} linked events</span>
+                    {% else %}
+                    <span class="badge badge-light" style="padding: 6px 10px;">No events</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <div class="mb-3 text-muted" style="font-size: 50px;"><i class="fa fa-building-o"></i></div>
+        <h5 class="text-muted">No auditoriums configured yet.</h5>
+        <a href="{% url 'admin_auditorium_create' %}" class="btn btn-orange-custom mt-3">Add Your First Venue</a>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    .btn-orange-custom { background: #f97316; color: white; font-weight: 600; border-radius: 10px; transition: all 0.2s; }
+    .btn-orange-custom:hover { background: #ea580c; color: white; transform: translateY(-2px); }
+    .content-card { transition: all 0.3s ease; border-radius: 16px; }
+    .content-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.1) !important; }
+    .badge-soft-blue { background: rgba(59, 130, 246, 0.1); color: #3b82f6; font-weight: 600; }
+</style>
+{% endblock %}

@@ -4,13 +4,13 @@
 
 {% block admin_content %}
 <div class="row mb-4 align-items-center">
-    <div class="col-md-4">
+    <div class="col-lg-4 col-md-12 mb-3 mb-lg-0">
         <h4 class="mb-0" style="font-weight: 700; color: #111827;">All Events</h4>
     </div>
-    <div class="col-md-8">
-        <div class="d-flex justify-content-end align-items-center">
-            <form class="form-inline mr-2" method="GET">
-                <select name="category" class="form-control mr-2 bg-white" style="border-radius: 10px; font-weight: 600;" onchange="this.form.submit()">
+    <div class="col-lg-8 col-md-12 mt-3 mt-lg-0">
+        <div class="d-flex flex-column flex-lg-row justify-content-lg-end align-items-stretch">
+            <form class="d-flex flex-column flex-sm-row mr-lg-3 mb-2 mb-lg-0" method="GET">
+                <select name="category" class="form-control mb-2 mb-sm-0 mr-sm-2 bg-white" style="border-radius: 10px; font-weight: 600;" onchange="this.form.submit()">
                     <option value="">All Categories</option>
                     {% for cat in categories %}
                     <option value="{{ cat.id }}" {% if selected_cat == cat.id %}selected{% endif %}>{{ cat.name }}</option>
@@ -25,7 +25,7 @@
                     </div>
                 </div>
             </form>
-            <a href="{% url 'admin_event_create' %}" class="btn btn-orange-custom">
+            <a href="{% url 'admin_event_create' %}" class="btn btn-orange-custom w-100 w-lg-auto d-flex align-items-center justify-content-center">
                 <i class="fa fa-plus mr-2"></i> Add New Event
             </a>
         </div>
@@ -141,6 +141,12 @@
     }
     .badge-soft-info {
         font-size: 11px;
+    }
+    
+    @media (max-width: 991px) {
+        .table {
+            min-width: 900px; /* Force horizontal scroll on mobile to prevent crushing */
+        }
     }
 </style>
 {% endblock %}

@@ -39,7 +39,34 @@ class EventForm(forms.ModelForm):
             'speakers': forms.SelectMultiple(attrs={'class': 'form-control'}),
         }
 
-from .models import Category, Speaker
+from .models import Category, Speaker, Auditorium
+
+class AuditoriumForm(forms.ModelForm):
+    class Meta:
+        model = Auditorium
+        fields = ['name', 'location', 'total_rows', 'seats_per_row']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Auditorium Name'}),
+            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Location'}),
+            'total_rows': forms.NumberInput(attrs={'class': 'form-control', 'min': 8, 'max': 26}),
+            'seats_per_row': forms.NumberInput(attrs={'class': 'form-control', 'min': 10, 'max': 15}),
+        }
+
+    def clean_total_rows(self):
+        rows = self.cleaned_data.get('total_rows')
+        if rows < 8:
+            raise forms.ValidationError("Minimum 8 rows required for a proper theater experience.")
+        if rows > 26:
+            raise forms.ValidationError("Maximum 26 rows (A-Z) allowed.")
+        return rows
+
+    def clean_seats_per_row(self):
+        seats = self.cleaned_data.get('seats_per_row')
+        if seats < 10:
+            raise forms.ValidationError("Minimum 10 seats per row required for a balanced grid.")
+        if seats > 15:
+            raise forms.ValidationError("Maximum 15 seats per row allowed.")
+        return seats
 
 class CategoryForm(forms.ModelForm):
     class Meta:
