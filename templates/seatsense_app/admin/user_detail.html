@@ -1,0 +1,111 @@
+{% extends "seatsense_app/admin/admin_base.html" %}
+
+{% block page_title %}User Detail: {{ target_user.username }}{% endblock %}
+
+{% block admin_content %}
+<div class="row">
+    <!-- Profile Sidebar -->
+    <div class="col-lg-4">
+        <div class="card content-card border-0 shadow-sm mb-4">
+            <div class="card-body text-center p-5">
+                <div class="mb-4">
+                    {% if target_user.profile.profile_image and target_user.profile.profile_image.name != 'profiles/default.png' %}
+                    <img src="{{ target_user.profile.profile_image.url }}" alt="Profile" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 5px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    {% else %}
+                    <div style="width: 120px; height: 120px; border-radius: 50%; background: #f3f4f6; color: #f97316; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 40px; margin: 0 auto; border: 5px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                        {{ target_user.username.0|upper }}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <h4 class="mb-1" style="font-weight: 800; color: #111827;">{{ target_user.username }}</h4>
+                <p class="text-muted mb-3">{{ target_user.email|default:"No email provided" }}</p>
+                
+                <div class="d-flex justify-content-center gap-2 mb-4">
+                    {% if target_user.is_superuser %}
+                        <span class="badge badge-dark px-3 py-1" style="border-radius: 20px;">Super User</span>
+                    {% elif target_user.is_staff %}
+                        <span class="badge badge-info px-3 py-1" style="border-radius: 20px;">Staff</span>
+                    {% else %}
+                        <span class="badge badge-light px-3 py-1" style="border-radius: 20px;">Member</span>
+                    {% endif %}
+                </div>
+                
+                <hr>
+                
+                <div class="text-left mt-4">
+                    <div class="mb-3">
+                        <small class="text-uppercase text-muted font-weight-bold" style="font-size: 11px; letter-spacing: 1px;">Phone Number</small>
+                        <div style="font-weight: 600; color: #374151;">{{ target_user.profile.phone|default:"Not linked" }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-uppercase text-muted font-weight-bold" style="font-size: 11px; letter-spacing: 1px;">Member Since</small>
+                        <div style="font-weight: 600; color: #374151;">{{ target_user.date_joined|date:"F d, Y" }}</div>
+                    </div>
+                </div>
+
+                <div class="mt-5">
+                    <a href="{% url 'admin_user_list' %}" class="btn btn-light btn-block py-2" style="border-radius: 10px; font-weight: 600;">
+                        <i class="fa fa-arrow-left mr-2"></i> Back to Users
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking History -->
+    <div class="col-lg-8">
+        <div class="card content-card border-0 shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0" style="font-weight: 700;">Booking History</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="border-0 px-4">Event</th>
+                                <th class="border-0">Seats</th>
+                                <th class="border-0">Amount</th>
+                                <th class="border-0">Status</th>
+                                <th class="border-0">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for booking in bookings %}
+                            <tr>
+                                <td class="px-4 py-3 align-middle font-weight-bold">{{ booking.event.title|truncatechars:30 }}</td>
+                                <td class="py-3 align-middle text-center">{{ booking.bookingseat_set.count }}</td>
+                                <td class="py-3 align-middle">₹{{ booking.total_amount }}</td>
+                                <td class="py-3 align-middle">
+                                    {% if booking.status == 'CONFIRMED' %}
+                                        <span class="badge badge-success px-3 py-1" style="border-radius: 20px;">Confirmed</span>
+                                    {% else %}
+                                        <span class="badge badge-danger px-3 py-1" style="border-radius: 20px;">Cancelled</span>
+                                    {% endif %}
+                                </td>
+                                <td class="py-3 align-middle text-muted" style="font-size: 13px;">{{ booking.booking_date|date:"M d, Y" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="5" class="text-center py-5 text-muted">No booking history recorded.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .content-card { border-radius: 16px; }
+    .table thead th {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #64748b;
+        font-weight: 700;
+        background-color: #f8fafc;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "seatsense_app/admin/admin_base.html" %}
+
+{% block page_title %}User management{% endblock %}
+
+{% block admin_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0" style="font-weight: 700; color: #111827;">System Users</h4>
+</div>
+
+<div class="card content-card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="thead-light">
+                    <tr>
+                        <th class="border-0 px-4">Member</th>
+                        <th class="border-0">Email</th>
+                        <th class="border-0">Phone</th>
+                        <th class="border-0">Role</th>
+                        <th class="border-0">Joined</th>
+                        <th class="border-0 text-right px-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td class="px-4 py-3 align-middle">
+                            <div class="d-flex align-items-center">
+                                <div class="user-img-sm mr-3">
+                                    {% if user.profile.profile_image and user.profile.profile_image.name != 'profiles/default.png' %}
+                                    <img src="{{ user.profile.profile_image.url }}" alt="User" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                    {% else %}
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #f3f4f6; color: #f97316; display: flex; align-items: center; justify-content: center; font-weight: 800; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                                        {{ user.username.0|upper }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <div style="font-weight: 700; color: #111827;">{{ user.username }}</div>
+                                    <small class="text-muted">ID: #U-{{ user.id|stringformat:"04d" }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-3 align-middle font-weight-medium">{{ user.email|default:"No email" }}</td>
+                        <td class="py-3 align-middle text-muted">{{ user.profile.phone|default:"-" }}</td>
+                        <td class="py-3 align-middle">
+                            {% if user.is_superuser %}
+                                <span class="badge badge-soft-dark px-3 py-1" style="border-radius: 20px; background: #111827; color: #fff;">Super Admin</span>
+                            {% elif user.is_staff %}
+                                <span class="badge badge-soft-info px-3 py-1" style="border-radius: 20px; background: #e0f2fe; color: #0369a1;">Staff</span>
+                            {% else %}
+                                <span class="badge badge-soft-light px-3 py-1" style="border-radius: 20px; background: #f3f4f6; color: #4b5563;">Member</span>
+                            {% endif %}
+                        </td>
+                        <td class="py-3 align-middle text-muted" style="font-size: 13px;">{{ user.date_joined|date:"M d, Y" }}</td>
+                        <td class="py-3 align-middle text-right px-4">
+                            <div class="dropdown">
+                                <button class="btn btn-light btn-sm rounded-pill px-3" type="button" data-toggle="dropdown">
+                                    <i class="fa fa-cog mr-1"></i> Actions
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right border-0 shadow" style="border-radius: 12px;">
+                                    <a class="dropdown-item py-2" href="{% url 'admin_user_detail' user.id %}"><i class="fa fa-id-card mr-2 text-primary"></i> Full Profile</a>
+                                    {% if not user.is_superuser %}
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item py-2 text-danger" href="{% url 'admin_user_delete' user.id %}" onclick="return confirm('Deleting users might break related bookings. Proceed with {{ user.username }}?')">
+                                        <i class="fa fa-trash mr-2"></i> Remove Account
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="6" class="text-center py-4">No users found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .content-card { border-radius: 16px; }
+    .table thead th {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #64748b;
+        font-weight: 700;
+        background-color: #f8fafc;
+    }
+</style>
+{% endblock %}

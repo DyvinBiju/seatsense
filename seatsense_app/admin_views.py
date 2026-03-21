@@ -149,3 +149,29 @@ def admin_speaker_delete(request, speaker_id):
     speaker.delete()
     messages.success(request, "Speaker deleted!")
     return redirect('admin_speaker_list')
+
+# Users
+@user_passes_test(admin_required, login_url='login')
+def admin_user_list(request):
+    users = User.objects.all().order_by('-date_joined')
+    return render(request, 'seatsense_app/admin/user_list.html', {'users': users})
+
+@user_passes_test(admin_required, login_url='login')
+def admin_user_detail(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    bookings = Booking.objects.filter(user=user).order_by('-booking_date')
+    return render(request, 'seatsense_app/admin/user_detail.html', {'target_user': user, 'bookings': bookings})
+
+@user_passes_test(admin_required, login_url='login')
+def admin_user_delete(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    if user.is_superuser:
+        messages.error(request, "Cannot delete a superuser.")
+        return redirect('admin_user_list')
+    if user == request.user:
+        messages.error(request, "Cannot delete yourself.")
+        return redirect('admin_user_list')
+    
+    user.delete()
+    messages.success(request, f"User {user.username} deleted.")
+    return redirect('admin_user_list')

@@ -29,6 +29,9 @@ urlpatterns = [
     path('admin-panel/speakers/create/', admin_views.admin_speaker_create, name='admin_speaker_create'),
     path('admin-panel/speakers/<int:speaker_id>/edit/', admin_views.admin_speaker_edit, name='admin_speaker_edit'),
     path('admin-panel/speakers/<int:speaker_id>/delete/', admin_views.admin_speaker_delete, name='admin_speaker_delete'),
+    path('admin-panel/users/', admin_views.admin_user_list, name='admin_user_list'),
+    path('admin-panel/users/<int:user_id>/', admin_views.admin_user_detail, name='admin_user_detail'),
+    path('admin-panel/users/<int:user_id>/delete/', admin_views.admin_user_delete, name='admin_user_delete'),
 
     path("events/", views.explore_events, name="explore_events"),
     path("event/<int:event_id>/", views.event_detail, name="event_detail"),
