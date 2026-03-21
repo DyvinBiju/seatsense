@@ -3,11 +3,25 @@
 {% block page_title %}Categories manager{% endblock %}
 
 {% block admin_content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="mb-0" style="font-weight: 700; color: #111827;">All Categories</h4>
-    <a href="{% url 'admin_category_create' %}" class="btn btn-orange-custom">
-        <i class="fa fa-plus mr-2"></i> Add Category
-    </a>
+<div class="row mb-4 align-items-center">
+    <div class="col-md-4">
+        <h4 class="mb-0" style="font-weight: 700; color: #111827;">All Categories</h4>
+    </div>
+    <div class="col-md-8 text-right d-flex justify-content-end align-items-center">
+        <form class="mr-2" method="GET">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Search categories..." value="{{ search_query|default:'' }}" style="border-radius: 10px 0 0 10px;">
+                <div class="input-group-append">
+                    <button class="btn btn-light bg-white border-left-0" style="border: 1px solid #ced4da; border-left: none; border-radius: 0 10px 10px 0;" type="submit">
+                        <i class="fa fa-search text-muted"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+        <a href="{% url 'admin_category_create' %}" class="btn btn-orange-custom">
+            <i class="fa fa-plus mr-2"></i> Add Category
+        </a>
+    </div>
 </div>
 
 <div class="row">

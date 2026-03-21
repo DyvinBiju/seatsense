@@ -669,20 +669,18 @@ from io import BytesIO
 @login_required
 def booking_detail(request, booking_id):
 
-    booking = get_object_or_404(
-        Booking,
-        id=booking_id,
-        user=request.user
-    )
+    if request.user.is_staff:
+        booking = get_object_or_404(Booking, id=booking_id)
+    else:
+        booking = get_object_or_404(Booking, id=booking_id, user=request.user)
 
     booking_seats = BookingSeat.objects.filter(booking=booking)
 
     seat_list = [str(seat.seat) for seat in booking_seats]
 
-    # QR Code Data (unique per booking)
     qr_data = f"""
 SeatSense Ticket
-User: {request.user.username}
+User: {booking.user.username}
 Event: {booking.event.title}
 Seats: {', '.join(seat_list)}
 Date: {booking.event.event_date}

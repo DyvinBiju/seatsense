@@ -47,6 +47,30 @@
 </div>
 
 <div class="row mt-4">
+    <div class="col-lg-8">
+        <div class="card content-card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0" style="font-weight: 700;">Event Popularity</h5>
+                <small class="text-muted">Ranked by Confirmations</small>
+            </div>
+            <div class="card-body">
+                <canvas id="bookingsChart" height="280"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card content-card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0" style="font-weight: 700;">Revenue Stream</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="categoryChart" height="280"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-2">
     <!-- Recent Bookings Table -->
     <div class="col-lg-8 mb-4">
         <div class="card content-card border-0 shadow-sm">
@@ -178,4 +202,55 @@
         font-weight: 700;
     }
 </style>
+
+{% block extra_js %}
+<script>
+    // 1. Revenue by Category (Doughnut)
+    ctx1 = document.getElementById('categoryChart').getContext('2d');
+    new Chart(ctx1, {
+        type: 'doughnut',
+        data: {
+            labels: {{ cat_names|safe }},
+            datasets: [{
+                data: {{ cat_revenues|safe }},
+                backgroundColor: ['#f97316', '#3b82f6', '#10b981', '#ef4444', '#8b5cf6'],
+                hoverOffset: 4,
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } }
+            }
+        }
+    });
+
+    // 2. Bookings by Event (Bar)
+    ctx2 = document.getElementById('bookingsChart').getContext('2d');
+    new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: {{ event_titles|safe }},
+            datasets: [{
+                label: 'Total Bookings',
+                data: {{ event_booking_counts|safe }},
+                backgroundColor: '#3b82f6',
+                borderRadius: 8,
+                barThickness: 30
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, grid: { display: false } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+</script>
+{% endblock %}
 {% endblock %}

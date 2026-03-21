@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import user_passes_test
-from .models import Event, Booking, Category, Speaker, User
-from django.db.models import Sum, Count
+from .models import Event, Booking, Category, Speaker, User, Feedback, FeedbackReply
+from django.db.models import Sum, Count, Q
 from .forms import EventForm, CategoryForm, SpeakerForm
 from django.contrib import messages
 
@@ -16,7 +16,24 @@ def admin_dashboard(request):
     total_revenue = Booking.objects.filter(status='CONFIRMED').aggregate(Sum('total_amount'))['total_amount__sum'] or 0
     total_users = User.objects.all().count()
 
-    # Recent Data
+    # Charts Data
+    # 1. Revenue by Category
+    cat_stats = Category.objects.annotate(
+        category_revenue=Sum('event__booking__total_amount', filter=Q(event__booking__status='CONFIRMED'))
+    ).values('name', 'category_revenue').order_by('-category_revenue')[:5]
+    
+    cat_names = [c['name'] for c in cat_stats]
+    cat_revenues = [float(c['category_revenue'] or 0) for c in cat_stats]
+
+    # 2. Bookings by Event
+    event_stats = Event.objects.annotate(
+        booking_count=Count('booking', filter=Q(booking__status='CONFIRMED'))
+    ).order_by('-booking_count')[:6]
+    
+    event_titles = [e.title[:15] + '...' if len(e.title) > 15 else e.title for e in event_stats]
+    event_booking_counts = [e.booking_count for e in event_stats]
+
+    # Recent Records
     recent_bookings = Booking.objects.all().order_by('-booking_date')[:5]
     top_events = Event.objects.annotate(num_bookings=Count('booking')).order_by('-num_bookings')[:5]
 
@@ -27,13 +44,33 @@ def admin_dashboard(request):
         'total_users': total_users,
         'recent_bookings': recent_bookings,
         'top_events': top_events,
+        # Charts
+        'cat_names': cat_names,
+        'cat_revenues': cat_revenues,
+        'event_titles': event_titles,
+        'event_booking_counts': event_booking_counts,
     }
     return render(request, 'seatsense_app/admin/dashboard.html', context)
 
 @user_passes_test(admin_required, login_url='login')
 def admin_event_list(request):
+    query = request.GET.get('q')
+    cat_id = request.GET.get('category')
+    
     events = Event.objects.all().order_by('-event_date')
-    return render(request, 'seatsense_app/admin/event_list.html', {'events': events})
+    
+    if query:
+        events = events.filter(Q(title__icontains=query) | Q(description__icontains=query))
+    if cat_id:
+        events = events.filter(category_id=cat_id)
+        
+    categories = Category.objects.all()
+    return render(request, 'seatsense_app/admin/event_list.html', {
+        'events': events, 
+        'categories': categories,
+        'search_query': query,
+        'selected_cat': int(cat_id) if cat_id else None
+    })
 
 @user_passes_test(admin_required, login_url='login')
 def admin_event_create(request):
@@ -71,14 +108,25 @@ def admin_event_delete(request, event_id):
 
 @user_passes_test(admin_required, login_url='login')
 def admin_booking_list(request):
+    query = request.GET.get('q')
     bookings = Booking.objects.all().order_by('-booking_date')
-    return render(request, 'seatsense_app/admin/booking_list.html', {'bookings': bookings})
+    
+    if query:
+        bookings = bookings.filter(
+            Q(user__username__icontains=query) | 
+            Q(event__title__icontains=query) |
+            Q(id__icontains=query.replace('#BK-', '').lstrip('0'))
+        )
+    return render(request, 'seatsense_app/admin/booking_list.html', {'bookings': bookings, 'search_query': query})
 
 # Categories
 @user_passes_test(admin_required, login_url='login')
 def admin_category_list(request):
+    query = request.GET.get('q')
     categories = Category.objects.all()
-    return render(request, 'seatsense_app/admin/category_list.html', {'categories': categories})
+    if query:
+        categories = categories.filter(name__icontains=query)
+    return render(request, 'seatsense_app/admin/category_list.html', {'categories': categories, 'search_query': query})
 
 @user_passes_test(admin_required, login_url='login')
 def admin_category_create(request):
@@ -115,8 +163,11 @@ def admin_category_delete(request, cat_id):
 # Speakers
 @user_passes_test(admin_required, login_url='login')
 def admin_speaker_list(request):
+    query = request.GET.get('q')
     speakers = Speaker.objects.all()
-    return render(request, 'seatsense_app/admin/speaker_list.html', {'speakers': speakers})
+    if query:
+        speakers = speakers.filter(Q(name__icontains=query) | Q(designation__icontains=query))
+    return render(request, 'seatsense_app/admin/speaker_list.html', {'speakers': speakers, 'search_query': query})
 
 @user_passes_test(admin_required, login_url='login')
 def admin_speaker_create(request):
@@ -153,8 +204,15 @@ def admin_speaker_delete(request, speaker_id):
 # Users
 @user_passes_test(admin_required, login_url='login')
 def admin_user_list(request):
+    query = request.GET.get('q')
     users = User.objects.all().order_by('-date_joined')
-    return render(request, 'seatsense_app/admin/user_list.html', {'users': users})
+    if query:
+        users = users.filter(
+            Q(username__icontains=query) | 
+            Q(email__icontains=query) |
+            Q(profile__phone__icontains=query)
+        )
+    return render(request, 'seatsense_app/admin/user_list.html', {'users': users, 'search_query': query})
 
 @user_passes_test(admin_required, login_url='login')
 def admin_user_detail(request, user_id):
@@ -175,3 +233,31 @@ def admin_user_delete(request, user_id):
     user.delete()
     messages.success(request, f"User {user.username} deleted.")
     return redirect('admin_user_list')
+
+# Feedback
+@user_passes_test(admin_required, login_url='login')
+def admin_feedback_list(request):
+    feedback_list = Feedback.objects.all().order_by('-created_at')
+    return render(request, 'seatsense_app/admin/feedback_list.html', {'feedback_list': feedback_list})
+
+@user_passes_test(admin_required, login_url='login')
+def admin_feedback_reply(request, feedback_id):
+    if request.method == "POST":
+        feedback = get_object_or_404(Feedback, id=feedback_id)
+        reply_text = request.POST.get('reply')
+        if reply_text:
+            FeedbackReply.objects.create(
+                feedback=feedback,
+                user=request.user,
+                reply=reply_text
+            )
+            messages.success(request, "Reply sent successfully!")
+        return redirect('admin_feedback_list')
+    return redirect('admin_feedback_list')
+
+@user_passes_test(admin_required, login_url='login')
+def admin_feedback_delete(request, feedback_id):
+    feedback = get_object_or_404(Feedback, id=feedback_id)
+    feedback.delete()
+    messages.success(request, "Feedback removed.")
+    return redirect('admin_feedback_list')

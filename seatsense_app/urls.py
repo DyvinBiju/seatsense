@@ -32,6 +32,11 @@ urlpatterns = [
     path('admin-panel/users/', admin_views.admin_user_list, name='admin_user_list'),
     path('admin-panel/users/<int:user_id>/', admin_views.admin_user_detail, name='admin_user_detail'),
     path('admin-panel/users/<int:user_id>/delete/', admin_views.admin_user_delete, name='admin_user_delete'),
+    
+    # Feedback
+    path('admin-panel/feedback/', admin_views.admin_feedback_list, name='admin_feedback_list'),
+    path('admin-panel/feedback/<int:feedback_id>/reply/', admin_views.admin_feedback_reply, name='admin_feedback_reply'),
+    path('admin-panel/feedback/<int:feedback_id>/delete/', admin_views.admin_feedback_delete, name='admin_feedback_delete'),
 
     path("events/", views.explore_events, name="explore_events"),
     path("event/<int:event_id>/", views.event_detail, name="event_detail"),

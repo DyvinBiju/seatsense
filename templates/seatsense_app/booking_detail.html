@@ -118,9 +118,15 @@
             </div>
 
             <div class="action-buttons">
+               {% if request.user.is_staff %}
+               <a href="{% url 'admin_booking_list' %}" class="btn-custom btn-orange-custom">
+                  <i class="fa fa-arrow-left"></i> Back to Admin List
+               </a>
+               {% else %}
                <a href="{% url 'my_bookings' %}" class="btn-custom btn-orange-custom">
                   <i class="fa fa-arrow-left"></i> Back to My Bookings
                </a>
+               {% endif %}
 
                {% if booking.status == "CONFIRMED" %}
                   {% if is_past %}
@@ -135,10 +141,12 @@
                      <i class="fa fa-print"></i> Print Ticket
                   </button>
 
+                  {% if not request.user.is_staff %}
                   <a href="{% url 'cancel_booking' booking.id %}" class="btn-custom btn-danger-custom"
                      onclick="return confirm('Are you sure you want to cancel this ticket? This action cannot be undone.')">
                      <i class="fa fa-times"></i> Cancel Ticket
                   </a>
+                  {% endif %}
                   {% endif %}
                {% else %}
                <button class="btn-custom btn-disabled" disabled>

@@ -75,7 +75,14 @@
                             {% for booking in bookings %}
                             <tr>
                                 <td class="px-4 py-3 align-middle font-weight-bold">{{ booking.event.title|truncatechars:30 }}</td>
-                                <td class="py-3 align-middle text-center">{{ booking.bookingseat_set.count }}</td>
+                                <td class="py-3 align-middle text-center">
+                                    <div style="font-weight: 700; color: #111827;">{{ booking.bookingseat_set.count }}</div>
+                                    <small class="text-muted" style="font-size: 11px;">
+                                        {% for bs in booking.bookingseat_set.all %}
+                                            {{ bs.seat.row_label }}{{ bs.seat.seat_number }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </small>
+                                </td>
                                 <td class="py-3 align-middle">₹{{ booking.total_amount }}</td>
                                 <td class="py-3 align-middle">
                                     {% if booking.status == 'CONFIRMED' %}

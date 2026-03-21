@@ -1,0 +1,83 @@
+{% extends "seatsense_app/admin/admin_base.html" %}
+
+{% block page_title %}Feedback & Reviews{% endblock %}
+
+{% block admin_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0" style="font-weight: 700; color: #111827;">User Feedback</h4>
+</div>
+
+<div class="row">
+    {% for feedback in feedback_list %}
+    <div class="col-lg-12 mb-4">
+        <div class="card content-card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="user-avatar mr-3" style="width: 45px; height: 45px; border-radius: 50%; background: #f3f4f6; color: #f97316; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px;">
+                            {{ feedback.user.username.0|upper }}
+                        </div>
+                        <div>
+                            <h6 class="mb-0" style="font-weight: 700;">{{ feedback.user.username }}</h6>
+                            <small class="text-muted">on <strong>{{ feedback.event.title }}</strong> • {{ feedback.created_at|date:"d M, Y" }}</small>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="mb-1">
+                            {% for i in "12345"|make_list %}
+                                <i class="fa fa-star {% if forloop.counter <= feedback.rating %}text-warning{% else %}text-light{% endif %}"></i>
+                            {% endfor %}
+                        </div>
+                        <a href="{% url 'admin_feedback_delete' feedback.id %}" class="text-danger small" onclick="return confirm('Delete this feedback?')"><i class="fa fa-trash"></i> Remove</a>
+                    </div>
+                </div>
+
+                <div class="feedback-comment py-3 px-4 mb-3" style="background: #f8fafc; border-radius: 12px; border-left: 4px solid #f97316;">
+                    <p class="mb-0" style="font-style: italic; color: #374151;">"{{ feedback.comment }}"</p>
+                </div>
+
+                <!-- Existing Replies -->
+                {% if feedback.replies.all %}
+                <div class="replies-section ml-5 mt-3">
+                    {% for reply in feedback.replies.all %}
+                    <div class="reply-item mb-2 p-3" style="background: #f1f5f9; border-radius: 10px;">
+                        <div class="d-flex align-items-center mb-1">
+                            <span class="badge badge-dark mr-2" style="font-size: 10px;">{{ reply.user.username }}</span>
+                            <small class="text-muted" style="font-size: 10px;">{{ reply.created_at|date:"d M, H:i" }}</small>
+                        </div>
+                        <p class="mb-0 small" style="color: #475569;">{{ reply.reply }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Reply Form -->
+                <div class="reply-form mt-4">
+                    <form action="{% url 'admin_feedback_reply' feedback.id %}" method="POST">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <input type="text" name="reply" class="form-control" placeholder="Write a reply..." style="border-radius: 10px 0 0 10px;" required>
+                            <div class="input-group-append">
+                                <button class="btn btn-orange-custom" type="submit" style="border-radius: 0 10px 10px 0;">
+                                    <i class="fa fa-paper-plane mr-1"></i> Reply
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5 text-muted">
+        <i class="fa fa-comments fa-4x mb-3"></i>
+        <h5>No feedback received yet.</h5>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    .content-card { border-radius: 16px; }
+    .btn-orange-custom { background: #f97316; color: white; font-weight: 600; border: none; }
+</style>
+{% endblock %}
