@@ -3,6 +3,13 @@
 {% block page_title %}Dashboard Overview{% endblock %}
 
 {% block admin_content %}
+<div class="row mb-4">
+    <div class="col-12 text-right">
+        <a href="{% url 'admin_export_events_csv' %}" class="btn btn-success shadow-sm font-weight-bold" style="border-radius: 8px;">
+            <i class="fa fa-file-excel-o mr-2"></i> Export Events Report (CSV)
+        </a>
+    </div>
+</div>
 <div class="row">
     <!-- Stat Cards -->
     <div class="col-md-3 mb-4">

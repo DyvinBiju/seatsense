@@ -16,6 +16,7 @@ urlpatterns = [
     path('admin-panel/events/create/', admin_views.admin_event_create, name='admin_event_create'),
     path('admin-panel/events/<int:event_id>/edit/', admin_views.admin_event_edit, name='admin_event_edit'),
     path('admin-panel/events/<int:event_id>/delete/', admin_views.admin_event_delete, name='admin_event_delete'),
+    path('admin-panel/events/export/', admin_views.admin_export_events_csv, name='admin_export_events_csv'),
     path('admin-panel/bookings/', admin_views.admin_booking_list, name='admin_booking_list'),
     
     # Categories

@@ -6,6 +6,8 @@ from .forms import EventForm, CategoryForm, SpeakerForm, AuditoriumForm
 
 # ... rest of file (I'll use multi-replace for cleaner injection)
 
+import csv
+from django.http import HttpResponse
 from django.contrib import messages
 
 def admin_required(user):
@@ -125,6 +127,31 @@ def admin_event_delete(request, event_id):
         messages.success(request, "Event deleted successfully!")
         return redirect('admin_event_list')
     return render(request, 'seatsense_app/admin/event_confirm_delete.html', {'event': event})
+
+@user_passes_test(admin_required, login_url='login')
+def admin_export_events_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="events_summary.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Event Title', 'Date', 'Time', 'Auditorium', 'Category', 'Total Seats', 'Booked Seats', 'Remaining Seats', 'Total Revenue'])
+
+    events = Event.objects.all().order_by('-event_date')
+    for event in events:
+        revenue = event.booking_set.filter(status='CONFIRMED').aggregate(Sum('total_amount'))['total_amount__sum'] or 0
+        writer.writerow([
+            event.title,
+            event.event_date.strftime('%d-%b-%Y'),  # e.g. 22-Apr-2026
+            event.event_time.strftime('%I:%M %p'),  # e.g. 06:30 PM
+            event.auditorium.name,
+            event.category.name,
+            event.total_seats,
+            event.booked_seats,
+            event.remaining_seats,
+            f"{revenue:.2f}"
+        ])
+
+    return response
 
 @user_passes_test(admin_required, login_url='login')
 def admin_booking_list(request):
